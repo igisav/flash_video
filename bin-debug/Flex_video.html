@@ -1,0 +1,234 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+    <head>
+        <title>Flex_video</title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <style type="text/css" media="screen"> 
+            html, body  { height:100%; }
+            body { margin:0; padding:0; overflow:auto; text-align:center;}
+            object:focus { outline:none; }
+            #flashContent { display:none; }
+            .controls {margin-top: 20px;}
+        </style>
+
+            
+        <script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript">
+            // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+            var swfVersionStr = "13.0.0";
+            // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
+            var xiSwfUrlStr = "playerProductInstall.swf";
+            var flashvars = {xmlurl:'xml/video4.xml'};
+            var params = {};
+            params.quality = "high";
+            params.bgcolor = "0xEEEEEE";
+            params.allowscriptaccess = "sameDomain";
+            params.allowfullscreen = "true";
+            var attributes = {};
+            attributes.id = "videoplayer"; // Flex_video
+            attributes.name = "Flex_video";
+            attributes.align = "middle";
+            swfobject.embedSWF(
+                "Flex_video.swf", "flashContent",
+                    800, 475,
+                swfVersionStr, xiSwfUrlStr, 
+                flashvars, params, attributes);
+            // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+        </script>
+
+        <script type="text/javascript">
+
+            function track()
+            {
+                document.getElementById("debug").innerHTML += "track:";
+                for( var i=0; i < arguments.length; i++ )
+                {
+                    document.getElementById("debug").innerHTML += arguments[i]+" ";
+                }
+                document.getElementById("debug").innerHTML += "<br/>";
+            }
+            function videoTrackingEvent()
+            {
+                document.getElementById("debug").innerHTML += "videoTrackingEvent:";
+                for( var i=0; i < arguments.length; i++ )
+                {
+                    document.getElementById("debug").innerHTML += arguments[i]+" ";
+                }
+                document.getElementById("debug").innerHTML += "<br/>";
+            }
+            function ReportingCallback()
+            {
+                document.getElementById("debug").innerHTML += "ReportingCallback:";
+                for( var i=0; i < arguments.length; i++ )
+                {
+                    document.getElementById("debug").innerHTML += arguments[i]+" ";
+                }
+                document.getElementById("debug").innerHTML += "<br/>";
+            }
+            function trackVast()
+            {
+                document.getElementById("debug").innerHTML += "VAST:";
+                for( var i=0; i < arguments.length; i++ )
+                {
+                    document.getElementById("debug").innerHTML += arguments[i]+" ";
+                }
+                document.getElementById("debug").innerHTML += "<br/>";
+            }
+
+            function resize()
+            {
+                var p = document.getElementById("videoplayer");
+                alert( "player: " + p );
+                p.width = 457;
+                p.height = 282;
+            }
+
+
+            function seekPlaying()
+            {
+                document.getElementById("debug").innerHTML = "Player seeken";
+                document.getElementById("videoplayer").apiCall("SEEK",{"seekTime":27});
+            }
+
+            function startPlayingWithoutPreroll()
+            {
+                console.log("gooo two!");
+                document.getElementById("debug").innerHTML = "Player starten";
+                document.getElementById("videoplayer").apiCall("PLAY_WITH_PREROLL");
+            }
+
+            function startPlayingWithPreroll()
+            {
+                console.log("gooo!");
+                document.getElementById("debug").innerHTML = "Player starten ohne Preroll";
+                document.getElementById("videoplayer").apiCall("PLAY_WITHOUT_PREROLL");
+            }
+
+            function pausePlaying()
+            {
+                document.getElementById("debug").innerHTML = "Player pausieren";
+                document.getElementById("videoplayer").apiCall("PAUSE");
+            }
+
+            function resumePlaying()
+            {
+                document.getElementById("debug").innerHTML = "Player fortsetzen";
+                document.getElementById("videoplayer").apiCall("RESUME");
+            }
+
+            function volumeMute()
+            {
+                document.getElementById("debug").innerHTML = "Player Mute";
+                document.getElementById("videoplayer").apiCall("VOLUME_OFF");
+            }
+
+            function volumeUnmute()
+            {
+                document.getElementById("debug").innerHTML = "Player unMute";
+                document.getElementById("videoplayer").apiCall("VOLUME_ON");
+            }
+
+            function volUp()
+            {
+                document.getElementById("debug").innerHTML = "Player vol Up";
+                document.getElementById("videoplayer").apiCall("VOLUME_UP",{"volumeChange":0.1});
+            }
+
+            function setXML()
+            {
+                document.getElementById("debug").innerHTML = "Player setXml";
+                document.getElementById("videoplayer").apiCall("SET_XML",{"xml":escape('<?xml version="1.0" encoding="UTF-8"?><video src="http://localhost/1.5/Bild/html-template/assets/video/blur_demo.mov" img="http://bilder.bild.de/fotos/stand-kkl-spieltag05-stevens-26231514/Bild/1.bild.jpeg" id="26231516" autoplay="false" tracking="true" autorepeat="false" ueberschrift="Knops Kult-Liga" text="Der Integrationsspieltag geht auch an Knops Kult-Liga nicht spurlos vorbei. Als Huub Stevens analysiert Matze Knop den aktuellen Spieltag. " duration="23213424"  embedtrack="http://springer02.webtrekk.net/707476814322924/wt.pl?p=202,st&amp;mi=%MEDIAID%&amp;mk=%ACTION%&amp;mt1=%POSITION%&amp;mt2=%DURATION%&amp;ck3=%URL%&amp;ck4=%TITLE%&amp;bw=0&amp;vol=100&amp;mut=0&amp;x=%TIMESTAMP%" hdDefault="false" hdAdaptive="false"><copyright text="BILD.de"/><player width="658" height="399"/><end status="true" xml="xml/jira_201/channel.xml" more="true" revolvertime="5"/><comment status="false"/><subtitle status="false"/><share deeplink="http://www.bild.de/video/clip/huub-stevens/kkl-spieltag05-stevens-26231516.bild.html" embed="true"><bookmark url="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.bild.de%2Fvideo%2Fclip%2Fhuub-stevens%2Fkkl-spieltag05-stevens-26231516.bild.html&amp;action=recommend&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=true&amp;action=recommend&amp;colorscheme=light&amp;font&amp;height=21" title="Facebook" icon="http://bilder.bild.de/fotos/facebook-icon-15977316/Bild/1.bild.png"/><bookmark url="http%3A%2F%2Fwww.bild.de%2Fvideo%2Fclip%2Fhuub-stevens%2Fkkl-spieltag05-stevens-26231516.bild.html" title="Googleplus" icon="http://bilder.bild.de/fotos/googleplus-icon-23611400/Bild/2.bild.png"/><bookmark url="http://platform.twitter.com/widgets/tweet_button.html?url=http%3A%2F%2Fwww.bild.de%2Fvideo%2Fclip%2Fhuub-stevens%2Fkkl-spieltag05-stevens-26231516.bild.html&amp;lang=de" title="Twitter" icon="http://bilder.bild.de/fotos/twitter-icon-15977350/Bild/1.bild.png"/>	</share><mail link="http://www.bild.de/video/clip/huub-stevens/kkl-spieltag05-stevens-26231516,view=sendMail.bild.html"/><link text="Zum Artikel"/><ads><ad text="Werbung1" club="BULI" xml="http://ww251.smartadserver.com/call/pubx/21009/(bild/news/index)/[format]/M/[timestamp]" />   <ad text="Werbung2" club="BILDPlus" xml="http://ww251.smartadserver.com/call/pubx/21009/(bild/news/index)/[format]/M/[timestamp]" />    <ad text="Werbung3" club="default" xml="http://rtr.innovid.com/r1.51488750120194.79714643;cb=%5Btimestamp%5D" /></ads></video>')});
+            }
+
+            function volDown()
+            {
+                document.getElementById("debug").innerHTML = "Player vol Down";
+                document.getElementById("videoplayer").apiCall("VOLUME_DOWN",{"volumeChange":0.1});
+            }
+
+            function klickAd()
+            {
+                document.getElementById("debug").innerHTML = "Klick Ad";
+                document.getElementById("videoplayer").apiCall("AD_CLICK");
+            }
+
+            function askForPlayingStatus()
+            {
+                document.getElementById("debug").innerHTML = "is Playing: ";
+                document.getElementById("debug").innerHTML += document.getElementById("videoplayer").askForPlayingStatus();
+            }
+
+            de = {bild:{user: {
+                userHasClub: function(id)
+                {
+                    return true;
+                }
+            }}}
+        </script>
+    </head>
+    <body>
+        <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
+             JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
+             when JavaScript is disabled.
+        -->
+        <div id="flashContent">
+            <p>
+                To view this page ensure that Adobe Flash Player version 
+                13.0.0 or greater is installed. 
+            </p>
+            <script type="text/javascript"> 
+                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
+                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
+                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
+            </script> 
+        </div>
+
+        <div class="controls">
+            <input type="button" name="derButton" value="Seek" onclick="seekPlaying();">
+            <input type="button" name="derButton" value="Start Clean" onclick="startPlayingWithoutPreroll();">
+            <input type="button" name="derButton" value="Start" onclick="startPlayingWithPreroll();">
+            <input type="button" name="derButton" value="Pause" onclick="pausePlaying();">
+            <input type="button" name="derButton" value="Resume" onclick="resumePlaying();">
+            <input type="button" name="derButton" value="Volume Mute" onclick="volumeMute();">
+            <input type="button" name="derButton" value="Volume Unmute" onclick="volumeUnmute();">
+            <input type="button" name="derButton" value="getPlayerStatus" onclick="askForPlayingStatus();">
+            <input type="button" name="derButton" value="Volume Down" onclick="volDown();">
+            <input type="button" name="derButton" value="Volume Up" onclick="volUp();">
+            <input type="button" name="derButton" value="setXML" onclick="setXML();">
+            <input type="button" name="derButton" value="Click Ad" onclick="klickAd();">
+        </div>
+        <div id="debug"></div>
+
+        <noscript>
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="Flex_video">
+                <param name="movie" value="Flex_video.swf" />
+                <param name="quality" value="high" />
+                <param name="bgcolor" value="0xEEEEEE" />
+                <param name="allowScriptAccess" value="sameDomain" />
+                <param name="allowFullScreen" value="true" />
+                <!--[if !IE]>-->
+                <object type="application/x-shockwave-flash" data="Flex_video.swf" width="100%" height="100%">
+                    <param name="quality" value="high" />
+                    <param name="bgcolor" value="0xEEEEEE" />
+                    <param name="allowScriptAccess" value="sameDomain" />
+                    <param name="allowFullScreen" value="true" />
+                <!--<![endif]-->
+                <!--[if gte IE 6]>-->
+                    <p> 
+                        Either scripts and active content are not permitted to run or Adobe Flash Player version
+                        13.0.0 or greater is not installed.
+                    </p>
+                <!--<![endif]-->
+                    <a href="http://www.adobe.com/go/getflashplayer">
+                        <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
+                    </a>
+                <!--[if !IE]>-->
+                </object>
+                <!--<![endif]-->
+            </object>
+        </noscript>     
+   </body>
+</html>
