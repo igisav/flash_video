@@ -46,7 +46,7 @@ package de.axelspringer.videoplayer.vast.controller
 		
 		// gui
 		protected var playerView:VastPlayerView;
-		protected var controlsView:ControlsView;
+		//protected var controlsView:ControlsView;
 		
 		// netstream stuff
 		protected var nc:NetConnection;
@@ -76,12 +76,12 @@ package de.axelspringer.videoplayer.vast.controller
 		protected var paused:Boolean = false;
 		protected var started:Boolean = false;
 		
-		public function VastPlayerController( playerView:VastPlayerView, controlsView:ControlsView )
+		public function VastPlayerController( playerView:VastPlayerView )
 		{
 			super( this );
 			
 			this.playerView = playerView;
-			this.controlsView = controlsView;
+			// this.controlsView = controlsView;
 			
 			this.initPlayer();
 		}
@@ -203,8 +203,8 @@ package de.axelspringer.videoplayer.vast.controller
 			if( data.duration != null )
 			{
 				this.duration = Number( data.duration );
-				this.controlsView.setDuration( this.duration );
-				this.controlsView.updateTime( this.ns.time );
+				// this.controlsView.setDuration( this.duration );
+				// this.controlsView.updateTime( this.ns.time );
 			}
 		}
 		
@@ -271,7 +271,7 @@ package de.axelspringer.videoplayer.vast.controller
 					this.videoBufferEmptyStatus = false;
 					this.videoBufferFlushStatus = false;
 					
-//					this.controlsView.setPlayingStatus( true );
+//					// this.controlsView.setPlayingStatus( true );
 					this.videoLastTime = 0;
 					
 					if( !this.playerView.display.hasEventListener( Event.ENTER_FRAME ) )
@@ -319,7 +319,7 @@ package de.axelspringer.videoplayer.vast.controller
 				this.videoStopped = false;
 				this.videoBufferEmptyStatus = false;
 				this.videoBufferFlushStatus = false;
-				this.controlsView.removeEventListener( ControlEvent.PLAYPAUSE_CHANGE, onPlayPauseChange );
+				// this.controlsView.removeEventListener( ControlEvent.PLAYPAUSE_CHANGE, onPlayPauseChange );
 				this.playerView.display.removeEventListener( Event.ENTER_FRAME, onVideoEnterFrame, false );
 				this.ns.removeEventListener( NetStatusEvent.NET_STATUS, onNetStreamStatus, false );
 				
@@ -338,14 +338,14 @@ package de.axelspringer.videoplayer.vast.controller
 				
 				//trace( "progress: " + this.ns.time );
 				
-				this.controlsView.updateTime( this.ns.time );
+				// this.controlsView.updateTime( this.ns.time );
 //				this.trackingController.updatePlayProgress( this.ns.time );
 				
 				if( this.duration > 0 )
 				{
 					var progress:Number = this.ns.time / this.duration;
 					//trace(this + " progress in Vast: " + progress + ":::" + this.ns.time + "::" + this.duration);
-					this.controlsView.updatePlayProgress( progress );
+					// this.controlsView.updatePlayProgress( progress );
 					
 					// track
 					this.dispatchEvent( new AdEvent( AdEvent.PROGRESS, progress ) );
@@ -398,15 +398,14 @@ package de.axelspringer.videoplayer.vast.controller
 		
 		protected function play() :void
 		{
-			this.controlsView.enableSeeking( false );
-			//this.controlsView.enableSeeking( BildTvDefines.isSingleVastPlayer );
-			
+			// this.controlsView.enableSeeking( false );
+
 			// refresh clip info
-			this.controlsView.setDuration( this.duration );
-			this.controlsView.updateTime( 0 );
-			this.controlsView.updatePlayProgress( 0 );
+			// this.controlsView.setDuration( this.duration );
+			// this.controlsView.updateTime( 0 );
+			// this.controlsView.updatePlayProgress( 0 );
 			
-			this.controlsView.showAdControls( true, this.adType );
+			// this.controlsView.showAdControls( true, this.adType );
 			
 			this.started = false;
 			
@@ -451,12 +450,12 @@ package de.axelspringer.videoplayer.vast.controller
 //					graphic.height = this.nonLinear.height;
 					this.playerView.setNonLinearSize();
 					
-					if( BildTvDefines.isWidgetPlayer )
+					/*if( BildTvDefines.isWidgetPlayer )
 					{
 						var yOffset:Number = this.controlsView.controls.background.height - this.controlsView.controls.background.y + 5;
 						this.playerView.overlay.y -= yOffset; 
 						
-					}
+					}*/
 //					this.playerView.setNonLinear( graphic, 
 //												this.nonLinear.width, 
 //												this.nonLinear.height,
@@ -542,12 +541,12 @@ package de.axelspringer.videoplayer.vast.controller
 				this.loader.load( new URLRequest( nonLinear.staticResource ), new LoaderContext( true, new ApplicationDomain(), SecurityDomain.currentDomain ) );				
 				this.loadTimer.start();
 				
-				if( BildTvDefines.isWidgetPlayer )
+				/*if( BildTvDefines.isWidgetPlayer )
 				{
 					var yOffset:Number = this.controlsView.controls.background.height - this.controlsView.controls.background.y + 10;
 					this.playerView.overlay.y -= yOffset; 
 					
-				}
+				}*/
 			}
 			catch( error:Error )
 			{
@@ -634,8 +633,8 @@ package de.axelspringer.videoplayer.vast.controller
 				
 				this.checkEndOfVideoTimer.start();
 				
-				this.controlsView.showAdControls( true, this.adType );
-				this.controlsView.setDuration( this.duration );
+				// this.controlsView.showAdControls( true, this.adType );
+				// this.controlsView.setDuration( this.duration );
 			}
 		}
 		

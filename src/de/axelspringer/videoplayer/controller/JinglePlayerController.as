@@ -19,7 +19,7 @@ package de.axelspringer.videoplayer.controller
 	{
 		// gui
 		protected var playerView:PlayerView;
-		protected var controlsView:ControlsView;
+		// protected var controlsView:ControlsView;
 		
 		// stream
 		protected var streamServer:String;
@@ -32,12 +32,12 @@ package de.axelspringer.videoplayer.controller
 		protected var videoBufferFlushStatus:Boolean;
 		protected var videoStopped:Boolean;
 		
-		public function JinglePlayerController( playerView:PlayerView, controlsView:ControlsView )
+		public function JinglePlayerController( playerView:PlayerView )
 		{
 			super( this );
 			
 			this.playerView = playerView;
-			this.controlsView = controlsView;
+			// this.controlsView = controlsView;
 		}
 		
 		public function playJingle( streamServer:String, streamName:String, soundTransform:SoundTransform ) :void
@@ -49,7 +49,7 @@ package de.axelspringer.videoplayer.controller
 			this.soundTransform = soundTransform;
 			
 			this.playerView.setDisplayButtonVisible( false );
-			this.controlsView.enable( false );
+			// this.controlsView.enable( false );
 			
 			this.resetStatus();
 			
@@ -226,7 +226,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					this.resetStatus();
 					
-					this.controlsView.showJingleControls( true );
+					// this.controlsView.showJingleControls( true );
 					
 					break;
 				}
@@ -249,8 +249,8 @@ package de.axelspringer.videoplayer.controller
 		protected function onStreamFinished() :void
 		{
 			this.playerView.setDisplayButtonVisible( true );
-			this.controlsView.showJingleControls( false );
-			this.controlsView.enable( true );
+			// this.controlsView.showJingleControls( false );
+			// this.controlsView.enable( true );
 			
 			this.dispatchEvent( new ControlEvent( ControlEvent.JINGLE_FINISHED ) );
 		}

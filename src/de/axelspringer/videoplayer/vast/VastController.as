@@ -94,15 +94,15 @@ package de.axelspringer.videoplayer.vast
 		protected static const testing:Boolean = false;
 		//
 		
-		public function VastController( adContainer:Sprite, controlsView:ControlsView )
+		public function VastController( adContainer:Sprite )
 		{
 			super( this );
 			
-			controlsView.addEventListener( ControlEvent.VOLUME_CHANGE, onVolumeChange );
+			//controlsView.addEventListener( ControlEvent.VOLUME_CHANGE, onVolumeChange );
 			
 			var playerView:VastPlayerView = new VastPlayerView( adContainer );
-			this.playerController = new VastPlayerController( playerView, controlsView );
-			this.vpaidController = new VPaidController( playerView, controlsView );
+			this.playerController = new VastPlayerController( playerView );
+			this.vpaidController = new VPaidController( playerView );
 			
 			this.init();
 		}

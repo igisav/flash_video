@@ -73,7 +73,7 @@ package de.axelspringer.videoplayer.controller
 
 		// gui
 		protected var playerView:PlayerView;
-		protected var controlsView:ControlsView;
+		//protected var controlsView:ControlsView;
 		//protected var subtitleView:SubtitleView;
 
 		// netstream stuff
@@ -152,13 +152,13 @@ package de.axelspringer.videoplayer.controller
 		//protected var akamaiHDController:AkamaiHDController;
 		private var _cachedVideoUrl:String;
 
-		public function PlayerController(playerView:PlayerView, controlsView:ControlsView) //, subtitleView:SubtitleView
+		public function PlayerController(playerView:PlayerView) //, controlsView:ControlsView, subtitleView:SubtitleView
 		{
 			super(this);
 
 			//// this.trackingController=new TrackingController();
             // TODO Selim - vast brauchen?
-			this.vastController=new VastController(playerView.adContainer, controlsView);
+			this.vastController=new VastController(playerView.adContainer);
 			this.vastController.addEventListener(AdEvent.ERROR, onAdError);
 			this.vastController.addEventListener(AdEvent.LINEAR_START, onAdLinearStart);
 			this.vastController.addEventListener(AdEvent.LINEAR_STOP, onAdLinearStop);
@@ -167,7 +167,7 @@ package de.axelspringer.videoplayer.controller
 
 
 			this.playerView=playerView;
-			this.controlsView=controlsView;
+			//this.controlsView=controlsView;
 			//this.subtitleView=subtitleView;
 			this.initPlayer()
 		}
@@ -202,9 +202,9 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.addEventListener(ControlEvent.RESIZE, onDisplayResize);
 			this.playerView.addEventListener(ControlEvent.AGE_RESTRICTION, onAgeRestrictionFeedback);
 
-			this.controlsView.addEventListener(ControlEvent.PLAYPAUSE_CHANGE, onPlayPauseChange);
+			/*this.controlsView.addEventListener(ControlEvent.PLAYPAUSE_CHANGE, onPlayPauseChange);
 			this.controlsView.addEventListener(ControlEvent.PROGRESS_CHANGE, onProgressChange);
-			this.controlsView.addEventListener(ControlEvent.VOLUME_CHANGE, onVolumeChange);
+			this.controlsView.addEventListener(ControlEvent.VOLUME_CHANGE, onVolumeChange);*/
 
 			this.playerView.dispatchEvent(new ControlEvent(ControlEvent.RESIZE));
 		}
@@ -231,7 +231,7 @@ package de.axelspringer.videoplayer.controller
 				//// this.trackingController.trackPlayerEvent("VOLUME_OFF");
 				this.savedVolume=this.soundTransform.volume;
 				this.muted=true;
-				if(this.controlsView.controls.muteBtn)this.controlsView.controls.muteBtn.phase= 1;
+				//if(this.controlsView.controls.muteBtn)this.controlsView.controls.muteBtn.phase= 1;
 				volume=Math.min(1, Math.max(0, volume));
 			}
 			else
@@ -240,7 +240,7 @@ package de.axelspringer.videoplayer.controller
 				this.muted=false;
 				
 				volume=Math.min(1, Math.max(0, volume));
-				if(this.controlsView.controls.muteBtn) this.controlsView.controls.muteBtn.phase= 0;
+				//if(this.controlsView.controls.muteBtn) this.controlsView.controls.muteBtn.phase= 0;
 				
 				//if(this.savedVolume < volume) // this.trackingController.trackPlayerEvent("VOLUME_UP");
 				//else // this.trackingController.trackPlayerEvent("VOLUME_DOWN");
@@ -256,7 +256,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				else
 				{
-					this.controlsView.setVolume(volume);
+					//this.controlsView.setVolume(volume);
 					this.soundTransform.volume=volume;
 
 					if (this.ns != null)
@@ -267,7 +267,7 @@ package de.axelspringer.videoplayer.controller
 			}
 			else
 			{
-				this.controlsView.setVolume(volume);
+				//this.controlsView.setVolume(volume);
 				this.soundTransform.volume=volume;
 
 				if (this.nsHD != null)
@@ -326,11 +326,9 @@ package de.axelspringer.videoplayer.controller
 				// this.trackingController.trackPlayerEvent("LIVE_OFF");			
 			}*/
 			
-			this.controlsView.updateTime(0);
-			this.controlsView.updatePlayProgress(0);
-//			this.controlsView.updateTime(BildTvDefines.startTime);
-//			this.controlsView.updatePlayProgress(BildTvDefines.startTime);
-			this.controlsView.setDuration(this.videoVO.duration);
+			//this.controlsView.updateTime(0);
+			//this.controlsView.updatePlayProgress(0);
+			//this.controlsView.setDuration(this.videoVO.duration);
 
 			//// this.trackingController.setClip(videoVO, trackingData);
 
@@ -495,9 +493,9 @@ package de.axelspringer.videoplayer.controller
 			this.adPlaying=false;
 			this.previousVideoTime = this.savedPosition;
 			// refresh clip info
-			this.controlsView.updateTime(this.savedPosition);
+			/*this.controlsView.updateTime(this.savedPosition);
 			this.controlsView.updatePlayProgress(this.savedPosition);
-			this.controlsView.setDuration(this.savedPosition);
+			this.controlsView.setDuration(this.savedPosition);*/
 			this.videoLoaded=0;
 			this.videoReached50=false;
 			this.onContentStart();
@@ -580,12 +578,11 @@ package de.axelspringer.videoplayer.controller
 			if (this.videoSrcPosition == 2)
 			{
 				this.playing=true;
-				this.controlsView.showAdControls(false);
+				//this.controlsView.showAdControls(false);
 				this.playerView.setPlayingStatus(true);
 			}
-			this.controlsView.setDuration(this.duration);
-//			this.controlsView.updateTime(BildTvDefines.startTime);
-			this.controlsView.updateTime(0);
+			/*this.controlsView.setDuration(this.duration);
+			this.controlsView.updateTime(0);*/
 
 			
 			if (this.videoIsStream)
@@ -607,7 +604,7 @@ package de.axelspringer.videoplayer.controller
 				//		// this.trackingController.trackPlayerEvent("LIVE_OFF");
 					}
 					
-					this.controlsView.enableSeeking(this.duration != -1);
+					//this.controlsView.enableSeeking(this.duration != -1);
 					this.streamConnects=1;
 					this.playStream();
 				}
@@ -623,13 +620,13 @@ package de.axelspringer.videoplayer.controller
 				{
 					if(!BildTvDefines.isBumper ) 
 					{
-						this.controlsView.enableSeeking( false );
+						//this.controlsView.enableSeeking( false );
 						this.duration = -1;
 					}
-					else this.controlsView.enableSeeking( true );
+					//else this.controlsView.enableSeeking( true );
 					
 				}
-				else this.controlsView.enableSeeking(true);
+				//else this.controlsView.enableSeeking(true);
 				//check if nc is already connected
 				if( this.nc.connected && this.nc.uri == "null" )
 				{
@@ -758,7 +755,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			trace(this + " ------ set playing  " + value);
 			this.isPlaying=value;
-			this.controlsView.setPlayingStatus(value);
+			//this.controlsView.setPlayingStatus(value);
 			this.playerView.setPlayingStatus(value);
 			//// this.trackingController.setPlayingStatus(value && !this.adPlaying && !BildTvDefines.isBumper);
 		}
@@ -781,10 +778,10 @@ package de.axelspringer.videoplayer.controller
 			//this.playerView.setDisplayButtonVisible( !value );	
 			this.playing=value;
 
-			if (!value)
+			/*if (!value)
 			{
 				this.controlsView.showAdControls(false);
-			}
+			}*/
 		}
 
 		protected function get adPlaying():Boolean
@@ -849,7 +846,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			trace( this + " onNetConnectionConnect: " + this.videoFile );
 		
-			if(this.controlsView.controls.hdBtn)
+			/*if(this.controlsView.controls.hdBtn)
 			{
 				if( this.videoVO.startHDQuality )
 				{
@@ -859,7 +856,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					 this.controlsView.controls.hdBtn.phase = 0;
 				}	
-			}
+			}*/
 			
 			this.nc = new NetConnection();
 			this.nc.connect(null);
@@ -1354,8 +1351,8 @@ package de.axelspringer.videoplayer.controller
 							
 							this.videoVO.duration=Number(this.duration);
 						//	// this.trackingController.setDuration( this.duration );
-							this.controlsView.setDuration( this.duration );
-							this.controlsView.enableSeeking(false);
+							/*this.controlsView.setDuration( this.duration );
+							this.controlsView.enableSeeking(false);*/
 						}	
 					}
 					// seeking in streams may trigger Play.Start, so check paused state
@@ -1367,7 +1364,7 @@ package de.axelspringer.videoplayer.controller
 						this.videoBufferFlushStatus=false;
 						
 					
-						this.controlsView.setPlayingStatus(true);
+						//this.controlsView.setPlayingStatus(true);
 
 						if (!this.playerView.display.hasEventListener(Event.ENTER_FRAME))
 						{
@@ -1407,11 +1404,11 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Play.Transition":
 				{
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","Bitratetransition: time:" + this.nsHD.time + "   index:"+e.info);		
-					if(this.controlsView.controls.hdBtn)
+					/*if(this.controlsView.controls.hdBtn)
 					{
 						//// this.trackingController.trackPlayerEvent("BITRATESWITCH_FINISH");
 						this.controlsView.controls.hdBtn.disabled = false;
-					}
+					}*/
 					break;
 				}		
 			}
@@ -1497,11 +1494,10 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Play.TransitionComplete":
 				{
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","Bitratetransition changed...finish: " + evt.index + " time:" + this.nsHD.time);
-					if(this.controlsView.controls.hdBtn) 
+					/*if(this.controlsView.controls.hdBtn)
 					{
-				//		// this.trackingController.trackPlayerEvent("BITRATESWITCH_FINISH");
-						this.controlsView.controls.hdBtn.disabled = false;	
-					}
+						this.controlsView.controls.hdBtn.disabled = false;
+					}*/
 					break;
 				}
 				case "NetStream.Seek.Notify":
@@ -1540,14 +1536,14 @@ package de.axelspringer.videoplayer.controller
 					{						
 			//			// this.trackingController.trackPlayerEvent("HD_ON");
 						this.nsHD.startingIndex = highestIndex;
-						if(this.controlsView.controls.hdBtn) this.controlsView.controls.hdBtn.phase = 1;					
+						//if(this.controlsView.controls.hdBtn) this.controlsView.controls.hdBtn.phase = 1;
 					}
 					catch(e:Error)
 					{
 					}
 				}
 				
-				if( highestIndex < 1 )
+				/*if( highestIndex < 1 )
 				{
 					this.controlsView.getSkin().styleHDBtn = null;							
 					
@@ -1558,7 +1554,7 @@ package de.axelspringer.videoplayer.controller
 					this.controlsView.controls.hdBtn = null; 
 					this.controlsView.controls.setBtnBackground();
 					this.controlsView.controls.resize();
-				}
+				}*/
 			}
 			
 			if(BildTvDefines.startTime != 0) 
@@ -1595,8 +1591,7 @@ package de.axelspringer.videoplayer.controller
 					{			
 						this.videoVO.duration=Number(data.duration);
 						this.duration=Number(data.duration);
-					//	// this.trackingController.setDuration( this.duration );
-						this.controlsView.setDuration( this.duration );				
+						//this.controlsView.setDuration( this.duration );
 						
 						//trace(this + "  setze falsche zeit aus der xml: " + videoVO.duration);
 						// deactivate midrolls if video is under 5 minutes
@@ -1614,9 +1609,8 @@ package de.axelspringer.videoplayer.controller
 				{
 					this.duration = -1;
 					BildTvDefines.isLivePlayer = true;
-				//	// this.trackingController.trackPlayerEvent("LIVE_ON");
-					this.controlsView.setDuration( this.duration );	
-					this.controlsView.enableSeeking(false);
+					//this.controlsView.setDuration( this.duration );
+					//this.controlsView.enableSeeking(false);
 				}
 				
 				//// this.trackingController.updateMetaData( this.duration );
@@ -1693,11 +1687,11 @@ package de.axelspringer.videoplayer.controller
 						playtime = this.nsHD.time + ( this.videoVO.duration - this.nsHD.duration );
 					}
 					
-					this.controlsView.updatePlayProgress(playtime);			
+					// this.controlsView.updatePlayProgress(playtime);
 				}
 				
 				//trace(this + "  " + playtime);
-				this.controlsView.updateTime(playtime);
+				// this.controlsView.updateTime(playtime);
 				//trace("this.showAds: " + this.showAds + "   this.isBumper: "+ this.isBumper + "   BildTvDefines.adType: " + BildTvDefines.adType);
 				/*if (this.subtitleView && !BildTvDefines.isBumper) //BildTvDefines.adType
 				{
@@ -1710,7 +1704,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					var progress:Number=playtime / this.duration;
 					//trace(this + " progress: " + progress + ":::"+ this.ns.time + "::" + this.duration);
-					this.controlsView.updatePlayProgress(progress);
+					// this.controlsView.updatePlayProgress(progress);
 
 					if (!BildTvDefines.isBumper && this.showAds && !this.videoReached50 && progress > 0.5)
 					{
@@ -1736,7 +1730,7 @@ package de.axelspringer.videoplayer.controller
 					if(this.nsHD.bytesTotal == 0) this.videoLoaded = 0;
 				}
 					
-				this.controlsView.updateLoadProgress(this.videoLoaded);
+				// this.controlsView.updateLoadProgress(this.videoLoaded);
 				// this.trackingController.updateBufferProgress(this.videoLoaded);
 				
 			}
@@ -1820,9 +1814,9 @@ package de.axelspringer.videoplayer.controller
 			this.contentStarted=false;
 
 			// reset time and progress
-			this.controlsView.setDuration(this.videoVO.duration);
-			this.controlsView.updateTime(0);
-			this.controlsView.updatePlayProgress(0);
+			// this.controlsView.setDuration(this.videoVO.duration);
+			// this.controlsView.updateTime(0);
+			// this.controlsView.updatePlayProgress(0);
 			
 			this.playerView.setImageVisible(true);
 			
@@ -1996,7 +1990,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				//trace("ist mute und neue Vol ist:" + vol);
 				vol = this.savedVolume;
-				if( this.controlsView.controls.muteBtn.phase == 0) this.setVolume(vol);
+				// if( this.controlsView.controls.muteBtn.phase == 0) this.setVolume(vol);
 			}
 			else
 			{
@@ -2062,10 +2056,10 @@ package de.axelspringer.videoplayer.controller
 
 			ExternalInterface.call("com.xoz.flash_logger.logTrace"," onAdLinearStop");
 
-			this.controlsView.showAdControls(false);
-			this.controlsView.enableSeeking(!this.isLivestream);
+			// this.controlsView.showAdControls(false);
+			// this.controlsView.enableSeeking(!this.isLivestream);
 			// refresh clip info
-			this.controlsView.setDuration(this.videoVO.duration);
+			// this.controlsView.setDuration(this.videoVO.duration);
 			if (!this.paused)
 			{
 				this.resume();
@@ -2106,8 +2100,8 @@ package de.axelspringer.videoplayer.controller
 				this.vastController.reset();
 				this.vastController.showDisplay(false);
 				this.vastController.showOverlay(false);
-				this.controlsView.showAdControls(false, adType);
-				this.controlsView.enableSeeking(!BildTvDefines.isLivePlayer);
+				// this.controlsView.showAdControls(false, adType);
+				// this.controlsView.enableSeeking(!BildTvDefines.isLivePlayer);
 				
 			}
 			else
@@ -2164,7 +2158,7 @@ package de.axelspringer.videoplayer.controller
 					else
 					{
 						// refresh clip info
-						this.controlsView.setDuration(this.videoVO.duration);
+						// this.controlsView.setDuration(this.videoVO.duration);
 						//trace("type:" + BildTvDefines.adType +"   playing:" +  this.playing +"  paused:"+ this.paused);
 						if ( !this.paused )
 						{
@@ -2464,14 +2458,14 @@ package de.axelspringer.videoplayer.controller
 				}
 				case CALLBACK_HD_ON:
 				{
-					if(this.controlsView.controls.hdBtn)this.controlsView.controls.hdBtn.phase= 1;
+					// if(this.controlsView.controls.hdBtn)this.controlsView.controls.hdBtn.phase= 1;
 					this.videoVO.startHDQuality = true;
 					this.setHDBitrate();
 					break;
 				}
 				case CALLBACK_HD_OFF:
 				{
-					if(this.controlsView.controls.hdBtn)this.controlsView.controls.hdBtn.phase= 0;	
+					// if(this.controlsView.controls.hdBtn)this.controlsView.controls.hdBtn.phase= 0;
 					this.videoVO.startHDQuality = false;
 					this.setHDBitrate();
 					break;
@@ -2510,7 +2504,7 @@ package de.axelspringer.videoplayer.controller
 				{			
 					var percent:Number = params.seekTime /this.duration;
 //					ExternalInterface.call("function(){if (window.console) console.log('SEEK TO : "+percent+"');}");
-					this.controlsView.controls.progressBar.changeProgressByExtern(percent);
+					// this.controlsView.controls.progressBar.changeProgressByExtern(percent);
 					//this.controlsView.updateTime( params.seekTime );
 					//this.controlsView.updatePlayProgress( percent );
 					//this.playerController.s ();
@@ -2630,15 +2624,15 @@ package de.axelspringer.videoplayer.controller
 				{
 					this.nsHD.startingIndex = index;
 					
-					if(this.controlsView.controls.hdBtn) this.controlsView.controls.hdBtn.disabled = true;	
+					// if(this.controlsView.controls.hdBtn) this.controlsView.controls.hdBtn.disabled = true;
 					
 					this.offsetVideoTime = 0;
 					
 					if (time<10)	
 					{
 						this.savedPosition = 0;
-						this.controlsView.updateTime(0);
-						this.controlsView.updatePlayProgress(0);
+						// this.controlsView.updateTime(0);
+						// this.controlsView.updatePlayProgress(0);
 						this.nsHD.play(this.videoFile);
 					}
 					else
@@ -2674,7 +2668,7 @@ package de.axelspringer.videoplayer.controller
 			this.showAds=true;
 
 			// controller for akamai streams
-			this.akamaiController=new AkamaiController(this.playerView, this.controlsView);
+			this.akamaiController=new AkamaiController(this.playerView); // , this.controlsView
 			this.akamaiController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
 			this.akamaiController.addEventListener(ControlEvent.PAUSE, externalPause);
 			this.akamaiController.addEventListener(ControlEvent.RESUME, externalResume);

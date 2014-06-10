@@ -32,7 +32,7 @@ package de.axelspringer.videoplayer.controller
 		
 		// views
 		public var playerView:PlayerView;
-		public var controlsView:ControlsView;
+		//public var controlsView:ControlsView;
 		//public var subtitleView:SubtitleView;
 		/* protected var shareView:ShareView;
 		protected var mailView:MailView;
@@ -74,13 +74,13 @@ package de.axelspringer.videoplayer.controller
 			
 			s = new Sprite();
 			this.stage.addChild( s );
-			this.controlsView = new ControlsView( s );
+			/*this.controlsView = new ControlsView( s );
 			this.controlsView.addEventListener( ControlEvent.PLAYPAUSE_CHANGE, forwardControlEvent );
 			this.controlsView.addEventListener( ControlEvent.PROGRESS_CHANGE, forwardControlEvent );
 			this.controlsView.addEventListener( ControlEvent.VOLUME_CHANGE, forwardControlEvent );
 			this.controlsView.addEventListener( ControlEvent.BUTTON_CLICK, forwardControlEvent );
 			this.controlsView.addEventListener( ControlEvent.BUTTON_OUT, forwardControlEvent );
-			this.controlsView.addEventListener( ControlEvent.BUTTON_OVER, forwardControlEvent );
+			this.controlsView.addEventListener( ControlEvent.BUTTON_OVER, forwardControlEvent );*/
 			
 			// add views under their NAME property to hashmap - skip ControlsView because it's always visible
 			this.views[ PlayerView.NAME ] = this.playerView;
@@ -115,7 +115,7 @@ package de.axelspringer.videoplayer.controller
 			} 
 		
 			// check if it's a movie player - if so, disable feature buttons			
-			if( this.config.filmVO != null )
+			/*if( this.config.filmVO != null )
 			{				
 				this.controlsView.setSkin( this.config.skinVO, this.config.adTextTextVO, true );
 			}
@@ -139,7 +139,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				
 				this.controlsView.setSkin( this.config.skinVO, this.config.adTextTextVO, (!BildTvDefines.isWeltPlayer && this.config.shareVO.shareStatus) );
-			}
+			}*/
 			
 			/*if(BildTvDefines.size == BildTvDefines.SIZE_BIG || BildTvDefines.size == BildTvDefines.SIZE_MEDIUM)
 			{
@@ -161,10 +161,10 @@ package de.axelspringer.videoplayer.controller
 		
 		public function externFullscreenChange( state:Boolean) :void
 		{
-			if( this.state != STATE_PLAY )
+			/*if( this.state != STATE_PLAY )
 			{
 				this.controlsView.dispatchEvent( new ControlEvent( ControlEvent.PLAYPAUSE_CHANGE ) );
-			}
+			}*/
 			
 			this.showView( PlayerView.NAME );
 			
@@ -173,11 +173,10 @@ package de.axelspringer.videoplayer.controller
 		
 		public function fullscreenChange( e:Event = null ) :void
 		{
-			if( this.state != STATE_PLAY )
+			/*if( this.state != STATE_PLAY )
 			{
-//				return;
 				this.controlsView.dispatchEvent( new ControlEvent( ControlEvent.PLAYPAUSE_CHANGE ) );
-			}
+			}*/
 			
 			this.showView( PlayerView.NAME );
 			
@@ -214,13 +213,13 @@ package de.axelspringer.videoplayer.controller
 		
 		public function resize() :void
 		{
-			this.controlsView.resizeControls( this.stage.stage.displayState );
+			// this.controlsView.resizeControls( this.stage.stage.displayState );
 			this.playerView.resize();
 			//this.shareView.resize();
 			//this.mailView.resize();
 			//this.endView.resize();
 			
-			this.controlsView.y = BildTvDefines.height - BildTvDefines.HEIGHT_CONTROLS;
+			// this.controlsView.y = BildTvDefines.height - BildTvDefines.HEIGHT_CONTROLS;
 		}
 		
 		protected function onFullscreenExit( e:Event ) :void
@@ -250,7 +249,7 @@ package de.axelspringer.videoplayer.controller
 				this.stage.stage.displayState = StageDisplayState.NORMAL;
 				this.stage.stage.removeEventListener( Event.RESIZE, onFullscreenExit );
 				
-				this.controlsView.show();
+				// this.controlsView.show();
 				this.playerView.setDisplaySizeDefault();
 			}
 		}
@@ -279,14 +278,14 @@ package de.axelspringer.videoplayer.controller
 				}*/
 				case ControlButton.BILDDE:
 				{
-					if( e.type == ControlEvent.BUTTON_OUT )
+					/*if( e.type == ControlEvent.BUTTON_OUT )
 					{
 						this.controlsView.controls.bilddeBtnTooltip.visible = false;
 					}
 					if( e.type == ControlEvent.BUTTON_OVER )
 					{	
 						this.controlsView.controls.bilddeBtnTooltip.visible = true;
-					}
+					}*/
 					if( e.type == ControlEvent.BUTTON_CLICK )
 					{		
 						var deeplinkUrl:String = this.config.shareVO.deeplinkUrl;

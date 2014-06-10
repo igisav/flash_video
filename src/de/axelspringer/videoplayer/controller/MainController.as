@@ -359,7 +359,7 @@ package de.axelspringer.videoplayer.controller
 			this.viewController.addEventListener( ControlEvent.BUTTON_OUT, onControlButtonClick );
 			this.viewController.addEventListener( ControlEvent.REPLAY, onReplayClick );
 			
-			this.playerController = new PlayerController( this.viewController.playerView, this.viewController.controlsView); //, this.viewController.subtitleView
+			this.playerController = new PlayerController( this.viewController.playerView); //, this.viewController.controlsView, this.viewController.subtitleView
             this.playerController.addEventListener( ControlEvent.ERROR, onError );
 			this.playerController.addEventListener( ControlEvent.ERROR_AVAILABLE, onErrorAvailable );
 			this.playerController.addEventListener( ControlEvent.ERROR_GEO, onErrorGeo );

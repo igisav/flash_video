@@ -41,7 +41,7 @@ package de.axelspringer.videoplayer.vpaid.controller
 	public class VPaidController extends EventDispatcher
 	{
 		protected var playerView:VastPlayerView;
-		protected var controlsView:ControlsView;
+		// protected var controlsView:ControlsView;
 		
 		protected var vpaid:VPaidWrapper;
 		protected var ad:IVpaidAd;
@@ -60,12 +60,12 @@ package de.axelspringer.videoplayer.vpaid.controller
 		
 		protected var hideTimer:Timer;
 		
-		public function VPaidController( playerView:VastPlayerView, controlsView:ControlsView )
+		public function VPaidController( playerView:VastPlayerView )
 		{
 			super( this );
 			
 			this.playerView = playerView;
-			this.controlsView = controlsView;
+			// this.controlsView = controlsView;
 			
 			this.init();
 		}
@@ -102,11 +102,11 @@ package de.axelspringer.videoplayer.vpaid.controller
 			trace(this + " load swf: " + ad.swfUrl);
 			this.loadAd( ad.swfUrl );
 			
-			if( BildTvDefines.isWidgetPlayer )
+			/*if( BildTvDefines.isWidgetPlayer )
 			{	
 				var yOffset:Number = this.controlsView.controls.background.height - this.controlsView.controls.background.y + 5;
 				this.playerView.overlay.y -= yOffset;
-			}
+			}*/
 		}
 		
 		public function setSize( size:Rectangle, fullscreenData:FullscreenData ) :void
@@ -446,7 +446,7 @@ package de.axelspringer.videoplayer.vpaid.controller
 			if( this.adPlacement != VastDefines.ADTYPE_OVERLAY )
 			{
 				this.playerView.showBackground( true );
-				this.controlsView.showAdControls( true, this.adPlacement );
+				// this.controlsView.showAdControls( true, this.adPlacement );
 			}
 			
 			if( this.vpaid.adLinear )
@@ -508,11 +508,11 @@ package de.axelspringer.videoplayer.vpaid.controller
 			
 			if( this.vpaid.adLinear )
 			{
-				this.controlsView.showAdControls( true, VastDefines.ADTYPE_OVERLAY );
-				this.controlsView.updateTime( 0 );
-				this.controlsView.updatePlayProgress( 0 )
-				this.controlsView.setDuration( isNaN( this.vpaid.adRemainingTime ) ? 0 : this.vpaid.adRemainingTime );
-				this.controlsView.enableSeeking( false );
+				// this.controlsView.showAdControls( true, VastDefines.ADTYPE_OVERLAY );
+				// this.controlsView.updateTime( 0 );
+				// this.controlsView.updatePlayProgress( 0 )
+				// this.controlsView.setDuration( isNaN( this.vpaid.adRemainingTime ) ? 0 : this.vpaid.adRemainingTime );
+				// this.controlsView.enableSeeking( false );
 				
 				this.playerView.showBackground( true );
 				
@@ -528,10 +528,10 @@ package de.axelspringer.videoplayer.vpaid.controller
 		{
 //			trace( this + " onAdRemainingTimeChanged" );
 			
-			if( this.vpaid.adLinear )
+			/*if( this.vpaid.adLinear )
 			{
 				this.controlsView.setDuration( this.vpaid.adRemainingTime );
-			}
+			}*/
 		}
 		
 		protected function onHideTimer( event:TimerEvent ) :void

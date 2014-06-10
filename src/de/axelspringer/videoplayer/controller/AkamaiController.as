@@ -39,7 +39,7 @@ package de.axelspringer.videoplayer.controller
 		
 		// gui
 		protected var playerView:PlayerView;
-		protected var controlsView:ControlsView;
+		// protected var controlsView:ControlsView;
 		// protected var trackingController:TrackingController;
 		
 		// stream
@@ -82,12 +82,11 @@ package de.axelspringer.videoplayer.controller
 		// livestreams: check session periodically to avoid multiple logins
 		protected var sessionPinger:SessionPinger;
 		
-		public function AkamaiController( playerView:PlayerView, controlsView:ControlsView)
+		public function AkamaiController( playerView:PlayerView)
 		{
 			super( this );
 			
 			this.playerView = playerView;
-			this.controlsView = controlsView;
 			// this.trackingController = trackingController;
 
 			this.init();
@@ -101,7 +100,7 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.addEventListener( ControlEvent.PROGRESS_CHANGE, onChapterChange );
 
 			// controller for jingles -> different stream!
-			this.jingleController = new JinglePlayerController( this.playerView, this.controlsView );
+			this.jingleController = new JinglePlayerController( this.playerView );
 			this.jingleController.addEventListener( ControlEvent.JINGLE_FINISHED, onJingleFinished );
 			this.jingleController.addEventListener( ControlEvent.LOADERANI_CHANGE, forwardEvent );
 
@@ -264,7 +263,7 @@ package de.axelspringer.videoplayer.controller
 
 		public function setVolume( volume:Number ) :void
 		{
-			this.controlsView.setVolume( volume );
+			// this.controlsView.setVolume( volume );
 			this.soundTransform.volume = volume;
 
 			if( this.netstream != null )
@@ -313,7 +312,7 @@ package de.axelspringer.videoplayer.controller
 		public function resumeAfterMidroll() :void
 		{
 			// refresh clip info
-			this.controlsView.setDuration( this.duration );
+			// this.controlsView.setDuration( this.duration );
 
 			this.resume();
 
@@ -345,7 +344,7 @@ package de.axelspringer.videoplayer.controller
 				// livestreams
 				if( BildTvDefines.isLivePlayer )
 				{
-					this.controlsView.enable( false );
+					// this.controlsView.enable( false );
 					this.playerView.setDisplayButtonVisible( false );
 				}
 				// vod
@@ -375,7 +374,7 @@ package de.axelspringer.videoplayer.controller
 		{
 //			trace(this+" ------  playing  "+value);
 			this.isPlaying = value;
-			this.controlsView.setPlayingStatus( value );
+			// this.controlsView.setPlayingStatus( value );
 			this.playerView.setPlayingStatus( value );
 			// this.trackingController.setPlayingStatus( value );
 		}
@@ -407,9 +406,9 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.playing = true;
 				this.paused = false;
-				this.controlsView.setDuration( this.duration );
-				this.controlsView.updateTime( 0 );
-				this.controlsView.updatePlayProgress( 0 );
+				// this.controlsView.setDuration( this.duration );
+				// this.controlsView.updateTime( 0 );
+				// this.controlsView.updatePlayProgress( 0 );
 
 				if( BildTvDefines.isMoviePlayer && this.filmVO.chapters.length > 1 )
 				{
@@ -417,7 +416,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				if( BildTvDefines.isLivePlayer )
 				{
-					this.controlsView.enableSeeking( false );
+					// this.controlsView.enableSeeking( false );
 				}
 			}
 
@@ -452,9 +451,9 @@ package de.axelspringer.videoplayer.controller
 			this.netstream.resume();
 
 			// refresh info
-			this.controlsView.setDuration( this.duration );
-			this.controlsView.updateTime( 0 );
-			this.controlsView.updatePlayProgress( 0 );
+			// this.controlsView.setDuration( this.duration );
+			// this.controlsView.updateTime( 0 );
+			// this.controlsView.updatePlayProgress( 0 );
 			this.playerView.chapterList.updateTime( 0 );
 
 			this.clip2play = CLIP_CONTENT;
@@ -553,7 +552,7 @@ package de.axelspringer.videoplayer.controller
 				this.duration = Number( e.data.duration );
 				if( !this.initializingMovieStream )
 				{
-					this.controlsView.setDuration( this.duration );
+					// this.controlsView.setDuration( this.duration );
 				}
 			}
 
@@ -694,14 +693,14 @@ package de.axelspringer.videoplayer.controller
 				return;
 			}
 
-			this.controlsView.updateTime( this.netstream.time );
+			// this.controlsView.updateTime( this.netstream.time );
 			// this.trackingController.updatePlayProgress( this.netstream.time );
 
 			if( this.duration > 0 )
 			{
 				var progress:Number = this.netstream.time / this.duration;
 
-				this.controlsView.updatePlayProgress( progress );
+				// this.controlsView.updatePlayProgress( progress );
 				this.playerView.chapterList.updateTime( this.netstream.time );
 			}
 		}
