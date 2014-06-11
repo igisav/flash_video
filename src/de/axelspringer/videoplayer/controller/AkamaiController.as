@@ -49,7 +49,7 @@ package de.axelspringer.videoplayer.controller
 		
 		// midrolls
 		protected var midrollTimer:PausableTimer;
-		protected var jingleController:JinglePlayerController;
+		// protected var jingleController:JinglePlayerController;
 		
 		// data
 		protected var filmVO:FilmVO;
@@ -66,7 +66,7 @@ package de.axelspringer.videoplayer.controller
 		protected var clip2play:String;
 		protected var isPlaying:Boolean;
 		protected var isAdPlaying:Boolean;
-		protected var isJinglePlaying:Boolean;
+		//protected var isJinglePlaying:Boolean;
 		protected var paused:Boolean;
 		protected var videoBufferEmptyStatus:Boolean;
 		protected var videoBufferFlushStatus:Boolean;
@@ -100,10 +100,10 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.addEventListener( ControlEvent.PROGRESS_CHANGE, onChapterChange );
 
 			// controller for jingles -> different stream!
-			this.jingleController = new JinglePlayerController( this.playerView );
+			/*this.jingleController = new JinglePlayerController( this.playerView );
 			this.jingleController.addEventListener( ControlEvent.JINGLE_FINISHED, onJingleFinished );
 			this.jingleController.addEventListener( ControlEvent.LOADERANI_CHANGE, forwardEvent );
-
+*/
 			// midrolls every 10 minutes
 			this.midrollTimer = new PausableTimer( 10 * 60 * 1000 );
 			this.midrollTimer.addEventListener( TimerEvent.TIMER, onMidrollTimer );
@@ -914,16 +914,16 @@ package de.axelspringer.videoplayer.controller
 			this.pause( false );
 
 			// play jingle
-			this.isJinglePlaying = true;
+			//this.isJinglePlaying = true;
 			this.clip2play = type;
-			this.jingleController.playJingle( this.filmVO.jingleServer, url, this.soundTransform );
+			//this.jingleController.playJingle( this.filmVO.jingleServer, url, this.soundTransform );
 		}
 
 		protected function onJingleFinished( event:ControlEvent ) :void
 		{
 			trace( this + " onJingleFinished: " + this.clip2play );
 
-			this.isJinglePlaying = false;
+			//this.isJinglePlaying = false;
 			this.playerView.chapterList.visible = (this.filmVO.chapters.length > 1);
 
 			switch( this.clip2play )
@@ -982,11 +982,12 @@ package de.axelspringer.videoplayer.controller
 		{
 			//trace( "----------------> " + this + " externalPlay" );
 			
-			if( this.isJinglePlaying )
+			/*if( this.isJinglePlaying )
 			{
 				this.jingleController.resume();
 			}
-			else if( this.isAdPlaying )
+			else */
+            if( this.isAdPlaying )
 			{
 				this.dispatchEvent( new ControlEvent( ControlEvent.RESUME ) );
 			}
@@ -1003,11 +1004,12 @@ package de.axelspringer.videoplayer.controller
 		{
 			trace( "----------------> " + this + " externalPause" );
 			
-			if( this.isJinglePlaying )
+			/*if( this.isJinglePlaying )
 			{
 				this.jingleController.pause();
 			}
-			else if( this.isAdPlaying )
+			else*/
+            if( this.isAdPlaying )
 			{
 				this.dispatchEvent( new ControlEvent( ControlEvent.PAUSE ) );
 			}
