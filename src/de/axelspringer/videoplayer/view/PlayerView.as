@@ -45,7 +45,7 @@ package de.axelspringer.videoplayer.view
 		protected var skin:SkinVO;
 		
 		protected var imageMc:Sprite;
-		protected var displayBtn:DisplayButton;
+		//protected var displayBtn:DisplayButton;
 
 		protected var initWidth:Number;
 		protected var initHeight:Number;
@@ -128,20 +128,19 @@ package de.axelspringer.videoplayer.view
 		public function setSkin( skin:SkinVO ) :void
 		{
 			this.skin = skin;
-			this.displayBtn = new DisplayButton(this.skin.cssSprite,this.skin.styleBigPlay.skinWidth, this.skin.styleBigPlay.skinHeight,this.skin.styleBigPlay.skinX, this.skin.styleBigPlay.skinY, 2);
-				
+		/*	this.displayBtn = new DisplayButton(this.skin.cssSprite,this.skin.styleBigPlay.skinWidth, this.skin.styleBigPlay.skinHeight,this.skin.styleBigPlay.skinX, this.skin.styleBigPlay.skinY, 2);
+
 			if(true == BildTvDefines.isEmbedPlayer)
 			{
 				this.displayBtn.phase++;
-			}
+			}*/
 			
 			this.videoBtn.addEventListener( MouseEvent.ROLL_OVER, onDisplayMouseOver );
 			this.videoBtn.addEventListener( MouseEvent.ROLL_OUT, onDisplayMouseOut );
 			this.videoBtn.addEventListener( MouseEvent.MOUSE_MOVE, onDisplayMouseMove );
-			this.displayBtn.addEventListener( MouseEvent.ROLL_OVER, onDisplayMouseOver );
+			/*this.displayBtn.addEventListener( MouseEvent.ROLL_OVER, onDisplayMouseOver );
 			this.displayBtn.addEventListener( MouseEvent.ROLL_OUT, onDisplayMouseOut );
 			this.displayBtn.addEventListener( MouseEvent.MOUSE_MOVE, onDisplayMouseMove );
-			//this.displayBtn.mouseEnabled = false;
 			this.displayBtn.addEventListener( ControlEvent.BUTTON_CLICK, onDisplayClick );
 			this.displayBtn.addEventListener( ControlEvent.DOUBLE_CLICK, onDisplayDoubleClick );
 			this.stage.addChild( this.displayBtn );
@@ -151,7 +150,7 @@ package de.axelspringer.videoplayer.view
 				this.displayBtn.visible = false;
 			}
 			
-			this.displayBtn.onMouseOut();
+			this.displayBtn.onMouseOut();*/
 		}
 		
 		public override function resize() :void
@@ -175,18 +174,18 @@ package de.axelspringer.videoplayer.view
 		
 		public function supressPlayDisplayButton( val:Boolean ) :void
 		{			
-			if(this.displayBtn)this.displayBtn.supressShow(val);
+			//if(this.displayBtn)this.displayBtn.supressShow(val);
 		}
 		
 		public function setPlayingStatus( playing:Boolean ) :void
 		{
 			trace(this+" setPlayingSatus "+playing);
-			if(this.displayBtn)
+			/*if(this.displayBtn)
 			{
 				if(playing == true)this.displayBtn.phase = 1;
 				if(playing == false)this.displayBtn.phase = 0;
 				this.displayBtn.playing = playing;
-			} 
+			} */
 		
 			// for ViewController
 			if( playing )
@@ -203,16 +202,16 @@ package de.axelspringer.videoplayer.view
 		public function setDisplayButtonVisible( visible:Boolean = true ) :void
 		{
 		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ setDisplayButtonVisible: " + visible + " ~~~~~~~~~~~~~~~~~~~~~~" );
-			if(this.displayBtn && BildTvDefines.isEmbedPlayer)
+		/*	if(this.displayBtn && BildTvDefines.isEmbedPlayer)
 			{
 				this.displayBtn.visible = visible;
-			}
+			}*/
 		}
 		
 		public function setDisplayButtonAsPlayPauseButton( isPlayPauseBtn:Boolean = true ) :void
 		{
 		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ isPlayPauseBtn: " + isPlayPauseBtn + " ~~~~~~~~~~~~~~~~~~~~~~" );
-			if(this.displayBtn)this.displayBtn.isPlayPauseButton = isPlayPauseBtn;
+		//	if(this.displayBtn)this.displayBtn.isPlayPauseButton = isPlayPauseBtn;
 		}
 				
 		public function setDisplaySizeDefault() :void
@@ -307,13 +306,11 @@ package de.axelspringer.videoplayer.view
 			this.background.height = this.currentHeight;
 			this.videoBtn.width = this.currentWidth;
 			this.videoBtn.height = this.currentHeight;
-			if(this.displayBtn)
+			/*if(this.displayBtn)
 			{
 				this.displayBtn.x = Math.round( ( this.currentWidth - this.displayBtn.width ) / 2 );
 				this.displayBtn.y = Math.round( ( this.currentHeight - this.displayBtn.height ) / 2 );
-				//this.displayBtn.btnMc.width = this.currentWidth;
-				//this.displayBtn.btnMc.height = this.currentHeight;
-			}
+			}*/
 			
 			this.onImageLoaded( null );
 			
@@ -345,28 +342,25 @@ package de.axelspringer.videoplayer.view
 		}
 		protected function onDisplayMouseOver( e:MouseEvent ):void
 		{
-			//trace("over");
-			if( this.wasFullscreen == true )
+			/*if( this.wasFullscreen == true )
 			{
-				//trace("but fullscreen, so fade out");
 				this.displayBtn.onMouseOut();
 			}
 			else
 			{
-				//trace("so fade in");
-				this.displayBtn.onMouseOver();				
-			}
+				this.displayBtn.onMouseOver();
+			}*/
 		}
 		protected function onDisplayMouseMove( e:MouseEvent ):void
 		{
 			//trace("over");
-			this.displayBtn.onMouseMove();
+			//this.displayBtn.onMouseMove();
 		}
 		
 		protected function onDisplayMouseOut( e:MouseEvent ):void
 		{
 			//trace("out");
-			this.displayBtn.onMouseOut();
+			//this.displayBtn.onMouseOut();
 		}
 		
 		protected function onDisplayDoubleClick( e:ControlEvent ) :void
