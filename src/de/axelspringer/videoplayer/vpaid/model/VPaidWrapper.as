@@ -1,6 +1,8 @@
 package de.axelspringer.videoplayer.vpaid.model
 {
-	import flash.display.DisplayObject;
+    import de.axelspringer.videoplayer.util.Log;
+
+    import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	

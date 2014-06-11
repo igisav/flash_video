@@ -13,7 +13,9 @@ package de.axelspringer.videoplayer.controller
 	import de.axelspringer.videoplayer.model.vo.FilmVO;
 	import de.axelspringer.videoplayer.model.vo.FullscreenData;
 	import de.axelspringer.videoplayer.model.vo.StreamingVO;
-	//import de.axelspringer.videoplayer.model.vo.TrackingVO;
+    import de.axelspringer.videoplayer.util.Log;
+
+    //import de.axelspringer.videoplayer.model.vo.TrackingVO;
 	import de.axelspringer.videoplayer.model.vo.VideoVO;
 	import de.axelspringer.videoplayer.util.XmlLoader;
 	import de.axelspringer.videoplayer.vast.VastController;
@@ -158,6 +160,7 @@ package de.axelspringer.videoplayer.controller
 
 			//// this.trackingController=new TrackingController();
             // TODO Selim - vast brauchen?
+            // TODO Log messages to JS (see util.Log),
 			this.vastController=new VastController(playerView.adContainer);
 			this.vastController.addEventListener(AdEvent.ERROR, onAdError);
 			this.vastController.addEventListener(AdEvent.LINEAR_START, onAdLinearStart);

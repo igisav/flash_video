@@ -10,7 +10,8 @@ package de.axelspringer.videoplayer.controller
 	import de.axelspringer.videoplayer.model.vo.FilmVO;
 	import de.axelspringer.videoplayer.model.vo.StreamingVO;
 	import de.axelspringer.videoplayer.model.vo.VideoVO;
-	import de.axelspringer.videoplayer.util.PausableTimer;
+    import de.axelspringer.videoplayer.util.Log;
+    import de.axelspringer.videoplayer.util.PausableTimer;
 	import de.axelspringer.videoplayer.util.SessionPinger;
 	import de.axelspringer.videoplayer.view.ControlsView;
 	import de.axelspringer.videoplayer.view.PlayerView;

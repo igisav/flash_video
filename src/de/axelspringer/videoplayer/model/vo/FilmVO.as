@@ -2,7 +2,7 @@ package de.axelspringer.videoplayer.model.vo
 {
 	import de.axelspringer.videoplayer.model.vo.base.BaseVO;
 	
-	import tv.tvnext.stdlib.utils.StringUtils;
+	// import tv.tvnext.stdlib.utils.StringUtils;
 
 	public class FilmVO extends BaseVO
 	{
