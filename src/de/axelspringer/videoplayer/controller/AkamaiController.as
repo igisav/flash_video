@@ -257,7 +257,7 @@ package de.axelspringer.videoplayer.controller
 				trace( this + " set buffertime to " + this.netstream.bufferTime );
 
 				this.netstream.seek( newTime );
-				this.playerView.chapterList.updateTime( newTime );
+				//this.playerView.chapterList.updateTime( newTime );
 			}
 		}
 
@@ -454,7 +454,7 @@ package de.axelspringer.videoplayer.controller
 			// this.controlsView.setDuration( this.duration );
 			// this.controlsView.updateTime( 0 );
 			// this.controlsView.updatePlayProgress( 0 );
-			this.playerView.chapterList.updateTime( 0 );
+			//this.playerView.chapterList.updateTime( 0 );
 
 			this.clip2play = CLIP_CONTENT;
 			this.trackReplay = true;
@@ -701,7 +701,7 @@ package de.axelspringer.videoplayer.controller
 				var progress:Number = this.netstream.time / this.duration;
 
 				// this.controlsView.updatePlayProgress( progress );
-				this.playerView.chapterList.updateTime( this.netstream.time );
+				//this.playerView.chapterList.updateTime( this.netstream.time );
 			}
 		}
 
@@ -924,7 +924,7 @@ package de.axelspringer.videoplayer.controller
 			trace( this + " onJingleFinished: " + this.clip2play );
 
 			//this.isJinglePlaying = false;
-			this.playerView.chapterList.visible = (this.filmVO.chapters.length > 1);
+			//this.playerView.chapterList.visible = (this.filmVO.chapters.length > 1);
 
 			switch( this.clip2play )
 			{

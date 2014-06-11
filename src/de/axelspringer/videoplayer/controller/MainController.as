@@ -21,11 +21,11 @@ package de.axelspringer.videoplayer.controller
 	{
 		protected var xmlInitialized:Boolean;
 		protected var jsInitialized:Boolean;
-		protected var cssInitialized:Boolean;
+		// protected var cssInitialized:Boolean;
 		protected var cssUrl:String = "";
 		protected var root:Sprite;
 		protected var stage:Sprite;
-		protected var loaderAni:LoaderAni;
+		//protected var loaderAni:LoaderAni;
 //		protected var errorUi:ErrorUi;
 		protected var config:ConfigVO;
 		
@@ -55,8 +55,8 @@ package de.axelspringer.videoplayer.controller
 			
 			this.setSize();
 			
-			this.loaderAni = new LoaderAni();
-			this.root.addChild( this.loaderAni );
+			/*this.loaderAni = new LoaderAni();
+			this.root.addChild( this.loaderAni );*/
 			
 			this.root.stage.addEventListener( Event.RESIZE, onStageResize );
 		}
@@ -102,7 +102,7 @@ package de.axelspringer.videoplayer.controller
 		public function init( startXmlURL:String ="", cssURL:String="", jsURL:String="", adType:String="", autoplay:String="", time:Number = 0 ) :void
 		{
 			this.xmlInitialized = false;
-			this.cssInitialized = false;
+			// this.cssInitialized = false;
 			this.jsInitialized = false;
 				
 			this.config = new ConfigVO();
@@ -147,7 +147,7 @@ package de.axelspringer.videoplayer.controller
 //				this.xmlInitialized = true;
 			}
 			//trace(" css load: " + cssURL);
-			if(cssURL!= null && cssURL != "")
+			/*if(cssURL!= null && cssURL != "")
 			{
 				this.cssUrl = cssURL.substring(0,cssURL.lastIndexOf("/") + 1);
 				this.loadCSS(cssURL);
@@ -155,10 +155,9 @@ package de.axelspringer.videoplayer.controller
 			else
 			{
 				this.cssLoaded();
-				//this.cssInitialized = true;
-			}
+			}*/
 			//trace(" js load: " + jsURL);
-			
+
 			if(jsURL!= null && jsURL != "" && cssURL!= null && cssURL != "")
 			{
 				this.loadJS(jsURL, cssURL);	
@@ -181,11 +180,9 @@ package de.axelspringer.videoplayer.controller
 		
 		protected function start() :void
 		{
-			var consolstring:String = "Starte den Player. Daten geladen? xml js css:"+ this.xmlInitialized +"..."+this.jsInitialized +"..."+this.cssInitialized + "  ready send? " + this.readySignalsended;
-			
 //			ExternalInterface.call("com.xoz.flash_logger.logTrace",consolstring);
            			
-			if( false == this.readySignalsended && true == this.jsInitialized && true == this.cssInitialized)
+			if( false == this.readySignalsended && true == this.jsInitialized)
 			{
 				this.readySignalsended = true;
 				var userAgent:String = ExternalInterface.call("function(){return navigator.userAgent}")
@@ -209,7 +206,7 @@ package de.axelspringer.videoplayer.controller
 				}
 			}	
 			
-			if( true == this.xmlInitialized && true == this.jsInitialized && true == this.cssInitialized)
+			if( true == this.xmlInitialized && true == this.jsInitialized)
 			{
 //				ExternalInterface.call("com.xoz.flash_logger.logTrace","Embed: " + BildTvDefines.isEmbedPlayer);
 								
@@ -258,7 +255,7 @@ package de.axelspringer.videoplayer.controller
 		{
 //			ExternalInterface.call("com.xoz.flash_logger.logTrace","GET XML FILE IN FLASH ");
 			var videoXml:XML = XML(unescape(String(xml)));
-			this.setLoaderAniVisibility( false );	
+			// this.setLoaderAniVisibility( false );
 			this.config.xmlUrl = "";				
 			this.config.hydrate( videoXml );
 			ExternalInterface.call("com.xoz.flash_logger.logTrace","GET XML FILE IN FLASH ,SRC IS: " + this.config.videoVO.videoUrl);
@@ -364,7 +361,7 @@ package de.axelspringer.videoplayer.controller
 			this.playerController.addEventListener( ControlEvent.ERROR_AVAILABLE, onErrorAvailable );
 			this.playerController.addEventListener( ControlEvent.ERROR_GEO, onErrorGeo );
 			this.playerController.addEventListener( ControlEvent.VIDEO_FINISH, onVideoFinish );
-			this.playerController.addEventListener( ControlEvent.LOADERANI_CHANGE, onShowLoaderAni );
+			//this.playerController.addEventListener( ControlEvent.LOADERANI_CHANGE, onShowLoaderAni );
 			this.playerController.setVolume( 0.5 );
 			
 			//this.subtitleController = new SubtitleController( this.viewController.playerView, this.viewController.controlsView );
@@ -380,11 +377,11 @@ package de.axelspringer.videoplayer.controller
 			this.viewController.setConfig( this.config );
 			
 			// set LoaderUi skinning
-			var styleObjectLoader:SkinBaseVO = this.config.skinVO.styleLoader;
+			/*var styleObjectLoader:SkinBaseVO = this.config.skinVO.styleLoader;
 			if( styleObjectLoader != null )
 			{
 				this.loaderAni.setSkin( styleObjectLoader);
-			}
+			}*/
 			
 			// different action depending on type of player - video player vs. movie player vs. live player
 			if( this.config.filmVO != null )
@@ -459,7 +456,7 @@ package de.axelspringer.videoplayer.controller
  * CSS HANDLING
  ************************************************************************************************/
  		
- 		private function loadCSS(cssURL:String):void
+ 		/*private function loadCSS(cssURL:String):void
 		{
 			var cssLoader:URLLoader = new URLLoader();
 		   cssLoader.load(new URLRequest(cssURL));   
@@ -553,7 +550,7 @@ package de.axelspringer.videoplayer.controller
 		private function onLoadError(ioError:IOErrorEvent):void
 		{
 			ExternalInterface.call("com.xoz.flash_logger.logTrace","Spritesheet nicht geladen:" +ioError.text);
-		}
+		}*/
 		
 		
 		
@@ -607,7 +604,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			//trace( this + " loadXml: " + url );
 			
-			this.setLoaderAniVisibility( true );
+			//this.setLoaderAniVisibility( true );
 
 			var xmlLoader:XmlLoader = new XmlLoader();
 			xmlLoader.addEventListener( XmlEvent.XML_LOADED, onXmlLoaded, false, 0, true );
@@ -619,9 +616,8 @@ package de.axelspringer.videoplayer.controller
 		{
 			ExternalInterface.call("com.xoz.flash_logger.logTrace","XML geladen");
 			
-			this.setLoaderAniVisibility( false );
-			
-			
+			//this.setLoaderAniVisibility( false );
+
 			this.config.xmlUrl = LinkUtil.absoluteLink( e.url );
 			
 			this.config.hydrate( e.xml );
@@ -635,7 +631,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			trace( "onXmlError: " + e.text );
 			
-			this.setLoaderAniVisibility( false );
+			//this.setLoaderAniVisibility( false );
 			
 			this.showError( true, BildTvDefines.TEXT_ERROR_HEADER, BildTvDefines.TEXT_ERROR_INFO_DEFAULT );		
 		}
@@ -861,9 +857,8 @@ package de.axelspringer.videoplayer.controller
 			this.playerController.replay();
 		}
 		
-		protected function onShowLoaderAni( e:ControlEvent ) :void
+		/*protected function onShowLoaderAni( e:ControlEvent ) :void
 		{
-			// data: { visible:true, stream:this.ns }
 			this.setLoaderAniVisibility( e.data.visible, e.data.stream );
 		}
 		
@@ -876,11 +871,10 @@ package de.axelspringer.videoplayer.controller
 			}
 			else
 			{
-				//trace("playtype: " + this.playerController.clipType + "     adType:" + BildTvDefines.adType);
 				this.loaderAni.visible = false;
 			}
 
-		}
+		}*/
 		
 		protected function openPopup() :void
 		{
@@ -989,7 +983,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.viewController.resize();
 			}
-			this.loaderAni.resize();
+			//this.loaderAni.resize();
 		}
 	}
 }

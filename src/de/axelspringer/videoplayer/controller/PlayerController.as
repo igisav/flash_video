@@ -738,7 +738,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				// clear overlay timeout
 				clearTimeout(this.overlayTimeout);
-				this.playerView.adLabel.visible = false;
+				//this.playerView.adLabel.visible = false;
 				this.adPlaying=true;
 				this.vastController.load(this.adData.postroll, VastDefines.ADTYPE_POSTROLL);
 			}
@@ -773,7 +773,7 @@ package de.axelspringer.videoplayer.controller
 			trace(this + "  +++++ adPlaying:  " + value + "::" + this.videoStopped);
 			this.isAdPlaying=value;
 			this.playerView.videoBtn.visible=!value;
-			this.playerView.adLabel.text=(value) ? this.adData.adText : "";
+			//this.playerView.adLabel.text=(value) ? this.adData.adText : "";
 
 			//this.playerView.setDisplayButtonVisible( !value );	
 			this.playing=value;
@@ -2109,7 +2109,7 @@ package de.axelspringer.videoplayer.controller
 				adType = adPlacement;
 			}
 			
-			this.playerView.adLabel.text="";
+			//this.playerView.adLabel.text="";
 
 			ExternalInterface.call("com.xoz.flash_logger.logTrace","onAdEnd: type from VAST:"+adType);
 			

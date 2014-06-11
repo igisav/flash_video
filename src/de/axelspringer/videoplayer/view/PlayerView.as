@@ -33,11 +33,11 @@ package de.axelspringer.videoplayer.view
 		public var display:Video;
 //		public var displayHD:AkamaiVideoSurface;
 		public var adContainer:MovieClip;
-		public var adLabel:AdLabel;
+		//public var adLabel:AdLabel;
 		public var videoBtn:Sprite;
 		
 		// movieplayer only
-		public var chapterList:ChapterListUi;
+		//public var chapterList:ChapterListUi;
 		public var endscreenTeaserplayer:EndscreenTeaserplayerUi;
 		public var logoMovieplayer:LogoMovieplayer;
 		//
@@ -86,10 +86,10 @@ package de.axelspringer.videoplayer.view
 			this.stage.addChild( this.imageMc );
 			
 			// movieplayer only
-			this.chapterList = new ChapterListUi();
+			/*this.chapterList = new ChapterListUi();
 			this.chapterList.addEventListener( ControlEvent.PROGRESS_CHANGE, onMovieProgressChange );
 			this.chapterList.visible = false;
-			this.stage.addChild( this.chapterList );
+			this.stage.addChild( this.chapterList );*/
 			
 			this.endscreenTeaserplayer = new EndscreenTeaserplayerUi();
 			this.endscreenTeaserplayer.visible = false;
@@ -103,13 +103,13 @@ package de.axelspringer.videoplayer.view
 			this.adContainer = new MovieClip();
 			this.stage.addChild( this.adContainer );
 			
-			this.adLabel = new AdLabel();
+			/*this.adLabel = new AdLabel();
 			this.stage.addChild( this.adLabel );
-			
+
 			if(!BildTvDefines.isEmbedPlayer)
 			{
 				this.adLabel.visible = false;
-			}
+			}*/
 			
 			this.videoBtn = new Sprite();
 			this.videoBtn.graphics.beginFill( 0, 0 );
@@ -257,10 +257,10 @@ package de.axelspringer.videoplayer.view
 		 */
 		public function createChapterlist( data:Array ) :void
 		{
-			if( data != null && data.length > 0 )
+			/*if( data != null && data.length > 0 )
 			{
 				this.chapterList.create( data );
-			}
+			}*/
 		}
 		
 		protected function setSize() :void
@@ -318,8 +318,8 @@ package de.axelspringer.videoplayer.view
 //			{
 				this.logoMovieplayer.x = Math.round( this.currentWidth - this.logoMovieplayer.width - 10 );
 				this.logoMovieplayer.y = 5;
-				this.chapterList.x = Math.round( ( this.currentWidth - ChapterListUi.WIDTH ) / 2 );
-				this.chapterList.y = Math.round( this.currentHeight - ChapterListUi.HEIGHT );
+				/*this.chapterList.x = Math.round( ( this.currentWidth - ChapterListUi.WIDTH ) / 2 );
+				this.chapterList.y = Math.round( this.currentHeight - ChapterListUi.HEIGHT );*/
 //			}
 			
 			// notify PlayerController to change size of Ad
