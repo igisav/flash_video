@@ -6,8 +6,11 @@ package de.axelspringer.videoplayer.model.vo
 	public class VideoVO extends BaseVO
 	{
 		public var videoUrl:String 		= "";
+
+        // TODO: wozu ist das?
 		public var videoUrl2:String 	= "";
-		public var imageUrl:String 		= "";
+
+        public var imageUrl:String 		= "";
 		public var headline:String 		= "";
 		public var roofline:String 		= "";
 		public var text:String 			= "";

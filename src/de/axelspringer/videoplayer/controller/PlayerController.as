@@ -1518,8 +1518,12 @@ package de.axelspringer.videoplayer.controller
 		
 		protected function onMetaData(data:Object):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","get MetaData");
-			//trace(data);
+            var dataObj:Object = {};
+            for(var key:String in data) {
+                dataObj[key] = data[key];
+            }
+			ExternalController.dispatch(ExternalController.EVENT_LOADED_METADATA, dataObj);
+            Log.info( this + " onMetaData" );
 			//this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
 			
 			

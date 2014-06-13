@@ -14,7 +14,7 @@ package de.axelspringer.videoplayer.controller
 
     public class MainController
 	{
-		protected var xmlInitialized:Boolean;
+		// protected var xmlInitialized:Boolean;
 		protected var jsInitialized:Boolean;
 		// protected var cssInitialized:Boolean;
 		protected var cssUrl:String = "";
@@ -95,7 +95,7 @@ package de.axelspringer.videoplayer.controller
 
             trace(flashVars.cb);
 
-			this.xmlInitialized = false;
+			// this.xmlInitialized = false;
 			// this.cssInitialized = false;
 			this.jsInitialized = false;
 				
@@ -131,16 +131,16 @@ package de.axelspringer.videoplayer.controller
 				BildTvDefines.autoplaySet= true;	
 			}			
 			
-			if(startXmlURL!= null && startXmlURL != "")
+			/*if(startXmlURL!= null && startXmlURL != "")
 			{
 				//trace("video xml load: " + startXmlURL);
 				// LinkUtil.setServerFromUrl( startXmlURL );
-				this.loadXml( startXmlURL );
+				 this.loadXml( startXmlURL );
 			}
 			else
 			{
-//				this.xmlInitialized = true;
-			}
+				this.xmlInitialized = true;
+			}*/
 			//trace(" css load: " + cssURL);
 			/*if(cssURL!= null && cssURL != "")
 			{
@@ -166,9 +166,14 @@ package de.axelspringer.videoplayer.controller
             this.start();
     }
 
-        public function loadXML(xml:String):void{
+       /* public function loadXML(xml:String):void{
             // LinkUtil.setServerFromUrl( xml );
             this.loadXml( xml );
+        }*/
+
+        public function loadURL(url:String):void{
+            this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2 = url ;
+            this.start();
         }
 
 
@@ -207,7 +212,7 @@ package de.axelspringer.videoplayer.controller
 				}
 			}	
 			
-			if( true == this.xmlInitialized && true == this.jsInitialized)
+			if( true == this.jsInitialized) // true == this.xmlInitialized &&
 			{
 //				ExternalInterface.call("com.xoz.flash_logger.logTrace","Embed: " + BildTvDefines.isEmbedPlayer);
 								
@@ -251,7 +256,7 @@ package de.axelspringer.videoplayer.controller
 			
 		}
 		
-		protected function setXMLByJSCall(xml:String):void
+	/*	protected function setXMLByJSCall(xml:String):void
 		{
 //			ExternalInterface.call("com.xoz.flash_logger.logTrace","GET XML FILE IN FLASH ");
 			var videoXml:XML = XML(unescape(String(xml)));
@@ -263,10 +268,10 @@ package de.axelspringer.videoplayer.controller
 //			if(this.config.videoVO.videoUrl != "")
 			{
 				this.xmlInitialized = true;
-				
+
 				this.start();			
 			}
-		}
+		}*/
 				
 
         /*	protected function apiCall(type:String, params:Object = null ):void
@@ -400,7 +405,7 @@ package de.axelspringer.videoplayer.controller
 				
 				this.playerController.setClip( videoVO, this.config.adVO );
 				
-				if( true == BildTvDefines.isEmbedPlayer ) this.loadRelatedXml();
+				// if( true == BildTvDefines.isEmbedPlayer ) this.loadRelatedXml();
 			}
 			else
 			{
@@ -440,7 +445,7 @@ package de.axelspringer.videoplayer.controller
 				
 				this.playerController.setClip( this.config.videoVO, this.config.adVO );
 						
-				if( true == BildTvDefines.isEmbedPlayer ) this.loadRelatedXml();
+				// if( true == BildTvDefines.isEmbedPlayer ) this.loadRelatedXml();
 			}
 		}
 				
@@ -592,7 +597,7 @@ package de.axelspringer.videoplayer.controller
  * XML HANDLING
  ************************************************************************************************/
  
- 		protected function loadXml( url:String ) :void
+ /*		protected function loadXml( url:String ) :void
 		{
 			//trace( this + " loadXml: " + url );
 			
@@ -721,7 +726,7 @@ package de.axelspringer.videoplayer.controller
 				}	
 			}
 		}
-		
+		*/
 /************************************************************************************************
  * EVENTS
  ************************************************************************************************/

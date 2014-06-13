@@ -186,7 +186,7 @@ package de.axelspringer.videoplayer.vast.controller
 		
 		protected function onMetaData( data:Object ):void
 		{
-//			trace( this + " onMetaData" );
+			trace( this + " onMetaData" );
 //			trace( data );
 			
 			// check ratio

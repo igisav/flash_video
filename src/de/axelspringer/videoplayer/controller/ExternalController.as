@@ -71,19 +71,20 @@ package de.axelspringer.videoplayer.controller
             return true;
         }
 
-        public static function dispatch(eventName:String, value:String = ""):void
+        public static function dispatch(eventName:String, value:* = null):void
         {
-            if (value == "") {
+            if (value == null || value == "") {
                 ExternalInterface.call(jsEventCallback, eventName);
             } else {
                 var msg:Object =  {};
                 msg[eventName] = value;
-                ExternalInterface.call(jsEventCallback, msg.toString());
+                trace(JSON.stringify(msg))
+                ExternalInterface.call(jsEventCallback, JSON.stringify(msg));
             }
         }
 
         private function bind():void {
-            ExternalInterface.addCallback(LOAD, mainController.loadXML);
+            ExternalInterface.addCallback(LOAD, mainController.loadURL);
             ExternalInterface.addCallback(PLAY, playerController.play);
             ExternalInterface.addCallback(PAUSE, playerController.pause);
             ExternalInterface.addCallback(VOLUME, playerController.volume);
