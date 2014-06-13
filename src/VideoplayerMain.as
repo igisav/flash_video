@@ -114,7 +114,7 @@ package
             if (BildTvDefines.debugFlag) ExternalInterface.call("function(){if (window.console) console.log('isEmbedPlayer: " + BildTvDefines.isEmbedPlayer + "');}");
 
             this.mainController = new MainController(this);
-            this.mainController.init(this.loaderInfo.parameters.xmlurl, this.loaderInfo.parameters.cssurl, this.loaderInfo.parameters.jsurl, this.loaderInfo.parameters.adtype, this.loaderInfo.parameters.autoplay, this.loaderInfo.parameters.time);
+            this.mainController.init(this.loaderInfo.parameters);
 
             var playerName:String = "";
             //trace("............try to get long URL: " +  BildTvDefines.urlLong);

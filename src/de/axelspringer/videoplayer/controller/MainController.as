@@ -1,23 +1,18 @@
 package de.axelspringer.videoplayer.controller
 {
-	import de.axelspringer.videoplayer.event.*;
-	import de.axelspringer.videoplayer.model.vo.*;
-	import de.axelspringer.videoplayer.model.vo.base.SkinBaseVO;
-	import de.axelspringer.videoplayer.ui.LoaderAni;
-	import de.axelspringer.videoplayer.ui.controls.ControlButton;
-	import de.axelspringer.videoplayer.util.*;
-	import de.axelspringer.videoplayer.view.PlayerView;
-	
-	import flash.display.*;
-	import flash.events.*;
-	import flash.external.ExternalInterface;
-	import flash.net.*;
-	import flash.system.LoaderContext;
-	import flash.text.StyleSheet;
-	import flash.utils.Timer;
-	import flash.utils.getQualifiedSuperclassName;
-	
-	public class MainController
+    import de.axelspringer.videoplayer.event.*;
+    import de.axelspringer.videoplayer.model.vo.*;
+    import de.axelspringer.videoplayer.ui.controls.ControlButton;
+    import de.axelspringer.videoplayer.util.*;
+    import de.axelspringer.videoplayer.view.PlayerView;
+
+    import flash.display.*;
+    import flash.events.*;
+    import flash.external.ExternalInterface;
+    import flash.net.*;
+    import flash.utils.Timer;
+
+    public class MainController
 	{
 		protected var xmlInitialized:Boolean;
 		protected var jsInitialized:Boolean;
@@ -28,7 +23,7 @@ package de.axelspringer.videoplayer.controller
 		//protected var loaderAni:LoaderAni;
 //		protected var errorUi:ErrorUi;
 		protected var config:ConfigVO;
-		
+
 		protected var relatedXmlsLoaded:uint;
 		
 		private static const CALLBACK_SUBTITLE_ON:String		= "SUBTITLE_ON";
@@ -67,25 +62,18 @@ package de.axelspringer.videoplayer.controller
 		}
 		
 		
-		protected function registerExternalCallbacks(event:Event = null):void 
+		/*protected function registerExternalCallbacks(event:Event = null):void
 		{
-			trace("ExternalInterface:" + ExternalInterface.available);
-    		if (ExternalInterface.available) 
+    		if (ExternalInterface.available)
 			{
 	    		try
 				{
 					
 					ExternalInterface.addCallback("apiCall", apiCall);
-					ExternalInterface.addCallback("askForPlayingStatus", externalGetPlayingStatus);
-					
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","SETTED CALLBACKS");
-					
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","---------SEND READY SIGNAL------------------External is Available=" + ExternalInterface.available);
-//					var xml:String = ExternalInterface.call("com.xoz.videoplayer.getXMLString", BildTvDefines.playerId) as String;								
-			
-					var xml2:String= ExternalInterface.call("com.xoz.videoplayer.instances." + BildTvDefines.playerId + ".events.publish","videoplayer/flashplayer/ready", {'id': BildTvDefines.playerId});							
-//					this.setXMLByJSCall(xml);
-					
+					ExternalInterface.addCallback("load", loadXML);
+
+                    ExternalInterface.addCallback("volume", volume);
+
 				}
 				catch(e:Error)				
 				{
@@ -97,24 +85,31 @@ package de.axelspringer.videoplayer.controller
 			{
 				ExternalInterface.call("com.xoz.flash_logger.logTrace","TRY SET CALLBACKS");
 			}
-		}
+		}*/
 				
-		public function init( startXmlURL:String ="", cssURL:String="", jsURL:String="", adType:String="", autoplay:String="", time:Number = 0 ) :void
+		public function init( flashVars:Object ) :void
 		{
+            var startXmlURL:String = flashVars.xmlurl;
+            var autoplay:String = flashVars.autoplay;
+            var time:Number = flashVars.time;
+
+            trace(flashVars.cb);
+
 			this.xmlInitialized = false;
 			// this.cssInitialized = false;
 			this.jsInitialized = false;
 				
 			this.config = new ConfigVO();
-			
-			try
-			{
-				this.registerExternalCallbacks();
-			}
-			catch (error:Error)
-			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","ERROR BY SETTING CALLBACKS");
-			}
+
+            this.initController();
+
+            var external:ExternalController = new ExternalController();
+            var externalSuccess:Boolean = external.init(this, this.playerController);
+			if (!externalSuccess) {
+                return;
+            }
+            ExternalController.swfInitialized(flashVars.cb);
+
 			
 			// to load relative linked stuff in the embed-player, we need absolute urls
 			// bild.de wants us to use the url of the xml to generate absolute links
@@ -122,7 +117,7 @@ package de.axelspringer.videoplayer.controller
 			trace(this + " XML: " + startXmlURL);
 			
 			//set type of Ad, playing first,
-			BildTvDefines.adType = adType;
+			BildTvDefines.adType = flashVars.adType;
 			
 			if(!isNaN(time))
 			{
@@ -158,18 +153,24 @@ package de.axelspringer.videoplayer.controller
 			}*/
 			//trace(" js load: " + jsURL);
 
-			if(jsURL!= null && jsURL != "" && cssURL!= null && cssURL != "")
+			/*if(jsURL!= null && jsURL != "" && cssURL!= null && cssURL != "")
 			{
 				this.loadJS(jsURL, cssURL);	
 				//BildTvDefines.isEmbedPlayer = true;
 			}
 			else
 			{
+			}*/
 //???				if( BildTvDefines.isEmbedPlayer != true )BildTvDefines.isEmbedPlayer = false; //zuvor durch ScriptaccessAbfrage geklärt bei FB
-				this.jsInitialized = true;
-				this.start();
-			}			
-		}
+            this.jsInitialized = true;
+            this.start();
+    }
+
+        public function loadXML(xml:String):void{
+            LinkUtil.setServerFromUrl( xml );
+            this.loadXml( xml );
+        }
+
 
 /************************************************************************************************
  * APP CONTROL
@@ -244,8 +245,7 @@ package de.axelspringer.videoplayer.controller
 					}
 				}
 //				if( this.config.adVO ) ExternalInterface.call("com.xoz.flash_logger.logTrace","AD CALL CHOOSEN: id:" + this.config.adVO.club);
-				
-				this.initController();
+
 				this.update();	
 			}
 			
@@ -268,11 +268,8 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 				
-		/********************************************************************************************************
-		 * EXTERNAL CALLBACKS
-		 *******************************************************************************************************/
-						
-		protected function apiCall(type:String, params:Object = null ):void
+
+        /*	protected function apiCall(type:String, params:Object = null ):void
 		{
 			trace("Type:" + type + "    params: " + params);
 //			ExternalInterface.call("com.xoz.flash_logger.logTrace","Type:" + type + "    params: " + params);
@@ -287,7 +284,7 @@ package de.axelspringer.videoplayer.controller
 					this.setXMLByJSCall(xml);
 					break;
 				}
-				/*case CALLBACK_SUBTITLE_OFF:
+				case CALLBACK_SUBTITLE_OFF:
 				{
 					if( this.viewController.subtitleView ) this.viewController.subtitleView.ui.visible = false;
 					break;
@@ -296,20 +293,15 @@ package de.axelspringer.videoplayer.controller
 				{
 					if( this.viewController.subtitleView ) this.viewController.subtitleView.ui.visible = true;
 					break;
-				}*/
+				}
 				default:
 				{
 					if( this.playerController ) this.playerController.apiCall(type,params);
 					break;
 				}
 			}
-		}
-		
-		protected function externalGetPlayingStatus():Boolean
-		{
-			return this.playerController.externalGetPlayingStatus();
-		}
-		
+		}*/
+
 		protected function setSize() :void
 		{
 			BildTvDefines.width = this.stage.stage.stageWidth;

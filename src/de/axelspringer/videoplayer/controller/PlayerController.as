@@ -434,7 +434,7 @@ package de.axelspringer.videoplayer.controller
 			this.play();
 		}
 
-		protected function play(considerAds:Boolean=true):void
+		public function play(considerAds:Boolean=true):void
 		{
 			//trace( this + " play: " + this.videoVO.videoUrl );
 
@@ -2419,10 +2419,27 @@ package de.axelspringer.videoplayer.controller
 			return this.isPlaying;
 		}
 
+
+        public function volume(value:Number = NaN):Number {
+            if (!isNaN(value)) {
+                this.setVolume( value );
+                if(this.vastController) this.vastController.setVolume(this.savedVolume);
+            }
+
+            return this.savedVolume
+        }
+
+        public function mute(param:String = ""):Boolean {
+            if (param != "") {
+                volume( this.savedVolume );
+            }
+
+            return this.muted
+        }
+
 		
-		public function apiCall(type:String, params:Object):void
+		/*public function apiCall(type:String, params:Object):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","APICALL Type:" + type);	
 			switch(type)
 			{
 				case CALLBACK_VOLUME_ON:
@@ -2517,7 +2534,7 @@ package de.axelspringer.videoplayer.controller
 					default:break;
 			}
 		}
-
+*/
 		/********************************************************************************************************
 		 * BUMPER STUFF
 		 *******************************************************************************************************/
