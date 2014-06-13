@@ -42,10 +42,14 @@ package de.axelspringer.videoplayer.controller
         protected var mainController:MainController;
         protected var playerController:PlayerController;
 
-        public function init(mainController:MainController, playerController:PlayerController):Boolean
+        private static var jsEventCallback:String;
+
+        public function init(mainController:MainController, playerController:PlayerController, jsCallback:String):Boolean
         {
             this.mainController = mainController;
             this.playerController = playerController;
+
+            jsEventCallback = jsCallback;
 
             if (ExternalInterface.available)
             {
@@ -67,9 +71,15 @@ package de.axelspringer.videoplayer.controller
             return true;
         }
 
-        public static function swfInitialized(jsEventCallback:String):void
+        public static function dispatch(eventName:String, value:String = ""):void
         {
-            ExternalInterface.call(jsEventCallback, EVENT_INITIALIZED);
+            if (value == "") {
+                ExternalInterface.call(jsEventCallback, eventName);
+            } else {
+                var msg:Object =  {};
+                msg[eventName] = value;
+                ExternalInterface.call(jsEventCallback, msg.toString());
+            }
         }
 
         private function bind():void {
@@ -79,12 +89,5 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.addCallback(VOLUME, playerController.volume);
             ExternalInterface.addCallback(MUTED, playerController.mute);
         }
-
-       /* private function bindPlayerController(params:*):void {
-            if (playerController) {
-                playerController.volume(params);
-
-            }
-        }*/
     }
 }

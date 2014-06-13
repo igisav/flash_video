@@ -22,7 +22,7 @@ package de.axelspringer.videoplayer.model.vo
 			{
 				this.url = hasAttribute( xml, "url" ) ? xml.@url : this.url;
 				this.title = hasAttribute( xml, "title" ) ? xml.@title : this.title;
-				this.icon = hasAttribute( xml, "icon" ) ? LinkUtil.absoluteLink( xml.@icon ) : this.icon;
+				this.icon = hasAttribute( xml, "icon" ) ?  xml.@icon  : this.icon;
 			}
 		}
 	}

@@ -120,11 +120,11 @@ package de.axelspringer.videoplayer.model.vo
 			
 			this.videoVO.hydrate( xml );
 			this.videoVO.geoRestriction = hasAttribute( xml.geo[0], "regions" ) ? xml.geo[0].@regions : this.videoVO.geoRestriction;
-			this.videoVO.geoImage = hasAttribute( xml.geo[0], "img" ) ? LinkUtil.absoluteLink( xml.geo[0].@img ) : this.videoVO.geoImage;
+			this.videoVO.geoImage = hasAttribute( xml.geo[0], "img" ) ? xml.geo[0].@img  : this.videoVO.geoImage;
 			this.videoVO.ageRestriction = hasAttribute( xml.restrict[0], "age" ) ? xml.restrict[0].@age : this.videoVO.ageRestriction;
-			this.videoVO.bumperPrerollXml = hasAttribute( xml.bumper[0], "preroll" ) ? LinkUtil.absoluteLink( xml.bumper[0].@preroll ) : this.videoVO.bumperPrerollXml;
-			this.videoVO.bumperPostrollXml = hasAttribute( xml.bumper[0], "postroll" ) ? LinkUtil.absoluteLink( xml.bumper[0].@postroll ) : this.videoVO.bumperPostrollXml;
-			this.videoVO.link = hasAttribute( xml.link[0], "link" ) ? LinkUtil.absoluteLink( xml.link[0].@link ) : this.videoVO.link;
+			this.videoVO.bumperPrerollXml = hasAttribute( xml.bumper[0], "preroll" ) ?  xml.bumper[0].@preroll  : this.videoVO.bumperPrerollXml;
+			this.videoVO.bumperPostrollXml = hasAttribute( xml.bumper[0], "postroll" ) ? xml.bumper[0].@postroll : this.videoVO.bumperPostrollXml;
+			this.videoVO.link = hasAttribute( xml.link[0], "link" ) ? xml.link[0].@link : this.videoVO.link;
 			this.videoVO.linkTarget = hasAttribute( xml.link[0], "target" ) ? xml.link[0].@target : this.videoVO.linkTarget;
 			
 			//this.skinVO.hydrate( xml.skin[0] );
@@ -192,14 +192,14 @@ package de.axelspringer.videoplayer.model.vo
 			{	
 				if(xml.subtitle[0].@status == "1" || xml.subtitle[0].@status == "true")
 				{
-					this.srtUrl = hasAttribute( xml.subtitle[0], "url" ) ? LinkUtil.absoluteLink( xml.subtitle[0].@url ) : this.srtUrl;	
+					this.srtUrl = hasAttribute( xml.subtitle[0], "url" ) ? xml.subtitle[0].@url : this.srtUrl;
 				}
 			}
 			BildTvDefines.buffertimeMaximum = hasAttribute( xml.buffer[0], "dynbuffer" ) ? xml.buffer[0].@dynbuffer : BildTvDefines.buffertimeMaximum;
 			BildTvDefines.buffertimeMinimum = hasAttribute( xml.buffer[0], "startbuffer" ) ? xml.buffer[0].@startbuffer : BildTvDefines.buffertimeMinimum;
 						
-			if(this.endScreenEnabled && true == BildTvDefines.isEmbedPlayer )this.relatedXml = hasAttribute( xml.end[0], "xml" ) ? LinkUtil.absoluteLink( xml.end[0].@xml ) : this.relatedXml;
-			if(this.endScreenEnabled && true == BildTvDefines.isEmbedPlayer && this.relatedXml == "" )this.relatedXml = hasAttribute( xml.channel[0], "xml" ) ? LinkUtil.absoluteLink( xml.channel[0].@xml ) : this.relatedXml;
+			if(this.endScreenEnabled && true == BildTvDefines.isEmbedPlayer )this.relatedXml = hasAttribute( xml.end[0], "xml" ) ? xml.end[0].@xml : this.relatedXml;
+			if(this.endScreenEnabled && true == BildTvDefines.isEmbedPlayer && this.relatedXml == "" )this.relatedXml = hasAttribute( xml.channel[0], "xml" ) ? xml.channel[0].@xml : this.relatedXml;
 																	
 			if( hasAttribute( xml.popup[0], "status" ) )
 			{

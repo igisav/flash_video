@@ -28,8 +28,8 @@ package de.axelspringer.videoplayer.model.vo
 		{
 			if( xml != null )
 			{
-				this.xml = hasAttribute( xml, "xml" ) ? LinkUtil.absoluteLink( xml.@xml ) : this.xml;
-				this.thumb = hasAttribute( xml, "img" ) ? LinkUtil.absoluteLink( xml.@img ) : this.thumb;
+				this.xml = hasAttribute( xml, "xml" ) ?  xml.@xml : this.xml;
+				this.thumb = hasAttribute( xml, "img" ) ? xml.@img : this.thumb;
 				this.title = hasAttribute( xml, "title" ) ? xml.@title : this.title;
 				this.text = hasAttribute( xml, "text" ) ? xml.@text : this.text;
 				this.date = hasAttribute( xml, "date" ) ? xml.@date : this.date;

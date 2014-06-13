@@ -104,11 +104,11 @@ package de.axelspringer.videoplayer.controller
             this.initController();
 
             var external:ExternalController = new ExternalController();
-            var externalSuccess:Boolean = external.init(this, this.playerController);
+            var externalSuccess:Boolean = external.init(this, this.playerController, flashVars.cb);
 			if (!externalSuccess) {
                 return;
             }
-            ExternalController.swfInitialized(flashVars.cb);
+            ExternalController.dispatch( ExternalController.EVENT_INITIALIZED );
 
 			
 			// to load relative linked stuff in the embed-player, we need absolute urls
@@ -134,7 +134,7 @@ package de.axelspringer.videoplayer.controller
 			if(startXmlURL!= null && startXmlURL != "")
 			{
 				//trace("video xml load: " + startXmlURL);
-				LinkUtil.setServerFromUrl( startXmlURL );
+				// LinkUtil.setServerFromUrl( startXmlURL );
 				this.loadXml( startXmlURL );
 			}
 			else
@@ -167,7 +167,7 @@ package de.axelspringer.videoplayer.controller
     }
 
         public function loadXML(xml:String):void{
-            LinkUtil.setServerFromUrl( xml );
+            // LinkUtil.setServerFromUrl( xml );
             this.loadXml( xml );
         }
 
@@ -610,7 +610,7 @@ package de.axelspringer.videoplayer.controller
 			
 			//this.setLoaderAniVisibility( false );
 
-			this.config.xmlUrl = LinkUtil.absoluteLink( e.url );
+			this.config.xmlUrl =  e.url ;
 			
 			this.config.hydrate( e.xml );
 			

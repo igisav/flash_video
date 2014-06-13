@@ -49,7 +49,7 @@ package de.axelspringer.videoplayer.model.vo
 			}
 			
 			this.videoUrl2 = hasAttribute( xml, "src" ) ? xml.@src : this.videoUrl2;
-			this.imageUrl = hasAttribute( xml, "img" ) ? LinkUtil.absoluteLink( xml.@img ) : this.imageUrl;
+			this.imageUrl = hasAttribute( xml, "img" ) ? xml.@img : this.imageUrl;
 			this.headline = hasAttribute( xml, "ueberschrift" ) ? xml.@ueberschrift : this.headline;
 			this.roofline = hasAttribute( xml, "dachzeile" ) ? xml.@dachzeile : this.roofline;
 			this.text = xml.text[0];
