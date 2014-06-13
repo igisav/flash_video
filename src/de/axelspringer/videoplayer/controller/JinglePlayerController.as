@@ -48,7 +48,7 @@ package de.axelspringer.videoplayer.controller
 			this.streamName = streamName;
 			this.soundTransform = soundTransform;
 			
-			this.playerView.setDisplayButtonVisible( false );
+			// this.playerView.setDisplayButtonVisible( false );
 			// this.controlsView.enable( false );
 			
 			this.resetStatus();
@@ -248,7 +248,7 @@ package de.axelspringer.videoplayer.controller
 		
 		protected function onStreamFinished() :void
 		{
-			this.playerView.setDisplayButtonVisible( true );
+			// this.playerView.setDisplayButtonVisible( true );
 			// this.controlsView.showJingleControls( false );
 			// this.controlsView.enable( true );
 			

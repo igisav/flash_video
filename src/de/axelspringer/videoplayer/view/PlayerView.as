@@ -199,20 +199,20 @@ package de.axelspringer.videoplayer.view
 			this.imageMc.visible = visible;
 		}
 		
-		public function setDisplayButtonVisible( visible:Boolean = true ) :void
+		/*public function setDisplayButtonVisible( visible:Boolean = true ) :void
 		{
 		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ setDisplayButtonVisible: " + visible + " ~~~~~~~~~~~~~~~~~~~~~~" );
-		/*	if(this.displayBtn && BildTvDefines.isEmbedPlayer)
+			if(this.displayBtn && BildTvDefines.isEmbedPlayer)
 			{
 				this.displayBtn.visible = visible;
-			}*/
-		}
+			}
+		}*/
 		
-		public function setDisplayButtonAsPlayPauseButton( isPlayPauseBtn:Boolean = true ) :void
+		/*public function setDisplayButtonAsPlayPauseButton( isPlayPauseBtn:Boolean = true ) :void
 		{
 		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ isPlayPauseBtn: " + isPlayPauseBtn + " ~~~~~~~~~~~~~~~~~~~~~~" );
 		//	if(this.displayBtn)this.displayBtn.isPlayPauseButton = isPlayPauseBtn;
-		}
+		}*/
 				
 		public function setDisplaySizeDefault() :void
 		{
@@ -431,7 +431,7 @@ package de.axelspringer.videoplayer.view
 		public function showMovieteaserEndscreen( show:Boolean ) :void
 		{
 			this.endscreenTeaserplayer.visible = show;
-			this.setDisplayButtonVisible( !show );
+			//this.setDisplayButtonVisible( !show );
 		}
 	}
 }

@@ -295,7 +295,7 @@ package de.axelspringer.videoplayer.controller
 			this.videoStarted=false;
 			this.contentStarted=false;
 			BildTvDefines.isBumper=false;
-			this.playerView.setDisplayButtonAsPlayPauseButton(true);
+			//this.playerView.setDisplayButtonAsPlayPauseButton(true);
 
 			this.adData=adData;
 			
@@ -2354,17 +2354,7 @@ package de.axelspringer.videoplayer.controller
 			// if bumper or linked video, hide the big play/pause button and disable double-click timer
 			BildTvDefines.isBumper = (videoVO == this.bumperVO);
 
-			var showPlayPause:Boolean = true;
-			if ( BildTvDefines.isBumper )
-			{
-				showPlayPause=false;
-			}
-			else
-			{
-				showPlayPause = true;
-			}
-
-			this.playerView.setDisplayButtonAsPlayPauseButton(showPlayPause);
+			//this.playerView.setDisplayButtonAsPlayPauseButton(!BildTvDefines.isBumper);
 
 			//trace(videoVO.videoUrl + "::::" + videoVO.videoUrl.indexOf("smil"));
 			//HDNetwork content

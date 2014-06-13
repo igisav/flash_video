@@ -77,7 +77,7 @@ package de.axelspringer.videoplayer.controller
         {
             var supress:Array = [EVENT_PROGRESS, EVENT_TIMEUPDATE, EVENT_LOADED_METADATA];
 
-            //if (supress.indexOf(eventName) >= 0) {return}
+            if (supress.indexOf(eventName) >= 0) {return}
 
             if (value == null || value == "") {
                 ExternalInterface.call(jsEventCallback, eventName);

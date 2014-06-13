@@ -348,7 +348,7 @@ package de.axelspringer.videoplayer.controller
 				if( BildTvDefines.isLivePlayer )
 				{
 					// this.controlsView.enable( false );
-					this.playerView.setDisplayButtonVisible( false );
+					// this.playerView.setDisplayButtonVisible( false );
 				}
 				// vod
 				else
