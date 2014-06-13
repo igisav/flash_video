@@ -305,14 +305,7 @@ package de.axelspringer.videoplayer.controller
 				if(this.vastController) this.vastController.setVolume(0);
 			}
 			
-			if( this.adData )
-			{
-				this.showAds=true;	
-			}
-			else
-			{
-				this.showAds=false;	
-			}
+			this.showAds = this.adData;
 
 			if ( videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1 )
 			{

@@ -173,6 +173,9 @@ package de.axelspringer.videoplayer.controller
 
         public function loadURL(url:String):void{
             this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2 = url ;
+
+            // TODO: Selim: Parameter adaptive kam immer aus XML-Datei. Jetzt?
+            this.config.videoVO.hdAdaptive = true;
             this.start();
         }
 
