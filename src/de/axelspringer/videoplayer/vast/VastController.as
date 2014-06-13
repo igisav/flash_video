@@ -1,6 +1,7 @@
 package de.axelspringer.videoplayer.vast
 {
-	import de.axelspringer.videoplayer.event.AdEvent;
+    import de.axelspringer.videoplayer.controller.ExternalController;
+    import de.axelspringer.videoplayer.event.AdEvent;
 	import de.axelspringer.videoplayer.event.ControlEvent;
 	import de.axelspringer.videoplayer.model.vo.BildTvDefines;
 	import de.axelspringer.videoplayer.model.vo.FullscreenData;
@@ -623,7 +624,8 @@ package de.axelspringer.videoplayer.vast
 			
 			// track
 			this.trackingController.trackVolumeChange( new VolumeData( volume, this.currentVolume ) );
-			
+            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE, this.currentVolume);
+
 			this.currentVolume = volume;
 		}
 		

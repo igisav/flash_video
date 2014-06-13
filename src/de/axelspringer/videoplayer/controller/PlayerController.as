@@ -278,6 +278,8 @@ package de.axelspringer.videoplayer.controller
 					this.nsHD.soundTransform=this.soundTransform;
 				}
 			}
+
+            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE, this.savedVolume);
 		}
         
         //trackingData:TrackingVO,
@@ -359,7 +361,7 @@ package de.axelspringer.videoplayer.controller
 		public function pause():void
 		{
 			this.videoTimer.stop();
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","Pause: is started? "+this.videoStarted+"    isHd? "+this.hdContent);
+            ExternalController.dispatch(ExternalController.EVENT_PAUSE);
 			if (this.videoStarted)
 			{
 				if (this.hdContent == false)
@@ -450,7 +452,7 @@ package de.axelspringer.videoplayer.controller
 			// 17.01.11 - disabled permanently for bild too
 //			if( !this.videoVO.autoplay || BildTvDefines.isWeltPlayer )
 //			{	
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","LOG START ON CLIPPLAY!");
+			ExternalController.dispatch(ExternalController.EVENT_PLAY);
 			//// this.trackingController.onClipPlay();
 //			}						
 
@@ -1237,6 +1239,7 @@ package de.axelspringer.videoplayer.controller
 							this.nsHD.resume();			
 						}
 					}
+                    ExternalController.dispatch(ExternalController.EVENT_SEEKED);
 
 					break;
 				}
@@ -1343,6 +1346,8 @@ package de.axelspringer.videoplayer.controller
 					{
 						// this.trackingController.onClipStart();
 					}*/
+                    ExternalController.dispatch(ExternalController.EVENT_PLAYING);
+
 					if( this.nsHD )
 					{
 						if( this.nsHD.isLiveStream )
@@ -1445,6 +1450,7 @@ package de.axelspringer.videoplayer.controller
 					{
 						this.finishPlay();
 					}
+                    ExternalController.dispatch(ExternalController.EVENT_ENDED);
 					//// this.trackingController.onClipEnd();
 				}
 
@@ -1505,7 +1511,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				case "NetStream.Seek.Notify":
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","hd NetstreamEvent Seeked");	
+                    ExternalController.dispatch(ExternalController.EVENT_SEEKED);
 					if( BildTvDefines.isLivePlayer )
 					{
 						this.nsHD.resume();			
@@ -1706,6 +1712,7 @@ package de.axelspringer.videoplayer.controller
 				}*/
 
 				// this.trackingController.updatePlayProgress(playtime);
+                ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, playtime);
 
 				if (this.duration > 0)
 				{
@@ -1739,6 +1746,7 @@ package de.axelspringer.videoplayer.controller
 					
 				// this.controlsView.updateLoadProgress(this.videoLoaded);
 				// this.trackingController.updateBufferProgress(this.videoLoaded);
+                ExternalController.dispatch(ExternalController.EVENT_PROGRESS, this.videoLoaded);
 				
 			}
 		}
@@ -1773,6 +1781,7 @@ package de.axelspringer.videoplayer.controller
 				this.finishPlay();
 				if (!BildTvDefines.isBumper)
 				{
+                    ExternalController.dispatch(ExternalController.EVENT_ENDED);
 					// this.trackingController.onClipEnd();
 				}
 
@@ -1794,9 +1803,8 @@ package de.axelspringer.videoplayer.controller
 
 		protected function onVideoFinish():void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace"," +++ onVideoFinished +++" );
-			ExternalInterface.call("com.xoz.flash_logger.logTrace"," onAdEnd: type from defines: "+BildTvDefines.adType);
-			
+            ExternalController.dispatch(ExternalController.EVENT_ENDED);
+
 			// live player: let akamaiController finish
 			if (BildTvDefines.isStreamPlayer || BildTvDefines.isMoviePlayer)
 			{

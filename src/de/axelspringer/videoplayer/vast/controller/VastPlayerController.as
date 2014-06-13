@@ -1,6 +1,7 @@
 package de.axelspringer.videoplayer.vast.controller
 {
-	import de.axelspringer.videoplayer.controller.PlayerController;
+    import de.axelspringer.videoplayer.controller.ExternalController;
+    import de.axelspringer.videoplayer.controller.PlayerController;
 	import de.axelspringer.videoplayer.event.AdEvent;
 	import de.axelspringer.videoplayer.event.ControlEvent;
 	import de.axelspringer.videoplayer.model.vo.BildTvDefines;
@@ -340,6 +341,7 @@ package de.axelspringer.videoplayer.vast.controller
 				
 				// this.controlsView.updateTime( this.ns.time );
 //				this.trackingController.updatePlayProgress( this.ns.time );
+                ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, this.ns.time);
 				
 				if( this.duration > 0 )
 				{

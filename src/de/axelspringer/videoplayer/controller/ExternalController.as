@@ -33,11 +33,13 @@ package de.axelspringer.videoplayer.controller
         public static const EVENT_PLAYING:String	        = "playing";
         public static const EVENT_PAUSE:String	            = "pause";
         public static const EVENT_TIMEUPDATE:String	        = "timeupdate";
+        public static const EVENT_PROGRESS:String	        = "progress";
         public static const EVENT_ENDED:String	            = "ended";
         public static const EVENT_VOLUME_CHANGE:String	    = "volumechange";
         public static const EVENT_EMPTIED:String	        = "eptied";
         public static const EVENT_SEEKED:String         	= "seeked";
         public static const EVENT_ERROR:String              = "error";
+        public static const EVENT_DEBUG:String              = "debug";
 
         protected var mainController:MainController;
         protected var playerController:PlayerController;
@@ -73,12 +75,15 @@ package de.axelspringer.videoplayer.controller
 
         public static function dispatch(eventName:String, value:* = null):void
         {
+            var supress:Array = [EVENT_PROGRESS, EVENT_TIMEUPDATE, EVENT_LOADED_METADATA];
+
+            //if (supress.indexOf(eventName) >= 0) {return}
+
             if (value == null || value == "") {
                 ExternalInterface.call(jsEventCallback, eventName);
             } else {
                 var msg:Object =  {};
                 msg[eventName] = value;
-                trace(JSON.stringify(msg))
                 ExternalInterface.call(jsEventCallback, JSON.stringify(msg));
             }
         }

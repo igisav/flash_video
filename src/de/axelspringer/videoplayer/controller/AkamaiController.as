@@ -209,6 +209,8 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
+
+        // TODO: wird nicht benutzt?
 		public function onPlayPauseChange() :void
 		{
 			trace( this + " onPlayPauseChange - current state: " + this.playing );
@@ -606,6 +608,7 @@ package de.axelspringer.videoplayer.controller
 					this.netstream.bufferTime = bufferTime;
 
 					trace( this + " set buffertime to " + this.netstream.bufferTime );
+                    ExternalController.dispatch(ExternalController.EVENT_SEEKED);
 
 					break;
 				}
@@ -696,6 +699,7 @@ package de.axelspringer.videoplayer.controller
 
 			// this.controlsView.updateTime( this.netstream.time );
 			// this.trackingController.updatePlayProgress( this.netstream.time );
+            ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, this.netstream.time);
 
 			if( this.duration > 0 )
 			{
@@ -731,6 +735,7 @@ package de.axelspringer.videoplayer.controller
 			if( !this.videoStarted || this.trackReplay )
 			{
 				// this.trackingController.onClipStart();
+                ExternalController.dispatch(ExternalController.EVENT_PLAYING);
 				this.trackReplay = false;
 			}
 
@@ -775,6 +780,7 @@ package de.axelspringer.videoplayer.controller
 			if( ! this.errorOccured )
 			{
 				// this.trackingController.onClipEnd();
+                ExternalController.dispatch(ExternalController.EVENT_ENDED);
 
 				this.dispatchEvent( new ControlEvent( ControlEvent.LOAD_POSTROLL ) );
 			}
