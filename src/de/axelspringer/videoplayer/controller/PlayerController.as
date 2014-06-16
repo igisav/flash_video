@@ -189,7 +189,6 @@ package de.axelspringer.videoplayer.controller
 
 			this.soundTransform=new SoundTransform();
 
-			this.playerView.addEventListener(ControlEvent.DISPLAY_CLICK, onDisplayClick);
 			this.playerView.addEventListener(ControlEvent.RESIZE, onDisplayResize);
 			this.playerView.addEventListener(ControlEvent.AGE_RESTRICTION, onAgeRestrictionFeedback);
 
@@ -1821,41 +1820,6 @@ package de.axelspringer.videoplayer.controller
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // CONTROL EVENTS HANDLER
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		protected function onDisplayClick(e:ControlEvent = null):void
-		{
-			//trace(this + " onDisplayClick" + e.currentTarget);
-			if (BildTvDefines.isBumper && this.videoStarted)
-			{
-				//trace( "link: " + this.bumperVO.link + ", target: " + this.bumperVO.linkTarget );
-
-				try
-				{
-					navigateToURL(new URLRequest(this.bumperVO.link), this.bumperVO.linkTarget);
-				}
-				catch (oops:Error)
-				{
-					// ignore
-				}
-			}
-			/*else if (this.videoVO.link != "" && this.videoStarted)
-			{
-				//trace( "link: " + this.videoVO.link + ", target: " + this.videoVO.linkTarget );
-
-				try
-				{
-					navigateToURL(new URLRequest(this.videoVO.link), this.videoVO.linkTarget);
-				}
-				catch (oops:Error)
-				{
-					// ignore
-				}
-			}*/
-			else
-			{
-				this.onPlayPauseChange();
-			}
-		}
 
 		protected function onPlayPauseChange():void
 		{

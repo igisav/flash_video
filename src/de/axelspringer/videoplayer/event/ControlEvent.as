@@ -17,7 +17,6 @@ package de.axelspringer.videoplayer.event
 		public static const BUTTON_OVER:String 			= "ControlEvent.BUTTON_OVER";
 		public static const BUTTON_OUT:String 			= "ControlEvent.BUTTON_OUT";
 		public static const BUTTON_CLICK:String 		= "ControlEvent.BUTTON_CLICK";
-		public static const DISPLAY_CLICK:String 		= "ControlEvent.DISPLAY_CLICK";
 		public static const DOUBLE_CLICK:String 		= "ControlEvent.DOUBLE_CLICK";
 		public static const TEASER_CLICK:String 		= "ControlEvent.TEASER_CLICK";
 		public static const CLOSE_UI:String 			= "ControlEvent.CLOSE_UI";

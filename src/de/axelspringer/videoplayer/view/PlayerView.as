@@ -55,8 +55,7 @@ package de.axelspringer.videoplayer.view
 		protected var currentHeight:Number;
 		protected var isFullscreen:Boolean;
 		protected var wasFullscreen:Boolean;
-		protected var firstclick:Boolean = true;
-		
+
 		public function PlayerView( stage:Sprite )
 		{
 			super( stage );
@@ -117,7 +116,6 @@ package de.axelspringer.videoplayer.view
 			this.videoBtn.graphics.endFill();
 		//	this.videoBtn.addEventListener( MouseEvent.MOUSE_OVER, onMouseOver );
 		//	this.videoBtn.addEventListener( MouseEvent.MOUSE_OUT, onMouseOut );
-			this.videoBtn.addEventListener( MouseEvent.CLICK, onDisplayBtnClick );
 			this.videoBtn.buttonMode = true;
 			//this.videoBtn.visible = false;
 			this.stage.addChild(this.videoBtn);
@@ -135,9 +133,6 @@ package de.axelspringer.videoplayer.view
 				this.displayBtn.phase++;
 			}*/
 			
-			this.videoBtn.addEventListener( MouseEvent.ROLL_OVER, onDisplayMouseOver );
-			this.videoBtn.addEventListener( MouseEvent.ROLL_OUT, onDisplayMouseOut );
-			this.videoBtn.addEventListener( MouseEvent.MOUSE_MOVE, onDisplayMouseMove );
 			/*this.displayBtn.addEventListener( MouseEvent.ROLL_OVER, onDisplayMouseOver );
 			this.displayBtn.addEventListener( MouseEvent.ROLL_OUT, onDisplayMouseOut );
 			this.displayBtn.addEventListener( MouseEvent.MOUSE_MOVE, onDisplayMouseMove );
@@ -326,48 +321,7 @@ package de.axelspringer.videoplayer.view
 			this.dispatchEvent( new ControlEvent( ControlEvent.RESIZE, new FullscreenData( this.isFullscreen, this.wasFullscreen ) ) );
 		}
 		
-		protected function onDisplayBtnClick( e:MouseEvent ):void
-		{
-			if(true == BildTvDefines.isEmbedPlayer && this.firstclick == true)
-			{
-				this.firstclick = false;
-				//this.displayBtn.phase++;
-			}
-			
-			this.dispatchEvent( new ControlEvent( ControlEvent.DISPLAY_CLICK ) );
-		}
-		protected function onDisplayClick( e:ControlEvent ):void
-		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.DISPLAY_CLICK ) );
-		}
-		protected function onDisplayMouseOver( e:MouseEvent ):void
-		{
-			/*if( this.wasFullscreen == true )
-			{
-				this.displayBtn.onMouseOut();
-			}
-			else
-			{
-				this.displayBtn.onMouseOver();
-			}*/
-		}
-		protected function onDisplayMouseMove( e:MouseEvent ):void
-		{
-			//trace("over");
-			//this.displayBtn.onMouseMove();
-		}
-		
-		protected function onDisplayMouseOut( e:MouseEvent ):void
-		{
-			//trace("out");
-			//this.displayBtn.onMouseOut();
-		}
-		
-		protected function onDisplayDoubleClick( e:ControlEvent ) :void
-		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.FULLSCREEN_CHANGE ) );
-		}
-		
+
 		/**
 		 * movieplayer only
 		 */
