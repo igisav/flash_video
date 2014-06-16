@@ -15,7 +15,7 @@ package de.axelspringer.videoplayer.controller
     public class MainController
 	{
 		// protected var xmlInitialized:Boolean;
-		protected var jsInitialized:Boolean;
+		// protected var jsInitialized:Boolean;
 		// protected var cssInitialized:Boolean;
 		protected var cssUrl:String = "";
 		protected var root:Sprite;
@@ -97,7 +97,7 @@ package de.axelspringer.videoplayer.controller
 
 			// this.xmlInitialized = false;
 			// this.cssInitialized = false;
-			this.jsInitialized = false;
+			// this.jsInitialized = false;
 				
 			this.config = new ConfigVO();
 
@@ -162,7 +162,7 @@ package de.axelspringer.videoplayer.controller
 			{
 			}*/
 //???				if( BildTvDefines.isEmbedPlayer != true )BildTvDefines.isEmbedPlayer = false; //zuvor durch ScriptaccessAbfrage geklärt bei FB
-            this.jsInitialized = true;
+            // this.jsInitialized = true;
             this.start();
     }
 
@@ -174,7 +174,7 @@ package de.axelspringer.videoplayer.controller
         public function loadURL(url:String):void{
             this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2 = url ;
 
-            // TODO: Selim: Parameter adaptive kam immer aus XML-Datei. Jetzt?
+            // TODO: hdAdaptive wird über flashvars gesetzt. Überprüfen ob default=true nicht gefährlich ist.
             this.config.videoVO.hdAdaptive = true;
             this.start();
         }
@@ -184,39 +184,39 @@ package de.axelspringer.videoplayer.controller
  * APP CONTROL
  ************************************************************************************************/
 		
-		private var readySignalsended:Boolean = false;
-		private var readytimer:Timer = new Timer(2000,5);
+		//private var readySignalsended:Boolean = false;
+		// private var readytimer:Timer = new Timer(2000,5);
 		
 		protected function start() :void
 		{
 //			ExternalInterface.call("com.xoz.flash_logger.logTrace",consolstring);
-           			
-			if( false == this.readySignalsended && true == this.jsInitialized)
-			{
-				this.readySignalsended = true;
+            /*
+		//	if( false == this.readySignalsended && true == this.jsInitialized)
+		//	{
+				// this.readySignalsended = true;
 				var userAgent:String = ExternalInterface.call("function(){return navigator.userAgent}")
 //				ExternalInterface.call("com.xoz.flash_logger.logTrace","USE TIMER WHEN IE8 IS USED: " + userAgent);
 					
 				if(false)//userAgent == null)
 				{
 //					ExternalInterface.call("com.xoz.flash_logger.logTrace","START TIMER BECAUSE IE8");
-					/*this.readytimer.addEventListener(TimerEvent.TIMER, onTimerTick);
+					this.readytimer.addEventListener(TimerEvent.TIMER, onTimerTick);
 					this.readytimer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerComplete);
-					this.readytimer.start();		*/	
+					this.readytimer.start();
 				}
 				else
 				{
-	/*				ExternalInterface.call("com.xoz.flash_logger.logTrace","---------SEND READY SIGNAL------------------External is Available=" + ExternalInterface.available);
+					ExternalInterface.call("com.xoz.flash_logger.logTrace","---------SEND READY SIGNAL------------------External is Available=" + ExternalInterface.available);
 					var xml:String = ExternalInterface.call("com.xoz.videoplayer.getXMLString", BildTvDefines.playerId) as String;								
 					var xml2:String = ExternalInterface.call("com.xoz.videoplayer.instances." + BildTvDefines.playerId + ".events.publish","videoplayer/flashplayer/ready", {'id': BildTvDefines.playerId});								
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","GOT IT WITHOUT CALLBACK: " + xml)
-					this.setXMLByJSCall(xml);*/
+					this.setXMLByJSCall(xml);
 				
 				}
-			}	
-			
-			if( true == this.jsInitialized) // true == this.xmlInitialized &&
-			{
+		//	}
+            */
+		//	if( true == this.jsInitialized) // true == this.xmlInitialized &&
+	//		{
 //				ExternalInterface.call("com.xoz.flash_logger.logTrace","Embed: " + BildTvDefines.isEmbedPlayer);
 								
 				if( true == BildTvDefines.isEmbedPlayer )
@@ -255,7 +255,7 @@ package de.axelspringer.videoplayer.controller
 //				if( this.config.adVO ) ExternalInterface.call("com.xoz.flash_logger.logTrace","AD CALL CHOOSEN: id:" + this.config.adVO.club);
 
 				this.update();	
-			}
+		//	}
 			
 		}
 		
@@ -557,13 +557,13 @@ package de.axelspringer.videoplayer.controller
 /************************************************************************************************
  * JS HANDLING
  ************************************************************************************************/
-		
-		private function loadJS(jsURL:String, cssURL:String):void
+
+        /* private function loadJS(jsURL:String, cssURL:String):void
 		{
-			/* var jsLoader:URLLoader = new URLLoader();
+			var jsLoader:URLLoader = new URLLoader();
 			jsLoader.load(new URLRequest(jsURL));   
 		   	jsLoader.addEventListener(Event.COMPLETE, jSLoaded);
-		   	jsLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError); */	
+		   	jsLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		   	try
 			{
 			   	ExternalInterface.call("function(){var head= document.getElementsByTagName('head')[0]; var script=document.createElement('script'); script.type='text/javascript'; script.src='"+ jsURL +"'; head.appendChild(script);}");
@@ -593,7 +593,7 @@ package de.axelspringer.videoplayer.controller
 			this.jsInitialized = true;
 			this.start();
 		}
- 
+        */
  
  
 /************************************************************************************************

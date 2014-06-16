@@ -2,61 +2,49 @@ package de.axelspringer.videoplayer.controller
 {
 	//import com.akamai.hd.HDNetStream;
 	//import com.akamai.hd.HDNetStream;
-	import com.adobe.net.URI;
-	import com.akamai.net.f4f.ZStream;
-	import de.axelspringer.videoplayer.event.AdEvent;
-	import de.axelspringer.videoplayer.event.ControlEvent;
-	import de.axelspringer.videoplayer.event.XmlEvent;
-	import de.axelspringer.videoplayer.model.vo.AdVO;
-	import de.axelspringer.videoplayer.model.vo.BildTvDefines;
-	import de.axelspringer.videoplayer.model.vo.ConfigVO;
-	import de.axelspringer.videoplayer.model.vo.FilmVO;
-	import de.axelspringer.videoplayer.model.vo.FullscreenData;
-	import de.axelspringer.videoplayer.model.vo.StreamingVO;
+    import com.akamai.net.f4f.ZStream;
+
+    import de.axelspringer.videoplayer.event.AdEvent;
+    import de.axelspringer.videoplayer.event.ControlEvent;
+    import de.axelspringer.videoplayer.event.XmlEvent;
+    import de.axelspringer.videoplayer.model.vo.AdVO;
+    import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+    import de.axelspringer.videoplayer.model.vo.ConfigVO;
+    import de.axelspringer.videoplayer.model.vo.FilmVO;
+    import de.axelspringer.videoplayer.model.vo.FullscreenData;
+    import de.axelspringer.videoplayer.model.vo.StreamingVO;
+    import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
+    import de.axelspringer.videoplayer.util.XmlLoader;
+    import de.axelspringer.videoplayer.vast.VastController;
+    import de.axelspringer.videoplayer.vast.VastDefines;
+    import de.axelspringer.videoplayer.view.PlayerView;
+
+    import flash.events.AsyncErrorEvent;
+    import flash.events.Event;
+    import flash.events.EventDispatcher;
+    import flash.events.IOErrorEvent;
+    import flash.events.NetStatusEvent;
+    import flash.events.SecurityErrorEvent;
+    import flash.events.TimerEvent;
+    import flash.external.ExternalInterface;
+    import flash.media.SoundTransform;
+    import flash.net.NetConnection;
+    import flash.net.NetStream;
+    import flash.net.URLLoader;
+    import flash.net.URLRequest;
+    import flash.net.URLRequestHeader;
+    import flash.net.URLRequestMethod;
+    import flash.net.URLVariables;
+    import flash.net.navigateToURL;
+    import flash.utils.Timer;
+    import flash.utils.clearTimeout;
+    import flash.utils.setTimeout;
 
     //import de.axelspringer.videoplayer.model.vo.TrackingVO;
-	import de.axelspringer.videoplayer.model.vo.VideoVO;
-	import de.axelspringer.videoplayer.util.XmlLoader;
-	import de.axelspringer.videoplayer.vast.VastController;
-	import de.axelspringer.videoplayer.vast.VastDefines;
-	import de.axelspringer.videoplayer.view.ControlsView;
-	import de.axelspringer.videoplayer.view.PlayerView;
 //	import de.axelspringer.videoplayer.view.SubtitleView;
 
-	import flash.display.DisplayObject;
-	import flash.display.Loader;
-	import flash.events.AsyncErrorEvent;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.HTTPStatusEvent;
-	import flash.events.IOErrorEvent;
-	import flash.events.NetStatusEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.events.TimerEvent;
-	import flash.external.ExternalInterface;
-	import flash.media.SoundTransform;
-	import flash.net.NetConnection;
-	import flash.net.NetStream;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestHeader;
-	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables;
-	import flash.net.navigateToURL;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
-	import flash.system.Security;
-	import flash.system.SecurityDomain;
-	import flash.system.System;
-	import flash.utils.ByteArray;
-	import flash.utils.Timer;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
-
-	import mx.utils.object_proxy;
-
-	public class PlayerController extends EventDispatcher
+    public class PlayerController extends EventDispatcher
 	{
 		private static const CLIP_BUMPER_PREROLL:String="CLIP_BUMPER_PREROLL";
 		private static const CLIP_BUMPER_POSTROLL:String="CLIP_BUMPER_POSTROLL";
