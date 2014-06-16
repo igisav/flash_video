@@ -5,7 +5,6 @@ package de.axelspringer.videoplayer.controller
 	import de.axelspringer.videoplayer.model.vo.ConfigVO;
 //	import de.axelspringer.videoplayer.model.vo.SkinVO;
 //	import de.axelspringer.videoplayer.model.vo.base.SkinBaseVO;
-	import de.axelspringer.videoplayer.ui.controls.ControlButton;
 	import de.axelspringer.videoplayer.view.ControlsView;
 	import de.axelspringer.videoplayer.view.PlayerView;
 //	import de.axelspringer.videoplayer.view.SubtitleView;
@@ -61,7 +60,6 @@ package de.axelspringer.videoplayer.controller
 			s = new Sprite();
 			this.stage.addChild( s );
 			this.playerView = new PlayerView( s );
-			this.playerView.addEventListener( ControlEvent.FULLSCREEN_CHANGE, fullscreenChange );
 			this.playerView.addEventListener( ControlEvent.PLAY, onPlay );
 			this.playerView.addEventListener( ControlEvent.ERROR_CLICK, onErrorClick );
 			
@@ -156,32 +154,32 @@ package de.axelspringer.videoplayer.controller
 			
 			this.resize();
 		}
-		
-		
-		
-		public function externFullscreenChange( state:Boolean) :void
+
+
+
+        /*public function externFullscreenChange( state:Boolean) :void
 		{
-			/*if( this.state != STATE_PLAY )
+			if( this.state != STATE_PLAY )
 			{
 				this.controlsView.dispatchEvent( new ControlEvent( ControlEvent.PLAYPAUSE_CHANGE ) );
-			}*/
+			}
 			
 			this.showView( PlayerView.NAME );
 			
 			this.setFullscreen(state);
 		}
-		
-		public function fullscreenChange( e:Event = null ) :void
+
+        public function fullscreenChange( e:Event = null ) :void
 		{
-			/*if( this.state != STATE_PLAY )
+			if( this.state != STATE_PLAY )
 			{
 				this.controlsView.dispatchEvent( new ControlEvent( ControlEvent.PLAYPAUSE_CHANGE ) );
-			}*/
+			}
 			
 			this.showView( PlayerView.NAME );
 			
 			this.setFullscreen( !this.isFullscreen );
-		}
+		}*/
 		
 		public function showView( name:String ) :void
 		{
@@ -264,38 +262,6 @@ package de.axelspringer.videoplayer.controller
 					break;
 				}
 			}
-		}
-		
-		protected function forwardControlEvent( e:ControlEvent ) :void
-		{
-			switch( e.data.type )
-			{
-				/*case ControlButton.SUBTITLE:
-				{
-					if( this.subtitleView ) this.subtitleView.ui.visible = !this.subtitleView.ui.visible;
-					
-					break;
-				}*/
-				case ControlButton.BILDDE:
-				{
-					/*if( e.type == ControlEvent.BUTTON_OUT )
-					{
-						this.controlsView.controls.bilddeBtnTooltip.visible = false;
-					}
-					if( e.type == ControlEvent.BUTTON_OVER )
-					{	
-						this.controlsView.controls.bilddeBtnTooltip.visible = true;
-					}*/
-					if( e.type == ControlEvent.BUTTON_CLICK )
-					{		
-						var deeplinkUrl:String = this.config.shareVO.deeplinkUrl;
-						navigateToURL(new URLRequest(deeplinkUrl));
-					}
-					break;
-				}
-			}
-			
-			this.dispatchEvent( new ControlEvent( e.type, e.data ) );
 		}
 		
 		protected function onPlay( e:ControlEvent ) :void

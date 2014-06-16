@@ -2,7 +2,6 @@ package de.axelspringer.videoplayer.controller
 {
     import de.axelspringer.videoplayer.event.*;
     import de.axelspringer.videoplayer.model.vo.*;
-    import de.axelspringer.videoplayer.ui.controls.ControlButton;
     import de.axelspringer.videoplayer.util.*;
     import de.axelspringer.videoplayer.view.PlayerView;
 
@@ -352,10 +351,6 @@ package de.axelspringer.videoplayer.controller
 		protected function initController() :void
 		{
 			this.viewController = new ViewController( this.stage );
-			this.viewController.addEventListener( ControlEvent.TEASER_CLICK, onTeaserClick );
-			this.viewController.addEventListener( ControlEvent.BUTTON_CLICK, onControlButtonClick );
-			this.viewController.addEventListener( ControlEvent.BUTTON_OVER, onControlButtonClick );
-			this.viewController.addEventListener( ControlEvent.BUTTON_OUT, onControlButtonClick );
 			this.viewController.addEventListener( ControlEvent.REPLAY, onReplayClick );
 			
 			this.playerController = new PlayerController( this.viewController.playerView); //, this.viewController.controlsView, this.viewController.subtitleView
@@ -735,107 +730,11 @@ package de.axelspringer.videoplayer.controller
 /************************************************************************************************
  * EVENTS
  ************************************************************************************************/
- 
-		protected function onTeaserClick( e:ControlEvent ) :void
-		{
-			trace( this + " onTeaserClick: " + e.data.deeplink );
-			//this.loadXml( e.data.xml );
-			
-			try
-			{
-				navigateToURL( new URLRequest( e.data.deeplink ), "_self" );
-			}
-			catch( oops:Error )
-			{
-				// dumm gelaufen
-			}
-		}
-		
-		protected function onControlButtonClick( e:ControlEvent ) :void
-		{
-			//trace( this + " onControlButtonClick: " + e.data.type + "   " + e.type );
-			
-			switch( e.data.type )
-			{
-				case ControlButton.SUBTITLE:
-				{	
-					/*if( this.viewController.subtitleView.ui.visible )
-					{
-						this.playerController.trackingController.trackPlayerEvent("SUBTITLE_ON");		
-					}
-					else
-					{
-						this.playerController.trackingController.trackPlayerEvent("SUBTITLE_OFF");				
-					}*/
-					break;
-				}
-				case ControlButton.FULLSCREEN:
-				{
-					this.viewController.fullscreenChange();
-					
-					/*if( this.viewController.isFullscreen )
-					{
-						this.playerController.trackingController.trackPlayerEvent("FULLSCREEN_ON");		
-					}
-					else
-					{
-						this.playerController.trackingController.trackPlayerEvent("FULLSCREEN_OFF");				
-					}*/
-					
-					break;
-				}
-				case ControlButton.HD:
-				{
-					var phase:Number = e.data.phase;
-					this.playerController.setHDBitrate(phase);
-					break;
-				}
-				case ControlButton.SHARE:
-				{
-										
-					// movieplayer calls javascript, other players toggle the share overlay
-					 if( BildTvDefines.isMoviePlayer )
-					{
-						if( e.type == ControlEvent.BUTTON_OVER )
-						{
-							try
-							{
-								ExternalInterface.call( this.config.filmVO.functionNameShare );
-							}
-							catch( error:Error )
-							{								
-								trace("Kein Scriptaccess!");
-							}	
-						}
-					}
-					else
-					{
-						try
-						{
-							if( e.type == ControlEvent.BUTTON_OUT )
-							{
-								//trace(ExternalInterface.call("project_objects.StateManger.hideLikeOverlay",BildTvDefines.playerId));
-								ExternalInterface.call("project_objects.StateManger.hideLikeOverlay",BildTvDefines.playerId);		
-							}
-							if( e.type == ControlEvent.BUTTON_OVER )
-							{	
-								//ExternalInterface.call("Dojo.testCall","hide");
-								//ExternalInterface.call("Dojo.myFunction", "Hide jetzt mal nicht den Player..");
-							
-								var url:String = BookmarkVO(this.config.shareVO.bookmarks[0]).url;
-								ExternalInterface.call("project_objects.StateManger.showLikeOverlay",BildTvDefines.playerId, url);
-							}
-						}
-						catch(e:Error)
-						{
-							trace("Kein Scriptaccess!");
-						}
-					}
-					
-					break;
-				}
-			}
-		}
+
+
+// TODO: Selim: was ist mit setzen von HD
+        // var phase:Number = e.data.phase;
+        // this.playerController.setHDBitrate(phase);
 
 		protected function onVideoFinish( e:ControlEvent ) :void
 		{
