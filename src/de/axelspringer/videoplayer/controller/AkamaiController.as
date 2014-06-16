@@ -643,6 +643,8 @@ package de.axelspringer.videoplayer.controller
 						trace( this + " set buffertime to " + this.netstream.bufferTime );
 					}
 
+                    ExternalController.dispatch(ExternalController.EVENT_EMPTIED);
+
 					break;
 				}
 				case "NetStream.Play.StreamNotFound":

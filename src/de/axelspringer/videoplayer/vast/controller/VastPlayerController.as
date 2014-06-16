@@ -256,7 +256,7 @@ package de.axelspringer.videoplayer.vast.controller
 						
 						trace( this + " set buffertime to " + this.ns.bufferTime );
 					}
-					
+                    ExternalController.dispatch(ExternalController.EVENT_EMPTIED);
 					break;
 				}
 				case "NetStream.Play.StreamNotFound":

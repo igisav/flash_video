@@ -267,7 +267,7 @@ package de.axelspringer.videoplayer.controller
 				}
 			}
 
-            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE, this.savedVolume);
+            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE, this.soundTransform.volume);
 		}
         
         //trackingData:TrackingVO,
@@ -1248,6 +1248,7 @@ package de.axelspringer.videoplayer.controller
 						}
                         ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 					}
+                    ExternalController.dispatch(ExternalController.EVENT_EMPTIED);
 
 					break;
 				}
@@ -1909,14 +1910,14 @@ package de.axelspringer.videoplayer.controller
             else {
                 if (this.hdContent == false)
                 {
-                    if (this.ns != null && !this.adPlaying && (this.videoIsStream || time <= this.videoLoaded))
+                    if (this.ns != null && !this.adPlaying && (this.videoIsStream || time <= this.videoLoaded * this.duration))
                     {
                         // set lower buffer time to enable fast video start after seeking
                         this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
 
                         trace(this + " set buffertime to " + this.ns.bufferTime);
 
-                        var newTime:Number=time * this.duration;
+                        var newTime:Number=time ;
 
                         //						ExternalInterface.call("function(){if (window.console) console.log('SEEK TO Sec: "+newTime+"');}");
                         this.ns.seek(newTime);
@@ -2374,13 +2375,14 @@ package de.axelspringer.videoplayer.controller
                 if(this.vastController) this.vastController.setVolume(this.savedVolume);
             }
 
-            return this.savedVolume
+            return this.soundTransform ? this.soundTransform.volume : 0;
         }
 
         public function mute(param:String = ""):Boolean
         {
             if (param != "") {
-                volume( this.savedVolume );
+                var muteValue:Number = param == "false" ? this.savedVolume : 0;
+                volume( muteValue );
             }
 
             return this.muted
