@@ -113,6 +113,7 @@ package de.axelspringer.videoplayer.controller
 		protected var contentStarted:Boolean=false;
 		protected var metadata:Object;
 		protected var duration:Number;
+		protected var playtime:Number = 0; // currentTime
 		protected var savedVolume:Number=0;
 		protected var savedPosition:Number = 0;
 		protected var savedBitrate:Number = 0;
@@ -133,7 +134,6 @@ package de.axelspringer.videoplayer.controller
 		private static const CALLBACK_SEEK:String				= "SEEK";
 
 		//Variables to finish a Video which can't be flushed
-		protected var currentVideoTime:Number;
 		protected var previousVideoTime:Number;
 		protected var offsetVideoTime:int;
 		protected var videoTimer:Timer;
@@ -924,7 +924,7 @@ package de.axelspringer.videoplayer.controller
 				return;
 			}
 			
-			trace( "isPlaying: " + this.isPlaying + "  playing:" + this.playing + " videoStarted:" + this.videoStarted + " time: " + this.currentVideoTime)
+			trace( "isPlaying: " + this.isPlaying + "  playing:" + this.playing + " videoStarted:" + this.videoStarted )
 			if( this.videoUrl != videoVO.videoUrl2 )
 			{
 				this.videoVO.videoUrl = this.videoVO.videoUrl2;
@@ -1663,10 +1663,10 @@ package de.axelspringer.videoplayer.controller
 
 			if (this.playing)
 			{
-				var playtime:Number = -1;
+				this.playtime = -1;
 				if( this.hdContent == false) 
 				{
-					if( this.ns ) playtime = this.ns.time;
+					if( this.ns ) this.playtime = this.ns.time;
 				}
 				else if(this.nsHD && this.duration != -1) 
 				{
@@ -1675,41 +1675,41 @@ package de.axelspringer.videoplayer.controller
 						//mit bitratenwechsel, ins negative spulen
 						if(this.nsHD.duration < 0)
 						{
-							playtime = this.savedPosition + this.offsetVideoTime + this.nsHD.duration;
+							this.playtime = this.savedPosition + this.offsetVideoTime + this.nsHD.duration;
 						}
 						else
 						{
-							playtime = this.savedPosition + this.offsetVideoTime /*- ( this.videoVO.duration - this.nsHD.duration )*/;							
+							this.playtime = this.savedPosition + this.offsetVideoTime /*- ( this.videoVO.duration - this.nsHD.duration )*/;
 						}
 					}
 					else if( this.nsHD.time == 0 && ( this.videoVO.duration - this.nsHD.duration ) == 0)
 					{
 						//mit oder ohne bitratenwechsel, gesamte länge, spuelen nach vorn
-						playtime = this.nsHD.time + this.savedPosition;
+						this.playtime = this.nsHD.time + this.savedPosition;
 					}
 					else
 					{
 						//normal, mit oder ohne bitratenwechsel ohne spulen
-						playtime = this.nsHD.time + ( this.videoVO.duration - this.nsHD.duration );
+						this.playtime = this.nsHD.time + ( this.videoVO.duration - this.nsHD.duration );
 					}
 					
-					// this.controlsView.updatePlayProgress(playtime);
+					// this.controlsView.updatePlayProgress(this.playtime);
 				}
 				
-				//trace(this + "  " + playtime);
-				// this.controlsView.updateTime(playtime);
+				//trace(this + "  " + this.playtime);
+				// this.controlsView.updateTime(this.playtime);
 				//trace("this.showAds: " + this.showAds + "   this.isBumper: "+ this.isBumper + "   BildTvDefines.adType: " + BildTvDefines.adType);
 				/*if (this.subtitleView && !BildTvDefines.isBumper) //BildTvDefines.adType
 				{
-					this.subtitleView.updateTime(playtime);
+					this.subtitleView.updateTime(this.playtime);
 				}*/
 
-				// this.trackingController.updatePlayProgress(playtime);
-                ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, playtime);
+				// this.trackingController.updatePlayProgress(this.playtime);
+                ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, this.playtime);
 
 				if (this.duration > 0)
 				{
-					var progress:Number=playtime / this.duration;
+					var progress:Number=this.playtime / this.duration;
 					//trace(this + " progress: " + progress + ":::"+ this.ns.time + "::" + this.duration);
 					// this.controlsView.updatePlayProgress(progress);
 
@@ -1756,13 +1756,12 @@ package de.axelspringer.videoplayer.controller
 		
 		protected function checkEndOfVideo(event:TimerEvent):void
 		{
-			if (this.hdContent == false) this.currentVideoTime=this.ns.time;
-			else this.currentVideoTime=this.nsHD.time;
+            var currentVideoTime:Number = this.hdContent == false ? this.ns.time : this.nsHD.time;
 
 			
 			//trace(this + " :: currentTime = " + this.currentVideoTime + " :: lastTime = " + this.previousVideoTime);
 
-			var timeHasntChanged:Boolean=(this.currentVideoTime == this.previousVideoTime);
+			var timeHasntChanged:Boolean=(currentVideoTime == this.previousVideoTime);
 
 			if (this.videoStopped == true && this.videoBufferEmptyStatus != true && this.videoBufferFlushStatus == true && this.playing == true && timeHasntChanged == true)
 			{
@@ -1791,7 +1790,7 @@ package de.axelspringer.videoplayer.controller
 				this.reconnectLivestreamTimer.stop();
 			}
 
-			this.previousVideoTime=this.currentVideoTime;
+			this.previousVideoTime=currentVideoTime;
 		}
 
 		protected function onVideoFinish():void
@@ -1878,11 +1877,11 @@ package de.axelspringer.videoplayer.controller
 			}*/
 			else
 			{
-				this.onPlayPauseChange(e);
+				this.onPlayPauseChange();
 			}
 		}
 
-		protected function onPlayPauseChange(e:ControlEvent):void
+		protected function onPlayPauseChange():void
 		{
 
 			//trace( this + " onPlayPauseChange - current state: " + this.playing );
@@ -1916,14 +1915,12 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
-		protected function externalSeek(e:ControlEvent):void
+        /* Igor: alte Methodename onProgressChange
+         Benutzer ändert position des Videos
+          */
+		protected function setCurrentTime(time:Number):void
 		{
-			
-		}
-		
-		protected function onProgressChange(e:ControlEvent):void
-		{
-			ExternalInterface.call("com.xoz.flash_logger.logInfo"," onProgressChange - seekPoint: " + e.data.seekPoint);
+			ExternalInterface.call("com.xoz.flash_logger.logInfo"," onProgressChange - seekPoint: " + time);
 
 			// seeking is allowed for akamai streams if they are movies (Movieplayer) or VOD (StreamPlayer)
 			// livestreams are StreamPlayer too, but seeking is not active, so we should never get here in that case 
@@ -1931,62 +1928,51 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.subtitleView.updateSrtPosition(e.data.seekPoint * this.duration);				
 			}*/
-			if (this.hdContent == false)
-			{
-				if (BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer)
-				{
-					this.akamaiController.onProgressChange(e.data.seekPoint);
-				}
-				else
-				{
-					if (this.ns != null && !this.adPlaying && (this.videoIsStream || e.data.seekPoint <= this.videoLoaded))
-					{
-						// set lower buffer time to enable fast video start after seeking
-						this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
+            if (BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer)
+            {
+                this.akamaiController.onProgressChange(time);
+            }
+            else {
+                if (this.hdContent == false)
+                {
+                    if (this.ns != null && !this.adPlaying && (this.videoIsStream || time <= this.videoLoaded))
+                    {
+                        // set lower buffer time to enable fast video start after seeking
+                        this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
 
-						trace(this + " set buffertime to " + this.ns.bufferTime);
+                        trace(this + " set buffertime to " + this.ns.bufferTime);
 
-						var newTime:Number=e.data.seekPoint * this.duration;
-						
-//						ExternalInterface.call("function(){if (window.console) console.log('SEEK TO Sec: "+newTime+"');}");
-						this.ns.seek(newTime);
-					}
-				}
-			}
-			else
-			{
-				if (BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer)
-				{
-					this.akamaiController.onProgressChange(e.data.seekPoint);
-				}
-				else
-				{
-					if (this.nsHD != null && !this.adPlaying)
-					{
-						// set lower buffer time to enable fast video start after seeking
-//						this.nsHD.bufferTime= BildTvDefines.buffertimeMinimum * 100;						
+                        var newTime:Number=time * this.duration;
 
-						var newHDTime:Number=e.data.seekPoint * this.duration;
-						
-												
-						if(e.data.dragging == false)
-						{
-							this.savedPosition = newHDTime;
-							ExternalInterface.call("com.xoz.flash_logger.logTrace","new time: " + newHDTime + "   saved:" + this.savedPosition );
-						
-							
-							
-							trace("-------------------------");
-							trace(" längediff:" + (this.nsHD.duration - this.videoVO.duration) + "  newpos:" + newHDTime + "  längOrgi:" + this.videoVO.duration);
-							trace("-------------------------");
-							this.offsetVideoTime = 0;
-							this.nsHD.seek( newHDTime + (this.nsHD.duration - this.videoVO.duration) );
-							
-						}				
-					}
-				}
-			}
+                        //						ExternalInterface.call("function(){if (window.console) console.log('SEEK TO Sec: "+newTime+"');}");
+                        this.ns.seek(newTime);
+                    }
+                }
+                else
+                {
+                    if (this.nsHD != null && !this.adPlaying)
+                    {
+                        // set lower buffer time to enable fast video start after seeking
+//						this.nsHD.bufferTime= BildTvDefines.buffertimeMinimum * 100;
+
+                        var newHDTime:Number=time * this.duration;
+
+                        this.savedPosition = newHDTime;
+                        ExternalInterface.call("com.xoz.flash_logger.logTrace","new time: " + newHDTime + "   saved:" + this.savedPosition );
+
+                        trace("-------------------------");
+                        trace(" längediff:" + (this.nsHD.duration - this.videoVO.duration) + "  newpos:" + newHDTime + "  längOrgi:" + this.videoVO.duration);
+                        trace("-------------------------");
+                        this.offsetVideoTime = 0;
+                        this.nsHD.seek( newHDTime + (this.nsHD.duration - this.videoVO.duration) );
+                    }
+                }
+            }
+
+
 		}
+/*
+        Igor: Die alte Methode, wenn der Benutzer änderte Volume per Button Klick
 
 		protected function onVolumeChange(e:ControlEvent):void
 		{
@@ -2005,7 +1991,7 @@ package de.axelspringer.videoplayer.controller
 				this.setVolume(vol);
 				//trace("ist nicht mute und neues vol ist: " + vol);
 			}
-		}
+		}*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // AD EVENTS HANDLER
@@ -2407,13 +2393,6 @@ package de.axelspringer.videoplayer.controller
 		/********************************************************************************************************
 		 * EXTERNAL CALLBACKS
 		 *******************************************************************************************************/
-		
-		public function externalGetPlayingStatus():Boolean
-		{
-			trace("get Playerstraus: " + this.isPlaying + "::::videostartet:" + this.videoStarted);
-			return this.isPlaying;
-		}
-
 
         public function volume(value:Number = NaN):Number {
             if (!isNaN(value)) {
@@ -2424,12 +2403,27 @@ package de.axelspringer.videoplayer.controller
             return this.savedVolume
         }
 
-        public function mute(param:String = ""):Boolean {
+        public function mute(param:String = ""):Boolean
+        {
             if (param != "") {
                 volume( this.savedVolume );
             }
 
             return this.muted
+        }
+
+        public function currentTime(value:Number = NaN):Number
+        {
+            if (!isNaN(value)) {
+                this.setCurrentTime( value );
+            }
+
+            return this.playtime
+        }
+
+        public function getDuration():Number
+        {
+            return this.duration
         }
 
 		

@@ -46,6 +46,7 @@ package de.axelspringer.videoplayer.controller
 
         private static var jsEventCallback:String;
 
+        // TODO: mainController als Parameter hier entfernen
         public function init(mainController:MainController, playerController:PlayerController, jsCallback:String):Boolean
         {
             this.mainController = mainController;
@@ -94,6 +95,8 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.addCallback(PAUSE, playerController.pause);
             ExternalInterface.addCallback(VOLUME, playerController.volume);
             ExternalInterface.addCallback(MUTED, playerController.mute);
+            ExternalInterface.addCallback(CURRENT_TIME, playerController.currentTime);
+            ExternalInterface.addCallback(DURATION, playerController.getDuration);
         }
     }
 }
