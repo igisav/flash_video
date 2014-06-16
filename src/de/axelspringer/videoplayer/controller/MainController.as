@@ -12,6 +12,8 @@ package de.axelspringer.videoplayer.controller
     import flash.net.*;
     import flash.utils.Timer;
 
+    // TODO: rufe destroy() und töte den NetStream, wenn der Benutzer flash schliesst
+
     public class MainController
 	{
 		// protected var xmlInitialized:Boolean;

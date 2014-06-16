@@ -293,7 +293,7 @@ package de.axelspringer.videoplayer.controller
 				if(this.vastController) this.vastController.setVolume(0);
 			}
 			
-			this.showAds = this.adData;
+			this.showAds = this.adData != null;
 
 			if ( videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1 )
 			{
@@ -1589,14 +1589,7 @@ package de.axelspringer.videoplayer.controller
 						
 						//trace(this + "  setze falsche zeit aus der xml: " + videoVO.duration);
 						// deactivate midrolls if video is under 5 minutes
-						if (this.duration < 5 * 60)
-						{
-							this.videoReached50=true;
-						}
-						else
-						{
-							this.videoReached50=false;
-						}
+						this.videoReached50 = this.duration < 300;
 					}
 				}
 				else
@@ -2412,6 +2405,20 @@ package de.axelspringer.videoplayer.controller
         public function getDuration():Number
         {
             return this.duration
+        }
+
+        public function getBufferTime():Number
+        {
+            var bufferTime:Number = 0;
+            if (!hdContent)
+            {
+                if (ns) bufferTime = ns.bufferLength;
+            }
+            else if (nsHD)
+            {
+                bufferTime = nsHD.bufferLength;
+            }
+            return bufferTime
         }
 
 		
