@@ -527,7 +527,6 @@ package de.axelspringer.videoplayer.controller
 
 				this.playerView.display.attachNetStream( null );
 				this.playerView.display.attachNetStream( this.netstream );
-				this.playerView.setImageVisible( false );
 			}
 
             ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
@@ -570,7 +569,6 @@ package de.axelspringer.videoplayer.controller
 				videoVO.headline = this.filmVO.title;
 				videoVO.videoUrl = this.filmVO.streamUrl;
 				videoVO.videoUrl2 = this.filmVO.streamUrl2;
-				videoVO.imageUrl = this.filmVO.thumbnailUrl;
 				videoVO.duration = this.duration;
 				videoVO.autoplay = true;
 				// this.trackingController.setClip( videoVO, this.filmVO.trackingVO );

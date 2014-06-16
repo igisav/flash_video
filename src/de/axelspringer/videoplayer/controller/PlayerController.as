@@ -327,14 +327,7 @@ package de.axelspringer.videoplayer.controller
 
 			if (BildTvDefines.autoplay)
 			{
-				this.playerView.loadImage(null);
-				this.playerView.setImageVisible(false);
 				this.play();
-			}
-			else
-			{
-				this.playerView.loadImage(videoVO.imageUrl);
-				this.playerView.setImageVisible(true);
 			}
 		}
 
@@ -443,7 +436,6 @@ package de.axelspringer.videoplayer.controller
 			if (this.showAds && considerAds)
 			{
 				//this.adPlaying = true;
-				this.playerView.setImageVisible(false);
 
 				if (BildTvDefines.adType == "preroll")
 				{
@@ -802,7 +794,6 @@ package de.axelspringer.videoplayer.controller
 			this.ns.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus, false, 0, true);
 
 			this.playerView.display.attachNetStream(this.ns);
-			this.playerView.setImageVisible(false);
 
 			// play!
 			// for akamai live streams
@@ -882,8 +873,6 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.display.smoothing = true;
 				this.playerView.display.deblocking = 0;
 				
-				this.playerView.setImageVisible(false);
-
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				this.savedPosition = BildTvDefines.startTime;
 				
@@ -1800,8 +1789,6 @@ package de.axelspringer.videoplayer.controller
 			// this.controlsView.updateTime(0);
 			// this.controlsView.updatePlayProgress(0);
 			
-			this.playerView.setImageVisible(true);
-			
 			if (this.videoVO.autorepeat)
 			{
 				this.play();
@@ -2625,7 +2612,6 @@ package de.axelspringer.videoplayer.controller
 			this.videoVO.headline=filmVO.title;
 			this.videoVO.videoUrl=filmVO.streamUrl;
 			this.videoVO.videoUrl2=filmVO.streamUrl2;
-			this.videoVO.imageUrl=filmVO.thumbnailUrl;
 			this.videoVO.duration=filmVO.duration;
 			this.videoVO.autoplay=true;
 
@@ -2649,8 +2635,6 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.logoMovieplayer.visible=true;
 
 			// autoplay
-			this.playerView.loadImage(null);
-			this.playerView.setImageVisible(false);
 			this.clip2play=CLIP_CONTENT;
 
 			// start stream
@@ -2717,8 +2701,6 @@ package de.axelspringer.videoplayer.controller
 			this.akamaiController.setVolume(this.soundTransform.volume);*/
 
 			// autoplay
-			this.playerView.loadImage(null);
-			this.playerView.setImageVisible(false);
 			this.clip2play=CLIP_CONTENT;
 			// track playClick
 			

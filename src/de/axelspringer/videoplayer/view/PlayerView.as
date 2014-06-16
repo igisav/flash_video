@@ -44,7 +44,6 @@ package de.axelspringer.videoplayer.view
 		
 		protected var skin:SkinVO;
 		
-		protected var imageMc:Sprite;
 		//protected var displayBtn:DisplayButton;
 
 		protected var initWidth:Number;
@@ -80,10 +79,7 @@ package de.axelspringer.videoplayer.view
 			
 //			this.displayHD = new AkamaiVideoSurface(true);
 //			this.stage.addChild( this.displayHD );
-			
-			this.imageMc = new Sprite();
-			this.stage.addChild( this.imageMc );
-			
+
 			// movieplayer only
 			/*this.chapterList = new ChapterListUi();
 			this.chapterList.addEventListener( ControlEvent.PROGRESS_CHANGE, onMovieProgressChange );
@@ -188,12 +184,7 @@ package de.axelspringer.videoplayer.view
 				this.dispatchEvent( new ControlEvent( ControlEvent.PLAY ) );
 			}
 		}
-		
-		public function setImageVisible( visible:Boolean = true ) :void
-		{
-			this.imageMc.visible = visible;
-		}
-		
+
 		/*public function setDisplayButtonVisible( visible:Boolean = true ) :void
 		{
 		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ setDisplayButtonVisible: " + visible + " ~~~~~~~~~~~~~~~~~~~~~~" );
@@ -307,8 +298,7 @@ package de.axelspringer.videoplayer.view
 				this.displayBtn.y = Math.round( ( this.currentHeight - this.displayBtn.height ) / 2 );
 			}*/
 			
-			this.onImageLoaded( null );
-			
+
 //			if( BildTvDefines.isMoviePlayer )
 //			{
 				this.logoMovieplayer.x = Math.round( this.currentWidth - this.logoMovieplayer.width - 10 );
@@ -322,53 +312,6 @@ package de.axelspringer.videoplayer.view
 		}
 		
 
-		/**
-		 * movieplayer only
-		 */
-		protected function onMovieProgressChange( e:ControlEvent ) :void
-		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.PROGRESS_CHANGE, e.data ) );
-		}
-		
-		protected function onImageError( e:ErrorEvent ) :void
-		{
-			// nix
-		}
-		
-		public function loadImage( url:String ) :void
-		{
-			while( this.imageMc.numChildren > 0 )
-			{
-				this.imageMc.removeChildAt( 0 );
-			}
-			
-			if( url != null )
-			{
-				var loader:Loader = new Loader();
-				loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onImageError, false, 0, true );
-				loader.contentLoaderInfo.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onImageError, false, 0, true );
-				loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onImageLoaded, false, 0, true );
-				trace(this + " " + url);
-				loader.load( new URLRequest( url ), new LoaderContext( true ) );
-				
-				this.imageMc.addChild( loader );
-			}
-		}
-		
-		protected function onImageLoaded( e:Event ) :void
-		{
-			// scale
-			var scaleW:Number = this.currentWidth / this.imageMc.width;
-			var scaleH:Number = this.currentHeight / this.imageMc.height;
-			var scalor:Number = Math.min( scaleW, scaleH );
-			this.imageMc.width = Math.round( this.imageMc.width * scalor );
-			this.imageMc.height = Math.round( this.imageMc.height * scalor );
-			
-			// center
-			this.imageMc.x = Math.round( ( this.currentWidth - this.imageMc.width ) / 2 );
-			this.imageMc.y = Math.round( ( this.currentHeight - this.imageMc.height ) / 2 );
-		}
-		
 		protected function onAgeConfirm( e:MouseEvent ) :void
 		{
 			this.dispatchEvent( new ControlEvent( ControlEvent.AGE_RESTRICTION, { confirm:true } ) );
