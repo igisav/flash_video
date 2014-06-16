@@ -1,3 +1,4 @@
+/*
 package de.axelspringer.videoplayer.ui.controls
 {
 	import de.axelspringer.videoplayer.event.ControlEvent;
@@ -13,9 +14,6 @@ package de.axelspringer.videoplayer.ui.controls
 	{
 		public static const DEFAULT:String 		= "ControlButton.DEFAULT";
 		public static const FULLSCREEN:String 	= "ControlButton.FULLSCREEN";
-		public static const SHARE:String 		= "ControlButton.SHARE";
-		public static const LIKE:String 		= "ControlButton.LIKE";
-		public static const BILDDE:String 		= "ControlButton.BILDDE";
 		public static const HD:String 			= "ControlButton.HD";
 		public static const SUBTITLE:String 	= "ControlButton.SUBTITLE";
 		
@@ -121,4 +119,4 @@ package de.axelspringer.videoplayer.ui.controls
 			}
 		}
 	}
-}
+}*/
