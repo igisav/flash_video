@@ -10,10 +10,6 @@ package de.axelspringer.videoplayer.model.vo
         // TODO: wozu ist das?
 		public var videoUrl2:String 	= "";
 
-		public var headline:String 		= "";
-		public var roofline:String 		= "";
-		public var text:String 			= "";
-		
 		/**
 		 * duration in seconds
 		 */
@@ -23,10 +19,6 @@ package de.axelspringer.videoplayer.model.vo
 		public var autorepeat:Boolean 		= false;
 		public var startHDQuality:Boolean 	= false;
 		public var hdAdaptive:Boolean 		= false;
-		public var geoRestriction:String	= "";
-		public var geoImage:String			= "";
-		public var ageRestriction:String	= "";
-		
 		// gets set in ConfigVO
 		public var bumperPrerollXml:String	= "";
 		public var bumperPostrollXml:String	= "";
@@ -51,10 +43,7 @@ package de.axelspringer.videoplayer.model.vo
 			}
 			
 			this.videoUrl2 = hasAttribute( xml, "src" ) ? xml.@src : this.videoUrl2;
-			this.headline = hasAttribute( xml, "ueberschrift" ) ? xml.@ueberschrift : this.headline;
-			this.roofline = hasAttribute( xml, "dachzeile" ) ? xml.@dachzeile : this.roofline;
-			this.text = xml.text[0];
-			
+
 			if( this.videoUrl.indexOf( ".xml" ) != -1 )
 			{
 				trace("search for this one to get VAST player back");

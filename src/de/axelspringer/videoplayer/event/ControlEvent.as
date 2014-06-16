@@ -21,7 +21,6 @@ package de.axelspringer.videoplayer.event
 		public static const TEASER_CLICK:String 		= "ControlEvent.TEASER_CLICK";
 		public static const CLOSE_UI:String 			= "ControlEvent.CLOSE_UI";
 		public static const RESIZE:String 				= "ControlEvent.RESIZE";
-		public static const AGE_RESTRICTION:String 		= "ControlEvent.AGE_RESTRICTION";
 		public static const ERROR:String 				= "ControlEvent.ERROR";
 		public static const ERROR_GEO:String 			= "ControlEvent.ERROR_GEO";
 		public static const ERROR_SESSION:String 		= "ControlEvent.ERROR_SESSION";

@@ -119,9 +119,6 @@ package de.axelspringer.videoplayer.model.vo
 			this.playerHeight = hasAttribute( xml.player[0], "height" ) ? parseInt( xml.player[0].@height ) : this.playerHeight;
 			
 			this.videoVO.hydrate( xml );
-			this.videoVO.geoRestriction = hasAttribute( xml.geo[0], "regions" ) ? xml.geo[0].@regions : this.videoVO.geoRestriction;
-			this.videoVO.geoImage = hasAttribute( xml.geo[0], "img" ) ? xml.geo[0].@img  : this.videoVO.geoImage;
-			this.videoVO.ageRestriction = hasAttribute( xml.restrict[0], "age" ) ? xml.restrict[0].@age : this.videoVO.ageRestriction;
 			this.videoVO.bumperPrerollXml = hasAttribute( xml.bumper[0], "preroll" ) ?  xml.bumper[0].@preroll  : this.videoVO.bumperPrerollXml;
 			this.videoVO.bumperPostrollXml = hasAttribute( xml.bumper[0], "postroll" ) ? xml.bumper[0].@postroll : this.videoVO.bumperPostrollXml;
 			this.videoVO.link = hasAttribute( xml.link[0], "link" ) ? xml.link[0].@link : this.videoVO.link;

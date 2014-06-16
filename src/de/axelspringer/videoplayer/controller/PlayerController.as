@@ -190,7 +190,6 @@ package de.axelspringer.videoplayer.controller
 			this.soundTransform=new SoundTransform();
 
 			this.playerView.addEventListener(ControlEvent.RESIZE, onDisplayResize);
-			this.playerView.addEventListener(ControlEvent.AGE_RESTRICTION, onAgeRestrictionFeedback);
 
 			/*this.controlsView.addEventListener(ControlEvent.PLAYPAUSE_CHANGE, onPlayPauseChange);
 			this.controlsView.addEventListener(ControlEvent.PROGRESS_CHANGE, onProgressChange);
@@ -413,14 +412,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			//trace( this + " play: " + this.videoVO.videoUrl );
 
-			// check age restriction
-			if (this.videoVO.ageRestriction != "")
-			{
-				//this.showAgeRestrictionMessage();
-				return;
-			}
-
-			// track init, but not when autoplay			
+			// track init, but not when autoplay
 			// 12.01.11 - exception for welt			
 			// 17.01.11 - disabled permanently for bild too
 //			if( !this.videoVO.autoplay || BildTvDefines.isWeltPlayer )
@@ -2146,22 +2138,6 @@ package de.axelspringer.videoplayer.controller
 			this.vastController.setSize(this.playerView.getPlayerSize(), e.data as FullscreenData);
 		}
 
-		protected function showAgeRestrictionMessage():void
-		{
-			//this.playerView.showAgeRestrictionMessage( true, this.videoVO.ageRestriction );
-		}
-
-		protected function onAgeRestrictionFeedback(e:ControlEvent):void
-		{
-			//this.playerView.showAgeRestrictionMessage( false );
-
-			if (e.data.confirm)
-			{
-				this.videoVO.ageRestriction="";
-				this.play();
-			}
-		}
-
 		protected function showGeoMessage():void
 		{
 			this.dispatchEvent(new ControlEvent(ControlEvent.ERROR_GEO));
@@ -2609,7 +2585,6 @@ package de.axelspringer.videoplayer.controller
 			this.filmVO=filmVO;
 
 			this.videoVO=new VideoVO();
-			this.videoVO.headline=filmVO.title;
 			this.videoVO.videoUrl=filmVO.streamUrl;
 			this.videoVO.videoUrl2=filmVO.streamUrl2;
 			this.videoVO.duration=filmVO.duration;

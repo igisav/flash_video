@@ -311,17 +311,6 @@ package de.axelspringer.videoplayer.view
 			this.dispatchEvent( new ControlEvent( ControlEvent.RESIZE, new FullscreenData( this.isFullscreen, this.wasFullscreen ) ) );
 		}
 		
-
-		protected function onAgeConfirm( e:MouseEvent ) :void
-		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.AGE_RESTRICTION, { confirm:true } ) );
-		}
-		
-		protected function onAgeDeny( e:MouseEvent ) :void
-		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.AGE_RESTRICTION, { confirm:false } ) );
-		}
-		
 		/**
 		 * movieplayer only
 		 */

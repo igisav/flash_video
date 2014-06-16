@@ -566,7 +566,6 @@ package de.axelspringer.videoplayer.controller
 
 				// set tracking info here because now we have the duration
 				var videoVO:VideoVO = new VideoVO();
-				videoVO.headline = this.filmVO.title;
 				videoVO.videoUrl = this.filmVO.streamUrl;
 				videoVO.videoUrl2 = this.filmVO.streamUrl2;
 				videoVO.duration = this.duration;
