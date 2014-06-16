@@ -80,7 +80,7 @@ package de.axelspringer.videoplayer.controller
 
             if (supress.indexOf(eventName) >= 0) {return}
 
-            if (value == null || value == "") {
+            if (!(value is Boolean) && (value == null || value == "")) {
                 ExternalInterface.call(jsEventCallback, eventName);
             } else {
                 var msg:Object =  {};
@@ -97,6 +97,7 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.addCallback(MUTED, playerController.mute);
             ExternalInterface.addCallback(CURRENT_TIME, playerController.currentTime);
             ExternalInterface.addCallback(DURATION, playerController.getDuration);
+            ExternalInterface.addCallback(BUFFED, playerController.getBufferTime);
         }
     }
 }

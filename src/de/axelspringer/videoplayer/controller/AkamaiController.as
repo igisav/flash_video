@@ -191,7 +191,7 @@ package de.axelspringer.videoplayer.controller
 			this.dispatchEvent( new ControlEvent( ControlEvent.CONTENT_START ) );
 
 			this.initializingMovieStream = false;
-			this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:true } ) );
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 
 			// geoblock test
 //			this.onConnectionStatus( new NetStatusEvent( "", false, false, {code:"NetConnection.Connect.Rejected", description:"geoblock"} ) );
@@ -219,7 +219,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.pause();
 				// this.trackingController.onClipPause();
-				this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:false } ) );
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 			}
 			else if( this.videoStarted )
 			{
@@ -229,13 +229,13 @@ package de.axelspringer.videoplayer.controller
 					// this.trackingController.onClipPlay();
 				}
 
-				this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:true, stream:this.netstream } ) );
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				this.resume();
 				// this.trackingController.onClipResume();
 			}
 			else
 			{
-				this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:true } ) );
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				this.startStream();
 			}
 		}
@@ -246,7 +246,7 @@ package de.axelspringer.videoplayer.controller
 
 			if( this.netstream != null && !isNaN( seekPoint ) )
 			{
-				this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:true, stream:this.netstream } ) );
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				var newTime:Number = seekPoint * this.duration;
 
 				// set lower buffer time to enable fast video start after seeking
@@ -530,7 +530,7 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.setImageVisible( false );
 			}
 
-			this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:true, stream:this.netstream } ) );
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			this.netstream.play( this.streamName, 0 );
 		}
 
@@ -616,7 +616,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					this.videoBufferEmptyStatus = false;
 
-					this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:false } ) );
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					// set higher buffer now to enable constant playback
 					this.netstream.bufferTime = BildTvDefines.buffertimeMaximum;
@@ -630,7 +630,7 @@ package de.axelspringer.videoplayer.controller
 					this.videoBufferEmptyStatus = true;
 					if( !this.videoBufferFlushStatus )
 					{
-						this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:true, stream:this.netstream } ) );
+                        ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 
 						// set lower buffer here to enable fast video start
 						bufferTime = BildTvDefines.buffertimeMinimum;
@@ -654,7 +654,7 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Play.Start":
 				{
 					this.onStreamStarted();
-					this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:false } ) );
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					break;
 				}
@@ -1052,8 +1052,8 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.display.removeEventListener( Event.ENTER_FRAME, onVideoEnterFrame, false );
 			
 			this.pause( false );
-			
-			this.dispatchEvent( new ControlEvent( ControlEvent.LOADERANI_CHANGE, { visible:false } ) );
+
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 			
 			// dispatch error event to show error view in MainController
 			// use text from XML, if present, otherwise use fallback text from BildTvDefines

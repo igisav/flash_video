@@ -154,7 +154,7 @@ package de.axelspringer.videoplayer.controller
 			this.vastController.addEventListener(AdEvent.LINEAR_START, onAdLinearStart);
 			this.vastController.addEventListener(AdEvent.LINEAR_STOP, onAdLinearStop);
 			this.vastController.addEventListener(AdEvent.FINISH, onAdFinish);
-			this.vastController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
+			// this.vastController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
 
 
 			this.playerView=playerView;
@@ -437,7 +437,7 @@ package de.axelspringer.videoplayer.controller
 			//// this.trackingController.onClipPlay();
 //			}						
 
-			this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true}));
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			this.clip2play=CLIP_BUMPER_PREROLL;
 			
 
@@ -496,18 +496,18 @@ package de.axelspringer.videoplayer.controller
 			{
 				case CLIP_BUMPER_PREROLL:
 				{
-					this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true}));
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 					if (this.bumperVO != null)
 					{
 						this.currentClip=this.bumperVO;
 					}
-					else if (this.videoVO.bumperPrerollXml != "")
+					/*else if (this.videoVO.bumperPrerollXml != "")
 					{
 						this.loadBumperXml(this.videoVO.bumperPrerollXml);
 
 						// avoid playstart now
 						return;
-					}
+					}*/
 					else
 					{
 						this.clip2play=CLIP_CONTENT;
@@ -522,12 +522,12 @@ package de.axelspringer.videoplayer.controller
 					{
 						this.currentClip=this.bumperVO;
 					}
-					else if (this.videoVO.bumperPostrollXml != "")
+					/*else if (this.videoVO.bumperPostrollXml != "")
 					{
 						this.loadBumperXml(this.videoVO.bumperPostrollXml);
 						// avoid playstart now
 						return;
-					}
+					}*/
 					else
 					{
 						this.clip2play=CLIP_NONE;
@@ -637,7 +637,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			if (this.parseStreamUrl())
 			{
-				this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true}));
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				if( this.nc.connected && this.nc.uri == this.videoServer )
 				{
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","POST REQUEST @ playClip if Stream and this.nc.connected && this.nc.uri != null");
@@ -813,7 +813,7 @@ package de.axelspringer.videoplayer.controller
 			}
 
 			// action!
-			this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true, stream: this.ns}));
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			
 //			ExternalInterface.call("function(){if (window.console) console.log('play: "+ this.videoFile+"');}");
 			if( isLivestream || BildTvDefines.startTime == 0 )
@@ -884,8 +884,8 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.display.deblocking = 0;
 				
 				this.playerView.setImageVisible(false);
-		
-				this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true, stream: this.nsHD}));		
+
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				this.savedPosition = BildTvDefines.startTime;
 				
 	//			trace("starttime: " + this.savedPosition);
@@ -1228,7 +1228,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					this.videoBufferEmptyStatus=false;
 
-					this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					// set higher buffer now to enable constant playback
 					if (this.hdContent == false) this.ns.bufferTime = BildTvDefines.buffertimeMaximum;
@@ -1241,18 +1241,12 @@ package de.axelspringer.videoplayer.controller
 					this.videoBufferEmptyStatus=true;
 					if (!this.videoBufferFlushStatus)
 					{
-
 						// set lower buffer here to enable fast video start
 						if (this.hdContent == false)
 						{
-							this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true, stream: this.ns}));
 							this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
 						}
-						else
-						{
-							this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true, stream: this.nsHD}));
-//							if( this.nsHD ) this.nsHD.bufferTime= BildTvDefines.buffertimeMinimum;
-						}
+                        ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 					}
 
 					break;
@@ -1875,7 +1869,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				if (this.playing)
 				{
-					this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 					this.pause();
 					// this.trackingController.onClipPause();
 				}
@@ -1883,8 +1877,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					if (this.videoIsStream)
 					{
-						if (this.hdContent == false) this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true, stream: this.ns}));
-						else this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true, stream: this.nsHD}));		
+						ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 					}
 					this.resume();
 					// this.trackingController.onClipResume();
@@ -2099,7 +2092,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					trace(this + " onAdEnd: preroll");
 
-					this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					if (BildTvDefines.isMoviePlayer)
 					{
@@ -2124,7 +2117,7 @@ package de.axelspringer.videoplayer.controller
 					trace(this + " onAdEnd: midroll");
 					this.isAdPlaying = false;
 
-					this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					if (BildTvDefines.isMoviePlayer)
 					{
@@ -2156,8 +2149,8 @@ package de.axelspringer.videoplayer.controller
 				case VastDefines.ADTYPE_POSTROLL:
 				{
 					trace(this + " onAdEnd: postroll");
-					
-					this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
+
+                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 					this.onVideoFinish();
 
 					break;
@@ -2523,12 +2516,12 @@ package de.axelspringer.videoplayer.controller
 		 * BUMPER STUFF
 		 *******************************************************************************************************/
 
-		protected function loadBumperXml(url:String):void
+	/*	protected function loadBumperXml(url:String):void
 		{
 			trace(this + " loadBumperXml: " + url);
 
 //			ExternalInterface.call("function(){if (window.console) console.log('"+this + " loadBumperXml: " + url+"');}");
-			this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: true}));
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			this.playerView.supressPlayDisplayButton(true);
 			var xmlLoader:XmlLoader=new XmlLoader();
 			xmlLoader.addEventListener(XmlEvent.XML_LOADED, onBumperXmlLoaded, false, 0, true);
@@ -2554,15 +2547,17 @@ package de.axelspringer.videoplayer.controller
 			trace("onBumperXmlError: " + e.text);
 //			ExternalInterface.call("function(){if (window.console) console.log('onBumperXmlError: "+ e.text+"');}");
 			this.playerView.supressPlayDisplayButton(false);
-			this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 			this.setNextClip();
 			this.playClip();
 		}
 
-		protected function emptyCallback(... args):void
-		{
-			// nix drin
-		}
+		*/
+
+        protected function emptyCallback(... args):void
+        {
+            // nix drin
+        }
 
 		protected function forwardEvent(event:Event):void
 		{
@@ -2673,7 +2668,7 @@ package de.axelspringer.videoplayer.controller
 
 			// controller for akamai streams
 			this.akamaiController=new AkamaiController(this.playerView); // , this.controlsView
-			this.akamaiController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
+			//this.akamaiController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
 			this.akamaiController.addEventListener(ControlEvent.PAUSE, externalPause);
 			this.akamaiController.addEventListener(ControlEvent.RESUME, externalResume);
 			this.akamaiController.addEventListener(ControlEvent.LOAD_MIDROLL, loadMidroll);
