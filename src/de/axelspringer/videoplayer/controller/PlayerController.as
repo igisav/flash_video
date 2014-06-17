@@ -4,20 +4,12 @@ package de.axelspringer.videoplayer.controller
 	//import com.akamai.hd.HDNetStream;
     import com.akamai.net.f4f.ZStream;
 
-    import de.axelspringer.videoplayer.event.AdEvent;
     import de.axelspringer.videoplayer.event.ControlEvent;
-    import de.axelspringer.videoplayer.event.XmlEvent;
-    import de.axelspringer.videoplayer.model.vo.AdVO;
     import de.axelspringer.videoplayer.model.vo.BildTvDefines;
-    import de.axelspringer.videoplayer.model.vo.ConfigVO;
     import de.axelspringer.videoplayer.model.vo.FilmVO;
-    import de.axelspringer.videoplayer.model.vo.FullscreenData;
     import de.axelspringer.videoplayer.model.vo.StreamingVO;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
-    import de.axelspringer.videoplayer.util.XmlLoader;
-    import de.axelspringer.videoplayer.vast.VastController;
-    import de.axelspringer.videoplayer.vast.VastDefines;
     import de.axelspringer.videoplayer.view.PlayerView;
 
     import flash.events.AsyncErrorEvent;
@@ -36,9 +28,7 @@ package de.axelspringer.videoplayer.controller
     import flash.net.URLRequestHeader;
     import flash.net.URLRequestMethod;
     import flash.net.URLVariables;
-    import flash.net.navigateToURL;
     import flash.utils.Timer;
-    import flash.utils.clearTimeout;
     import flash.utils.setTimeout;
 
     //import de.axelspringer.videoplayer.model.vo.TrackingVO;
@@ -63,8 +53,6 @@ package de.axelspringer.videoplayer.controller
 
 		// gui
 		protected var playerView:PlayerView;
-		//protected var controlsView:ControlsView;
-		//protected var subtitleView:SubtitleView;
 
 		// netstream stuff
 		protected var nc:NetConnection;
@@ -81,7 +69,6 @@ package de.axelspringer.videoplayer.controller
 		protected var videoFile:String;
 		protected var videoIsStream:Boolean;
 		protected var streamConnects:uint;
-		protected var adData:AdVO;
 		protected var bumperVO:VideoVO;
 		protected var clip2play:String;
 		protected var hdContent:Boolean=false;
@@ -114,12 +101,6 @@ package de.axelspringer.videoplayer.controller
 		protected var checkEndOfVideoTimer:Timer;
 		protected var reconnectLivestreamTimer:Timer;
 
-		//ads
-		protected var vastController:VastController;
-		protected var isAdPlaying:Boolean;
-		protected var showAds:Boolean;
-		protected var overlayTimeout:int;
-
 		// movieplayer & liveplayer only
 		protected var filmVO:FilmVO;
 		protected var streamingVO:StreamingVO;
@@ -132,20 +113,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			super(this);
 
-			//// this.trackingController=new TrackingController();
-            // TODO Selim - vast brauchen?
-            // TODO Log messages to JS (see util.Log),
-			this.vastController=new VastController(playerView.adContainer);
-			this.vastController.addEventListener(AdEvent.ERROR, onAdError);
-			this.vastController.addEventListener(AdEvent.LINEAR_START, onAdLinearStart);
-			this.vastController.addEventListener(AdEvent.LINEAR_STOP, onAdLinearStop);
-			this.vastController.addEventListener(AdEvent.FINISH, onAdFinish);
-			// this.vastController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
-
-
 			this.playerView=playerView;
-			//this.controlsView=controlsView;
-			//this.subtitleView=subtitleView;
 			this.initPlayer()
 		}
 
@@ -174,8 +142,6 @@ package de.axelspringer.videoplayer.controller
 			this.nc.client=client;
 
 			this.soundTransform=new SoundTransform();
-
-			this.playerView.addEventListener(ControlEvent.RESIZE, onDisplayResize);
 
 			/*this.controlsView.addEventListener(ControlEvent.PLAYPAUSE_CHANGE, onPlayPauseChange);
 			this.controlsView.addEventListener(ControlEvent.PROGRESS_CHANGE, onProgressChange);
@@ -254,7 +220,7 @@ package de.axelspringer.videoplayer.controller
 		}
         
         //trackingData:TrackingVO,
-		public function setClip(videoVO:VideoVO,  adData:AdVO):void
+		public function setClip(videoVO:VideoVO):void
 		{
 			//trace("---------------------setclip-----------------------");
 			if(videoVO.videoUrl == "")
@@ -268,16 +234,11 @@ package de.axelspringer.videoplayer.controller
 			BildTvDefines.isBumper=false;
 			//this.playerView.setDisplayButtonAsPlayPauseButton(true);
 
-			this.adData=adData;
-			
 			if( true == this.videoVO.mute )
 			{
 				this.setVolume( 0 );
-				if(this.vastController) this.vastController.setVolume(0);
 			}
 			
-			this.showAds = this.adData != null;
-
 			if ( videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1 )
 			{
 				this.hdContent=true;
@@ -340,11 +301,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.videoTimer.start();
 			ExternalInterface.call("com.xoz.flash_logger.logTrace","------------RESUME STREAM!----------------");
-			if (this.isAdPlaying)
-			{
-				this.vastController.resume();
-			}
-			else if (this.videoStarted)
+			 if (this.videoStarted)
 			{
 				if (this.hdContent == false)
 				{
@@ -455,7 +412,6 @@ package de.axelspringer.videoplayer.controller
 
 		protected function playClip():void
 		{			
-			this.adPlaying=false;
 			this.previousVideoTime = this.savedPosition;
 			// refresh clip info
 			/*this.controlsView.updateTime(this.savedPosition);
@@ -604,12 +560,6 @@ package de.axelspringer.videoplayer.controller
 				}
 				
 			}
-
-			// load overlay
-			if (!BildTvDefines.isBumper && this.showAds)
-			{
-				this.overlayTimeout=setTimeout(this.vastController.load, VastDefines.OVERLAY_DELAY, this.adData.overlay, VastDefines.ADTYPE_OVERLAY);
-			}
 		}
 
 		protected function playStream():void
@@ -686,10 +636,6 @@ package de.axelspringer.videoplayer.controller
 					//this.akamaiHDController.close();
 			}
 
-			// hide ad overlay
-			this.vastController.showOverlay(false);
-			clearTimeout(this.overlayTimeout);
-
 			this.setNextClip();
 			this.bumperVO=null;
 
@@ -697,15 +643,6 @@ package de.axelspringer.videoplayer.controller
 			if (this.clip2play != CLIP_NONE)
 			{
 				this.playClip();
-			}
-			// all content finished, now play postroll ad
-			else if (this.showAds)
-			{
-				// clear overlay timeout
-				clearTimeout(this.overlayTimeout);
-				//this.playerView.adLabel.visible = false;
-				this.adPlaying=true;
-				this.vastController.load(this.adData.postroll, VastDefines.ADTYPE_POSTROLL);
 			}
 			else
 			{
@@ -728,30 +665,6 @@ package de.axelspringer.videoplayer.controller
 		protected function get playing():Boolean
 		{
 			return this.isPlaying;
-		}
-
-		/**
-		 * special flag - true if ad is current clip
-		 */
-		protected function set adPlaying(value:Boolean):void
-		{
-			trace(this + "  +++++ adPlaying:  " + value + "::" + this.videoStopped);
-			this.isAdPlaying=value;
-			this.playerView.videoBtn.visible=!value;
-			//this.playerView.adLabel.text=(value) ? this.adData.adText : "";
-
-			//this.playerView.setDisplayButtonVisible( !value );	
-			this.playing=value;
-
-			/*if (!value)
-			{
-				this.controlsView.showAdControls(false);
-			}*/
-		}
-
-		protected function get adPlaying():Boolean
-		{
-			return this.isAdPlaying;
 		}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1581,12 +1494,6 @@ package de.axelspringer.videoplayer.controller
 				this.setNextClip();
 				this.playClip();
 			}
-			// otherwise show message
-			else
-			{
-				// stop overlay timer
-				clearTimeout(this.overlayTimeout);
-			}
 		}
 
 		protected function onVideoEnterFrame(e:Event):void
@@ -1644,14 +1551,9 @@ package de.axelspringer.videoplayer.controller
 					//trace(this + " progress: " + progress + ":::"+ this.ns.time + "::" + this.duration);
 					// this.controlsView.updatePlayProgress(progress);
 
-					if (!BildTvDefines.isBumper && this.showAds && !this.videoReached50 && progress > 0.5)
+					if (!BildTvDefines.isBumper && !this.videoReached50 && progress > 0.5)
 					{
-						//trace( this + " reached 50 %" );
-
-						// clear overlay timeout
-						clearTimeout(this.overlayTimeout);
 						this.videoReached50=true;
-						this.vastController.load(this.adData.midroll, VastDefines.ADTYPE_MIDROLL);
 					}
 				}
 			}
@@ -1744,10 +1646,8 @@ package de.axelspringer.videoplayer.controller
 				if (this.nsHD != null) this.nsHD.pause();
 			}
 
-			this.adPlaying=false;
 			this.playing=false;
 			this.videoStarted=false;
-			this.showAds=false;
 			BildTvDefines.isBumper=false;
 			this.contentStarted=false;
 
@@ -1783,7 +1683,7 @@ package de.axelspringer.videoplayer.controller
 					this.pause();
 					// this.trackingController.onClipPause();
 				}
-				else if (this.adPlaying || this.videoStarted)
+				else if (this.videoStarted)
 				{
 					if (this.videoIsStream)
 					{
@@ -1819,7 +1719,7 @@ package de.axelspringer.videoplayer.controller
             else {
                 if (this.hdContent == false)
                 {
-                    if (this.ns != null && !this.adPlaying && (this.videoIsStream || time <= this.videoLoaded * this.duration))
+                    if (this.ns != null && (this.videoIsStream || time <= this.videoLoaded * this.duration))
                     {
                         // set lower buffer time to enable fast video start after seeking
                         this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
@@ -1834,7 +1734,7 @@ package de.axelspringer.videoplayer.controller
                 }
                 else
                 {
-                    if (this.nsHD != null && !this.adPlaying)
+                    if (this.nsHD != null )
                     {
                         // set lower buffer time to enable fast video start after seeking
 //						this.nsHD.bufferTime= BildTvDefines.buffertimeMinimum * 100;
@@ -1877,232 +1777,6 @@ package de.axelspringer.videoplayer.controller
 			}
 		}*/
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// AD EVENTS HANDLER
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		protected function onAdLinearStart(event:AdEvent):void
-		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","onAdLinearStart");
-			
-			// movieplayer only: start jingle
-			if (BildTvDefines.isMoviePlayer)
-			{
-				this.akamaiController.adPlaying=true;
-
-				if (this.vastController.currentAdType == VastDefines.ADTYPE_MIDROLL)
-				{
-					this.akamaiController.playMidrollJingle();
-				}
-			}
-			else if (BildTvDefines.isStreamPlayer)
-			{
-				this.akamaiController.adPlaying=true;
-			}
-			else
-			{
-				// pause mainclip (for midrolls)
-				if (this.playing)
-				{
-					if( this.hdContent == false )
-					{
-						if (this.ns != null)
-						{
-							this.ns.pause();
-						}
-					}
-					else
-					{
-						if (this.nsHD != null)
-						{
-							this.nsHD.pause();
-						}			
-					}
-					this.playing=true;
-					//this.paused=true;
-					
-					//this.playerView.adLabel.visible = true;
-					
-				}
-			}
-		}
-
-		protected function onAdLinearStop(event:AdEvent):void
-		{
-			// called if VPAID ad changed it's playing mode - does not mean that the ad finished displaying
-			// do not remove overlay here
-
-			ExternalInterface.call("com.xoz.flash_logger.logTrace"," onAdLinearStop");
-
-			// this.controlsView.showAdControls(false);
-			// this.controlsView.enableSeeking(!this.isLivestream);
-			// refresh clip info
-			// this.controlsView.setDuration(this.videoVO.duration);
-			if (!this.paused)
-			{
-				this.resume();
-			}
-		}
-
-		protected function onAdError(event:AdEvent):void
-		{
-			//this.adPlaying = false;
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","onAdErrorEvent: "+event.data+" vom Typ:"+event.adPlacement);
-			
-			//trace(this + " onAdErrorEvent: " + event.data);
-			VastController.traceToHtml("++++++++++++ error +++++++++++++++");
-			VastController.traceToHtml(event.data as String);
-
-			
-			//trace("onAdError:" + event.data + " this.playing=true;" + this.playing );
-			/*if( !this.playing ) */this.onAdEnd( event.adPlacement ); //check if timeout with no following adEnd Event has sideeffects
-		}
-
-		protected function onAdFinish(event:AdEvent):void
-		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","onAdFinish");
-			
-			this.onAdEnd();
-		}
-
-		protected function onAdEnd( adPlacement:String = "" ):void
-		{
-			var adType:String=this.vastController.currentAdType;
-			
-			if( adPlacement == VastDefines.ADTYPE_OVERLAY )
-			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","Overlay end: reset controls and display');}");		
-			}
-			if( adPlacement != VastDefines.ADTYPE_OVERLAY )
-			{
-				this.vastController.reset();
-				this.vastController.showDisplay(false);
-				this.vastController.showOverlay(false);
-				// this.controlsView.showAdControls(false, adType);
-				// this.controlsView.enableSeeking(!BildTvDefines.isLivePlayer);
-				
-			}
-			else
-			{
-				adType = adPlacement;
-			}
-			
-			//this.playerView.adLabel.text="";
-
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","onAdEnd: type from VAST:"+adType);
-			
-			if (BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer)
-			{
-				//this.akamaiController.adPlaying=false;
-			}
-
-			switch (adType)
-			{
-				case VastDefines.ADTYPE_PREROLL:
-				{
-					trace(this + " onAdEnd: preroll");
-
-                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
-
-					if (BildTvDefines.isMoviePlayer)
-					{
-						this.playClip();
-						//this.akamaiController.startPlaying();
-					}
-					//else if( BildTvDefines.isLivePlayer )
-					else if (BildTvDefines.isStreamPlayer)
-					{
-						//this.akamaiController.startLivestream();
-						this.playClip();
-					}
-					else
-					{
-						this.playClip();
-					}
-
-					break;
-				}
-				case VastDefines.ADTYPE_MIDROLL:
-				{
-					trace(this + " onAdEnd: midroll");
-					this.isAdPlaying = false;
-
-                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
-
-					if (BildTvDefines.isMoviePlayer)
-					{
-						this.akamaiController.resumeAfterMidroll();
-					}
-					else
-					{
-						// refresh clip info
-						// this.controlsView.setDuration(this.videoVO.duration);
-						//trace("type:" + BildTvDefines.adType +"   playing:" +  this.playing +"  paused:"+ this.paused);
-						if ( !this.paused )
-						{
-							ExternalInterface.call("com.xoz.flash_logger.logTrace","onAdEnd: type from defines: "+BildTvDefines.adType);
-							
-							if(BildTvDefines.adType != "" && BildTvDefines.adType != null)
-							{
-								//this.playClip();
-								this.resume();		
-							}
-							else
-							{
-								this.resume();		
-							}
-						}
-					}
-
-					break;
-				}
-				case VastDefines.ADTYPE_POSTROLL:
-				{
-					trace(this + " onAdEnd: postroll");
-
-                    ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
-					this.onVideoFinish();
-
-					break;
-				}
-				case VastDefines.ADTYPE_OVERLAY:
-
-				{
-					trace(this + " onAdEnd: overlay");
-
-					// refresh clip info
-					//this.controlsView.setDuration(this.videoVO.duration);
-					if (!this.playing && !this.paused)
-					{
-						ExternalInterface.call("com.xoz.flash_logger.logTrace","Overlay end: resume Clip now...");
-						
-						//this.resume();
-					}
-
-					break;
-				}
-				case VastDefines.ADTYPE_NONE:
-				{
-					//trace("Single Vast Clip finishes, finish the Player now!" + BildTvDefines.isSingleVastPlayer);
-					//if( BildTvDefines.isSingleVastPlayer ) this.onVideoFinish();
-					break;
-				}
-				default:
-				{
-					trace(this + " onAdEnd: other - " + this.vastController.currentAdType);
-
-					break;
-				}
-			}
-		}
-
-		protected function onDisplayResize(e:ControlEvent):void
-		{
-			//trace( this + " onDisplayResize" );
-			/*if (this.subtitleView)
-				this.subtitleView.updateSize();*/
-			this.vastController.setSize(this.playerView.getPlayerSize(), e.data as FullscreenData);
-		}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // DIVERSE STUFF
@@ -2255,7 +1929,6 @@ package de.axelspringer.videoplayer.controller
         public function volume(value:Number = NaN):Number {
             if (!isNaN(value)) {
                 this.setVolume( value );
-                if(this.vastController) this.vastController.setVolume(this.savedVolume);
             }
 
             return this.soundTransform ? this.soundTransform.volume : 0;
@@ -2546,18 +2219,9 @@ package de.axelspringer.videoplayer.controller
 			this.videoVO.duration=filmVO.duration;
 			this.videoVO.autoplay=true;
 
-			this.adData=filmVO.adVO;
-			this.showAds=true;
-
 			// controller for akamai streams
 			this.akamaiController=new AkamaiController(this.playerView); // , this.controlsView
 			//this.akamaiController.addEventListener(ControlEvent.LOADERANI_CHANGE, forwardEvent);
-			this.akamaiController.addEventListener(ControlEvent.PAUSE, externalPause);
-			this.akamaiController.addEventListener(ControlEvent.RESUME, externalResume);
-			this.akamaiController.addEventListener(ControlEvent.LOAD_MIDROLL, loadMidroll);
-			this.akamaiController.addEventListener(ControlEvent.LOAD_POSTROLL, loadPostroll);
-			this.akamaiController.addEventListener(ControlEvent.JINGLE_FINISHED, onJingleFinished);
-			this.akamaiController.addEventListener(ControlEvent.CONTENT_START, onContentStart);
 			this.akamaiController.setMovie(filmVO);
 			this.akamaiController.setVolume(this.soundTransform.volume);
 
@@ -2567,34 +2231,8 @@ package de.axelspringer.videoplayer.controller
 
 			// start stream
 			//this.akamaiController.startPlaying();
-			// start preroll
-			this.adPlaying=true;
-			this.vastController.load(filmVO.adVO.preroll, VastDefines.ADTYPE_PREROLL);
 		}
 
-		protected function externalPause(event:ControlEvent):void
-		{
-			this.vastController.pause();
-		}
-
-		protected function externalResume(event:ControlEvent):void
-		{
-			this.vastController.resume();
-		}
-
-		protected function loadMidroll(event:ControlEvent):void
-		{
-			// clear overlay timeout
-			clearTimeout(this.overlayTimeout);
-			this.vastController.load(this.adData.midroll, VastDefines.ADTYPE_MIDROLL, false);
-		}
-
-		protected function onJingleFinished(event:ControlEvent):void
-		{
-			trace(this + " onJingleFinished");
-
-			this.vastController.startAd();
-		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // liveplayer only
@@ -2614,9 +2252,6 @@ package de.axelspringer.videoplayer.controller
 //			this.videoVO.imageUrl = streamingVO.thumbnailUrl;
 			this.videoVO.duration=streamingVO.duration;
 			this.videoVO.autoplay=streamingVO.autoplay;
-
-			this.adData=streamingVO.adVO;
-			this.showAds=true;
 
 			// controller for akamai streams
 			/*this.akamaiController=new AkamaiController(this.playerView, this.controlsView, // this.trackingController);
@@ -2638,8 +2273,6 @@ package de.axelspringer.videoplayer.controller
 			// start stream
 //			this.akamaiController.startLivestream();
 			// start preroll
-			this.adPlaying=true;
-			this.vastController.load(streamingVO.adVO.preroll, VastDefines.ADTYPE_PREROLL);
 		}
 
 		/**
@@ -2658,8 +2291,6 @@ package de.axelspringer.videoplayer.controller
 			}
 
 			// clear overlay timeout
-			clearTimeout(this.overlayTimeout);
-			this.vastController.load(url, VastDefines.ADTYPE_POSTROLL);
 		}
 	}
 }

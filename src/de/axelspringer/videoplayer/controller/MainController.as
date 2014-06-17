@@ -123,31 +123,8 @@ package de.axelspringer.videoplayer.controller
 				}
 			
 				this.initMode();
-				
-				for (var i:int = 0; i < this.config.ads.length; i++) 
-				{	
-					if( this.config.ads[i].club == "default" )
-					{
-						this.config.adVO = this.config.ads[i];
-						break;
-					}
-					else
-					{
-						var adPossible:Boolean = ExternalInterface.call("de.bild.user.userHasClub",this.config.ads[i].club);
-						
-						//ExternalInterface.call("function(){if (window.console) console.log('club is ok? : "+this.config.ads[i].club + ": " + adPossible+"');}");
-						if( adPossible )
-						{
-							this.config.adVO = this.config.ads[i];
-							break;
-						}					
-					}
-				}
-//				if( this.config.adVO ) ExternalInterface.call("com.xoz.flash_logger.logTrace","AD CALL CHOOSEN: id:" + this.config.adVO.club);
 
 				this.update();	
-		//	}
-			
 		}
 		
 		protected function setSize() :void
@@ -225,7 +202,7 @@ package de.axelspringer.videoplayer.controller
 				videoVO.duration=this.config.streamingVO.duration;
 				videoVO.autoplay=this.config.streamingVO.autoplay;
 				
-				this.playerController.setClip( videoVO, this.config.adVO );
+				this.playerController.setClip( videoVO );
 			}
 			else
 			{
@@ -251,7 +228,7 @@ package de.axelspringer.videoplayer.controller
 					this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2;
 				}
 				 
-				this.playerController.setClip( this.config.videoVO, this.config.adVO );
+				this.playerController.setClip( this.config.videoVO);
 			}
 		}
 				

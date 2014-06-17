@@ -22,11 +22,7 @@ package de.axelspringer.videoplayer.model.vo
 		public var endScreenEnabled:Boolean = true;
 		public var relatedXml:String = "";
 		public var relatedVideos:Array;
-		
-		// ads
-		public var ads:Vector.<AdVO>;
-		public var adVO:AdVO;
-		
+
 		//AdTexts
 		public var adTextTextVO:AdTimerTextVO;
 		
@@ -39,7 +35,6 @@ package de.axelspringer.videoplayer.model.vo
 		public function ConfigVO()
 		{
 			this.videoVO = new VideoVO();
-			this.ads = new Vector.<AdVO>;
 			this.adTextTextVO = new AdTimerTextVO();
 			this.relatedVideos = new Array();
 		}
