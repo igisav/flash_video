@@ -56,7 +56,12 @@
             var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
 
             window.de.bild.callback = function(msg) {
+                if(msg.type == 'timeupdate' || msg.type == 'progress'){
+                    return
+                }
+
                 track("EVENT: " + JSON.stringify(msg));
+
                 if(msg.type == 'initialized'){
                     loadAndPlay(currentVideo);
                     play();

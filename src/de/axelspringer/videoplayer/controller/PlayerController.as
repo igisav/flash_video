@@ -1796,15 +1796,6 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.play();
 			}
-			else
-			{
-				/*if(this.trackingController.clipFinished == false )
-				{
-					// goes to MainController to show EndView
-					this.trackingController.onClipEnd();
-				}*/
-				this.dispatchEvent(new ControlEvent(ControlEvent.VIDEO_FINISH));
-			}
 		}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2499,14 +2490,14 @@ package de.axelspringer.videoplayer.controller
             // nix drin
         }
 
-		protected function forwardEvent(event:Event):void
+		/*protected function forwardEvent(event:Event):void
 		{
 			this.dispatchEvent(event.clone());
 			if (this.adPlaying == false && event.type == ControlEvent.LOADERANI_CHANGE) //toDelete  richtiges Event muss noch weitergereicht werden!!!-->AdStart oder so..
 			{
 				this.adPlaying=true;
 			}
-		}
+		}*/
 
 
 
@@ -2611,7 +2602,6 @@ package de.axelspringer.videoplayer.controller
 			this.akamaiController.addEventListener(ControlEvent.RESUME, externalResume);
 			this.akamaiController.addEventListener(ControlEvent.LOAD_MIDROLL, loadMidroll);
 			this.akamaiController.addEventListener(ControlEvent.LOAD_POSTROLL, loadPostroll);
-			this.akamaiController.addEventListener(ControlEvent.VIDEO_FINISH, finishPlay);
 			this.akamaiController.addEventListener(ControlEvent.JINGLE_FINISHED, onJingleFinished);
 			this.akamaiController.addEventListener(ControlEvent.CONTENT_START, onContentStart);
 			this.akamaiController.addEventListener(ControlEvent.ERROR, onError);

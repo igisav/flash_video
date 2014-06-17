@@ -5,7 +5,7 @@ package de.axelspringer.videoplayer.event
 	public class ControlEvent extends Event
 	{
 		public static const PLAYPAUSE_CHANGE:String 	= "ControlEvent.PLAYPAUSE_CHANGE";
-		public static const VIDEO_FINISH:String 		= "ControlEvent.VIDEO_FINISH";
+		// public static const VIDEO_FINISH:String 		= "ControlEvent.VIDEO_FINISH";
 		public static const PLAY:String 				= "ControlEvent.PLAY";
 		public static const PAUSE:String 				= "ControlEvent.PAUSE";
 		public static const RESUME:String 				= "ControlEvent.RESUME";
