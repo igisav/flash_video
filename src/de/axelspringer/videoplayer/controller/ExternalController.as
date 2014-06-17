@@ -81,8 +81,8 @@ package de.axelspringer.videoplayer.controller
 
         public static function dispatch(eventName:String, value:* = null):void
         {
-            var supress:Array = [EVENT_PROGRESS, EVENT_TIMEUPDATE, EVENT_LOADED_METADATA];
-            if (supress.indexOf(eventName) >= 0) {return}
+            /*var supress:Array = [EVENT_PROGRESS, EVENT_TIMEUPDATE, EVENT_LOADED_METADATA];
+            if (supress.indexOf(eventName) >= 0) {return}*/
 
             var time:int = getTimer();
 

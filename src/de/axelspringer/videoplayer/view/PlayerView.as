@@ -4,7 +4,6 @@ package de.axelspringer.videoplayer.view
     import de.axelspringer.videoplayer.event.ControlEvent;
     import de.axelspringer.videoplayer.model.vo.BildTvDefines;
     import de.axelspringer.videoplayer.model.vo.FullscreenData;
-    import de.axelspringer.videoplayer.model.vo.SkinVO;
     import de.axelspringer.videoplayer.view.base.BaseView;
 
     import flash.display.MovieClip;
@@ -26,8 +25,6 @@ package de.axelspringer.videoplayer.view
 		// movieplayer only
 		//public var chapterList:ChapterListUi;
 		//
-		
-		protected var skin:SkinVO;
 		
 		//protected var displayBtn:DisplayButton;
 
@@ -93,31 +90,6 @@ package de.axelspringer.videoplayer.view
 			this.stage.addChild(this.videoBtn);
 			
 			this.setDisplaySizeDefault();
-		}
-		
-		public function setSkin( skin:SkinVO ) :void
-		{
-			this.skin = skin;
-		/*	this.displayBtn = new DisplayButton(this.skin.cssSprite,this.skin.styleBigPlay.skinWidth, this.skin.styleBigPlay.skinHeight,this.skin.styleBigPlay.skinX, this.skin.styleBigPlay.skinY, 2);
-
-			if(true == BildTvDefines.isEmbedPlayer)
-			{
-				this.displayBtn.phase++;
-			}*/
-			
-			/*this.displayBtn.addEventListener( MouseEvent.ROLL_OVER, onDisplayMouseOver );
-			this.displayBtn.addEventListener( MouseEvent.ROLL_OUT, onDisplayMouseOut );
-			this.displayBtn.addEventListener( MouseEvent.MOUSE_MOVE, onDisplayMouseMove );
-			this.displayBtn.addEventListener( ControlEvent.BUTTON_CLICK, onDisplayClick );
-			this.displayBtn.addEventListener( ControlEvent.DOUBLE_CLICK, onDisplayDoubleClick );
-			this.stage.addChild( this.displayBtn );
-			
-			if( !BildTvDefines.isEmbedPlayer)
-			{
-				this.displayBtn.visible = false;
-			}
-			
-			this.displayBtn.onMouseOut();*/
 		}
 		
 		public override function resize() :void

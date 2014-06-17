@@ -8,7 +8,6 @@ package de.axelspringer.videoplayer.vpaid.controller
 	import de.axelspringer.videoplayer.vast.model.VASTTrackingEventType;
 	import de.axelspringer.videoplayer.vast.view.VastPlayerView;
 	import de.axelspringer.videoplayer.vast.vo.IVpaidAd;
-	import de.axelspringer.videoplayer.view.ControlsView;
 	import de.axelspringer.videoplayer.vpaid.event.VPaidEvent;
 	import de.axelspringer.videoplayer.vpaid.model.VPaidWrapper;
 	

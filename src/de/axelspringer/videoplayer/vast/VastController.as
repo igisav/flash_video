@@ -15,7 +15,6 @@ package de.axelspringer.videoplayer.vast
 	import de.axelspringer.videoplayer.vast.vo.VastNonLinear;
 	import de.axelspringer.videoplayer.vast.vo.VastVideo;
 	import de.axelspringer.videoplayer.vast.vo.VastVideoClicks;
-	import de.axelspringer.videoplayer.view.ControlsView;
 	import de.axelspringer.videoplayer.vpaid.controller.VPaidController;
 	
 	import flash.display.Sprite;

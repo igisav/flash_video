@@ -13,7 +13,6 @@ package de.axelspringer.videoplayer.controller
     import de.axelspringer.videoplayer.util.Log;
     import de.axelspringer.videoplayer.util.PausableTimer;
 	import de.axelspringer.videoplayer.util.SessionPinger;
-	import de.axelspringer.videoplayer.view.ControlsView;
 	import de.axelspringer.videoplayer.view.PlayerView;
 	
 	import flash.display.StageDisplayState;

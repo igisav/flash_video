@@ -5,7 +5,6 @@ package de.axelspringer.videoplayer.controller
 	import de.axelspringer.videoplayer.model.vo.ConfigVO;
 //	import de.axelspringer.videoplayer.model.vo.SkinVO;
 //	import de.axelspringer.videoplayer.model.vo.base.SkinBaseVO;
-	import de.axelspringer.videoplayer.view.ControlsView;
 	import de.axelspringer.videoplayer.view.PlayerView;
 //	import de.axelspringer.videoplayer.view.SubtitleView;
 	
@@ -91,22 +90,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.config = config;
 			
-			if( this.config.srtUrl == "" || BildTvDefines.isEmbedPlayer )
-			{
-				this.config.skinVO.styleSubtitleBtn = null;	
-				this.config.skinVO.styleSubtitleBox = null;	
-			} 
-			else if( this.config.skinVO.styleSubtitleBtn == null )
-			{
-				this.config.skinVO.styleSubtitleBtn = this.config.skinVO.styleFullscreenBtn;
-			}
-			
-			if( this.config.videoVO.videoUrl.indexOf(".f4m") == -1 || this.config.videoVO.hdAdaptive == true)
-			{
-				this.config.skinVO.styleHDBtn = null;	
-			} 
-		
-			// check if it's a movie player - if so, disable feature buttons			
+			// check if it's a movie player - if so, disable feature buttons
 			/*if( this.config.filmVO != null )
 			{				
 				this.controlsView.setSkin( this.config.skinVO, this.config.adTextTextVO, true );
@@ -143,8 +127,6 @@ package de.axelspringer.videoplayer.controller
 			}*/
             	
 			this.state = STATE_START;
-			
-			this.playerView.setSkin( this.config.skinVO );
 			
 			this.resize();
 		}

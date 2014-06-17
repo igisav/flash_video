@@ -8,8 +8,7 @@ package de.axelspringer.videoplayer.model.vo
 	
 	public class ConfigVO extends BaseVO
 	{
-		public var xmlUrl:String		= "";
-		
+
 		public var playerWidth:Number	= -1;
 		public var playerHeight:Number	= -1;
 		
@@ -18,15 +17,6 @@ package de.axelspringer.videoplayer.model.vo
 		
 		// VideoInfo
 		public var videoVO:VideoVO;
-		
-		// Skin info
-		public var skinVO:SkinVO;
-		
-		// Share
-
-		//Tracking
-		//public var trackingVO:TrackingVO;
-		
 		// Popup
 		public var popupUrl:String = "";
 		public var popupStatus:Boolean = true;
@@ -55,7 +45,6 @@ package de.axelspringer.videoplayer.model.vo
 		public function ConfigVO()
 		{
 			this.videoVO = new VideoVO();
-			this.skinVO = new SkinVO();
 			this.ads = new Vector.<AdVO>;
 			this.adTextTextVO = new AdTimerTextVO();
 			this.relatedVideos = new Array();

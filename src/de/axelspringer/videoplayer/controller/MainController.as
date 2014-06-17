@@ -69,7 +69,7 @@ package de.axelspringer.videoplayer.controller
 			if (!externalSuccess) {
                 return;
             }
-            ExternalController.dispatch( ExternalController.EVENT_INITIALIZED );
+
 
 			
 			// to load relative linked stuff in the embed-player, we need absolute urls
@@ -93,6 +93,7 @@ package de.axelspringer.videoplayer.controller
 			}			
 			
             this.start();
+            ExternalController.dispatch( ExternalController.EVENT_INITIALIZED );
     }
         // TODO: move this to playerController
         public function loadURL(url:String):void{
