@@ -23,8 +23,7 @@ package de.axelspringer.videoplayer.model.vo
 		public var skinVO:SkinVO;
 		
 		// Share
-		public var shareVO:ShareVO;
-		
+
 		//Tracking
 		//public var trackingVO:TrackingVO;
 		
@@ -57,8 +56,6 @@ package de.axelspringer.videoplayer.model.vo
 		{
 			this.videoVO = new VideoVO();
 			this.skinVO = new SkinVO();
-			this.shareVO = new ShareVO();
-			//this.trackingVO = new TrackingVO();
 			this.ads = new Vector.<AdVO>;
 			this.adTextTextVO = new AdTimerTextVO();
 			this.relatedVideos = new Array();
@@ -125,10 +122,7 @@ package de.axelspringer.videoplayer.model.vo
 			this.videoVO.linkTarget = hasAttribute( xml.link[0], "target" ) ? xml.link[0].@target : this.videoVO.linkTarget;
 			
 			//this.skinVO.hydrate( xml.skin[0] );
-			
-			this.shareVO.hydrate( xml.share[0],xml.embed[0] );
-			this.shareVO.xmlUrl = LinkUtil.forceAbsoluteLink(this.xmlUrl);
-			
+
 			/*this.trackingVO.hydrate( xml.tracking[0] );
 			this.trackingVO.ivw = hasAttribute( xml, "ivw" ) ? xml.@ivw : this.trackingVO.ivw;
 			this.trackingVO.trackFunction = hasAttribute( xml, "track" ) ? xml.@track : this.trackingVO.trackFunction;

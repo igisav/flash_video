@@ -91,12 +91,6 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.config = config;
 			
-			if( !this.config.shareVO.shareStatus )
-			{
-				this.config.skinVO.styleShareBtn = null;	
-				this.config.skinVO.styleBilddeBtn = null;	
-				this.config.skinVO.styleBilddeBtnTooltip = null;	
-			} 
 			if( this.config.srtUrl == "" || BildTvDefines.isEmbedPlayer )
 			{
 				this.config.skinVO.styleSubtitleBtn = null;	
