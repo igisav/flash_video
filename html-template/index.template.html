@@ -11,7 +11,7 @@
             body { margin:0; padding:0; overflow:auto; text-align:center;}
             object:focus { outline:none; }
             #flashContent { display:none; }
-            .controls {margin-top: 20px;}
+            .controls {margin: 20px 0;}
             .number {width: 50px;}
         </style>
 
@@ -53,7 +53,7 @@
                 window.de.bild = {};
             }
             window.de.bild.callback = function(msg) {
-                    track("EVENT: " + msg);
+                    track("EVENT: " + JSON.stringify(msg));
                 }
 
             function track()
@@ -117,9 +117,9 @@
                 track("Duration = "+duration);
             }
 
-            function getBuffed()
+            function getBuffered()
             {
-                var buffed = document.getElementById("videoplayer").getBuffed();
+                var buffed = document.getElementById("videoplayer").getBuffered();
                 track("Buffed = "+buffed);
             }
 
@@ -167,7 +167,7 @@
             <input type="button" value="set currentTime 22s" onclick="setCurrentTime();">
 
             <input type="button" value="get duration" onclick="getDuration();">
-            <input type="button" value="get buffed" onclick="getBuffed();">
+            <input type="button" value="get buffered" onclick="getBuffered();">
 
             <input type="button" value="destroy" onclick="destroy();">
             <br>
@@ -176,16 +176,16 @@
             <label>Höhe</label>
             <input class="number" type="number" value="800" id="sizeHeight" onchange="document.getElementById('sizeHeight').value = this.value">
             <input type="button" value="resize" onclick="resize();">
-
-
             <hr>
-            <br>
             <input type="button" value="Bild Video" onclick="load('http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4');">
             <input type="button" value="Webrbung" onclick="load('http://ced.sascdn.com/diff/251/3275372/VF_4MRD_20s_Sony_TagOn_816x458.mp4');">
             <input type="button" value="Akamai Stream" onclick="load('http://multiplatform-f.akamaihd.net/z/multi/companion/big_bang_theory/big_bang_theory.mov_,300,600,800,1000,2500,4000,9000,k.mp4.csmil/manifest.f4m');">
-            <input type="button" value="clear" onclick="document.getElementById('debug').innerHTML = '';">
+            <input type="button" value="Progressive H.264" onclick="load('http://mediapm.edgesuite.net/ovp/content/demo/video/elephants_dream/elephants_dream_768x428_24.0fps_608kbps.mp4');">
+            <input type="button" value="FLV on-demand" onclick="load('rtmp://cp88082.edgefcs.net/ondemand/mp4:trailer/72041_46322.flv');">
+
             <br>
         </div>
+        <input style="float: left" type="button" value="clear" onclick="document.getElementById('debug').innerHTML = '';">
         <div id="debug"></div>
 
 

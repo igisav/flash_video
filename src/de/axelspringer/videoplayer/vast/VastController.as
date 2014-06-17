@@ -624,7 +624,7 @@ package de.axelspringer.videoplayer.vast
 			
 			// track
 			this.trackingController.trackVolumeChange( new VolumeData( volume, this.currentVolume ) );
-            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE, this.currentVolume);
+            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE);
 
 			this.currentVolume = volume;
 		}

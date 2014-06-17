@@ -1,8 +1,9 @@
 package de.axelspringer.videoplayer.controller
 {
     import de.axelspringer.videoplayer.util.Log;
-    import flash.external.ExternalInterface;
 
+    import flash.external.ExternalInterface;
+    import flash.utils.getTimer;
 
     /********************************************************************************************************
      *                  EXTERNAL CALLBACKS
@@ -20,7 +21,7 @@ package de.axelspringer.videoplayer.controller
         public static const VOLUME:String		= "volume";
         public static const CURRENT_TIME:String	= "currentTime";
         public static const DURATION:String		= "getDuration";
-        public static const BUFFED:String		= "getBuffed";
+        public static const BUFFERED:String		= "getBuffered";
         public static const DESTROY:String		= "destroy";
 
         /*          EVENTS
@@ -41,10 +42,14 @@ package de.axelspringer.videoplayer.controller
         public static const EVENT_ERROR:String              = "error";
         public static const EVENT_DEBUG:String              = "debug";
 
+        public static const DISPATCH_EVENT_DELAY:int        = 200; // in ms
+
         protected var mainController:MainController;
         protected var playerController:PlayerController;
 
         private static var jsEventCallback:String;
+        private static var lastProgressTime:int = 0;
+        private static var lastTimeUpdateTime:int = 0;
 
         // TODO: mainController als Parameter hier entfernen
         public function init(mainController:MainController, playerController:PlayerController, jsCallback:String):Boolean
@@ -77,16 +82,28 @@ package de.axelspringer.videoplayer.controller
         public static function dispatch(eventName:String, value:* = null):void
         {
             var supress:Array = [EVENT_PROGRESS, EVENT_TIMEUPDATE, EVENT_LOADED_METADATA];
-
             if (supress.indexOf(eventName) >= 0) {return}
 
-            if (value === null || value === "") {
-                ExternalInterface.call(jsEventCallback, eventName);
-            } else {
-                var msg:Object =  {};
-                msg[eventName] = value;
-                ExternalInterface.call(jsEventCallback, JSON.stringify(msg));
+            var time:int = getTimer();
+
+            if (eventName == EVENT_PROGRESS) {
+                if (time - lastProgressTime < DISPATCH_EVENT_DELAY) {
+                    return
+                }
+                lastProgressTime = time;
             }
+            else if (eventName == EVENT_TIMEUPDATE) {
+                if (time - lastTimeUpdateTime < DISPATCH_EVENT_DELAY) {
+                    return
+                }
+                lastTimeUpdateTime = time;
+            }
+
+            var msg:Object =  {
+                'type': eventName,
+                'value': value
+            };
+            ExternalInterface.call(jsEventCallback, msg);
         }
 
         private function bind():void {
@@ -97,7 +114,7 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.addCallback(MUTED, playerController.mute);
             ExternalInterface.addCallback(CURRENT_TIME, playerController.currentTime);
             ExternalInterface.addCallback(DURATION, playerController.getDuration);
-            ExternalInterface.addCallback(BUFFED, playerController.getBufferTime);
+            ExternalInterface.addCallback(BUFFERED, playerController.getBufferTime);
         }
     }
 }

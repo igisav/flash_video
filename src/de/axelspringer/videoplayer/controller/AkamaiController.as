@@ -139,7 +139,7 @@ package de.axelspringer.videoplayer.controller
 			this.initMovieStream();
 		}
 
-		public function startPlaying() :void
+		/*public function startPlaying() :void
 		{
 			this.dispatchEvent( new ControlEvent( ControlEvent.CONTENT_START ) );
 
@@ -152,7 +152,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.playMovieJingle( this.filmVO.jingleFilePrerollMovie, MOVIE_JINGLE_PREROLL_MOVIE );
 			}
-		}
+		}*/
 
 		public function setStream( liveVO:StreamingVO ) :void
 		{
@@ -413,10 +413,10 @@ package de.axelspringer.videoplayer.controller
 				// this.controlsView.updateTime( 0 );
 				// this.controlsView.updatePlayProgress( 0 );
 
-				if( BildTvDefines.isMoviePlayer && this.filmVO.chapters.length > 1 )
+				/*if( BildTvDefines.isMoviePlayer && this.filmVO.chapters.length > 1 )
 				{
 					this.playerView.createChapterlist( this.filmVO.chapters );
-				}
+				}*/
 				if( BildTvDefines.isLivePlayer )
 				{
 					// this.controlsView.enableSeeking( false );

@@ -13,25 +13,17 @@ package de.axelspringer.videoplayer.controller
 
     // TODO: rufe destroy() und töte den NetStream, wenn der Benutzer flash schliesst
 
+    // TODO: keine Unterstützung für AMD live stream H.264
+    // Beispiel: http://multiplatform-f.akamaihd.net/z/multi/companion/big_bang_theory/big_bang_theory.mov_,300,600,800,1000,2500,4000,9000,k.mp4.csmil/manifest.f4m
+    // siehe: http://support.akamai.com/flash/
+
     public class MainController
 	{
-		// protected var xmlInitialized:Boolean;
-		// protected var jsInitialized:Boolean;
-		// protected var cssInitialized:Boolean;
 		protected var cssUrl:String = "";
 		protected var root:Sprite;
 		protected var stage:Sprite;
-		//protected var loaderAni:LoaderAni;
-//		protected var errorUi:ErrorUi;
 		protected var config:ConfigVO;
 
-		protected var relatedXmlsLoaded:uint;
-		
-		private static const CALLBACK_SUBTITLE_ON:String		= "SUBTITLE_ON";
-		private static const CALLBACK_SUBTITLE_OFF:String		= "SUBTITLE_OFF";
-		private static const CALLBACK_SET_XML:String			= "SET_XML";
-		
-		
 		// controller
 		protected var playerController:PlayerController;
 		protected var viewController:ViewController;
@@ -62,44 +54,12 @@ package de.axelspringer.videoplayer.controller
 			this.viewController.dispatchEvent( new ControlEvent( e.type, e.data ) );
 		}
 		
-		
-		/*protected function registerExternalCallbacks(event:Event = null):void
-		{
-    		if (ExternalInterface.available)
-			{
-	    		try
-				{
-					
-					ExternalInterface.addCallback("apiCall", apiCall);
-					ExternalInterface.addCallback("load", loadXML);
-
-                    ExternalInterface.addCallback("volume", volume);
-
-				}
-				catch(e:Error)				
-				{
-					trace("Error by adding callback");
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","ERROR SET CALLBACKS");
-				}
-			}
-			else
-			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","TRY SET CALLBACKS");
-			}
-		}*/
-				
 		public function init( flashVars:Object ) :void
 		{
             var startXmlURL:String = flashVars.xmlurl;
             var autoplay:String = flashVars.autoplay;
             var time:Number = flashVars.time;
 
-            trace(flashVars.cb);
-
-			// this.xmlInitialized = false;
-			// this.cssInitialized = false;
-			// this.jsInitialized = false;
-				
 			this.config = new ConfigVO();
 
             this.initController();
@@ -132,46 +92,9 @@ package de.axelspringer.videoplayer.controller
 				BildTvDefines.autoplaySet= true;	
 			}			
 			
-			/*if(startXmlURL!= null && startXmlURL != "")
-			{
-				//trace("video xml load: " + startXmlURL);
-				// LinkUtil.setServerFromUrl( startXmlURL );
-				 this.loadXml( startXmlURL );
-			}
-			else
-			{
-				this.xmlInitialized = true;
-			}*/
-			//trace(" css load: " + cssURL);
-			/*if(cssURL!= null && cssURL != "")
-			{
-				this.cssUrl = cssURL.substring(0,cssURL.lastIndexOf("/") + 1);
-				this.loadCSS(cssURL);
-			}
-			else
-			{
-				this.cssLoaded();
-			}*/
-			//trace(" js load: " + jsURL);
-
-			/*if(jsURL!= null && jsURL != "" && cssURL!= null && cssURL != "")
-			{
-				this.loadJS(jsURL, cssURL);	
-				//BildTvDefines.isEmbedPlayer = true;
-			}
-			else
-			{
-			}*/
-//???				if( BildTvDefines.isEmbedPlayer != true )BildTvDefines.isEmbedPlayer = false; //zuvor durch ScriptaccessAbfrage geklärt bei FB
-            // this.jsInitialized = true;
             this.start();
     }
-
-       /* public function loadXML(xml:String):void{
-            // LinkUtil.setServerFromUrl( xml );
-            this.loadXml( xml );
-        }*/
-
+        // TODO: move this to playerController
         public function loadURL(url:String):void{
             this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2 = url ;
 

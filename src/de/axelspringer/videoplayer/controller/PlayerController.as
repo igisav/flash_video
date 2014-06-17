@@ -265,7 +265,7 @@ package de.axelspringer.videoplayer.controller
 				}
 			}
 
-            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE, this.soundTransform.volume);
+            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE);
 		}
         
         //trackingData:TrackingVO,
@@ -421,10 +421,11 @@ package de.axelspringer.videoplayer.controller
 			//// this.trackingController.onClipPlay();
 //			}						
 
-            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
+            // ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			this.clip2play=CLIP_BUMPER_PREROLL;
 			
 
+			/* TODO: brauche ich das?
 			if (this.showAds && considerAds)
 			{
 				//this.adPlaying = true;
@@ -454,7 +455,17 @@ package de.axelspringer.videoplayer.controller
 			else
 			{
 				this.playClip();
-			}
+			}*/
+
+            if (this.videoStarted)
+            {
+
+                this.resume();
+            }
+            else
+            {
+                this.playClip();
+            }
 		}
 
 		protected function playClip():void
@@ -479,7 +490,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				case CLIP_BUMPER_PREROLL:
 				{
-                    ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
+                    // ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 					if (this.bumperVO != null)
 					{
 						this.currentClip=this.bumperVO;
@@ -795,7 +806,7 @@ package de.axelspringer.videoplayer.controller
 			}
 
 			// action!
-            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
+             ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			
 //			ExternalInterface.call("function(){if (window.console) console.log('play: "+ this.videoFile+"');}");
 			if( isLivestream || BildTvDefines.startTime == 0 )
@@ -1226,7 +1237,7 @@ package de.axelspringer.videoplayer.controller
 						{
 							this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
 						}
-                        ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
+                     //   ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 					}
                     ExternalController.dispatch(ExternalController.EVENT_EMPTIED);
 
@@ -2334,11 +2345,11 @@ package de.axelspringer.videoplayer.controller
             var bufferTime:Number = 0;
             if (!hdContent)
             {
-                if (ns) bufferTime = ns.bufferLength;
+                if (ns) bufferTime = this.playtime + ns.bufferLength;
             }
             else if (nsHD)
             {
-                bufferTime = nsHD.bufferLength;
+                bufferTime = this.playtime + nsHD.bufferLength;
             }
             return bufferTime
         }
