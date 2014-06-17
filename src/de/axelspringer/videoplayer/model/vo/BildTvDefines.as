@@ -26,11 +26,8 @@ package de.axelspringer.videoplayer.model.vo
 		
 		public static const TEASER_BIG_OFFSET:uint			= 30;
 		public static const TEASER_SMALL_OFFSET:uint		= 6;
-		
-		
-		public static const HEIGHT_CONTROLS:uint			= 29;
-		
-		public static const SIZE_MICRO:String				= "micro";		
+
+		public static const SIZE_MICRO:String				= "micro";
 		public static const SIZE_MINI:String				= "mini";		
 		public static const SIZE_MEDIUM:String				= "normal";		
 		public static const SIZE_BIG:String					= "big";				

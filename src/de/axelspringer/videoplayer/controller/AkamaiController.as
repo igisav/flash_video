@@ -741,8 +741,6 @@ package de.axelspringer.videoplayer.controller
 			this.resetStatus();
 			this.videoStarted = true;
 
-			this.playerView.showMovieteaserEndscreen( false );
-
 			// start midroll timer
 			if( BildTvDefines.isMoviePlayer && !BildTvDefines.isTrailerPlayer )
 			{
@@ -958,7 +956,6 @@ package de.axelspringer.videoplayer.controller
 					
 					if( BildTvDefines.isTrailerPlayer )
 					{
-						this.playerView.showMovieteaserEndscreen( true );
 						this.doRewind = true;
 						this.rewindStream( this.netstream.time - 1 );
 					}

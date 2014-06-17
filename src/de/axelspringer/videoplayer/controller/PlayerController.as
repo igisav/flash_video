@@ -2607,7 +2607,6 @@ package de.axelspringer.videoplayer.controller
 			this.akamaiController.setMovie(filmVO);
 			this.akamaiController.setVolume(this.soundTransform.volume);
 
-			this.playerView.logoMovieplayer.visible=true;
 
 			// autoplay
 			this.clip2play=CLIP_CONTENT;

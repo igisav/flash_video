@@ -1,31 +1,18 @@
 package de.axelspringer.videoplayer.view
 {
 //	import com.akamai.display.AkamaiVideoSurface;
-	import de.axelspringer.videoplayer.event.ControlEvent;
-	import de.axelspringer.videoplayer.model.vo.BildTvDefines;
-	import de.axelspringer.videoplayer.model.vo.FullscreenData;
-	import de.axelspringer.videoplayer.model.vo.SkinVO;
-	import de.axelspringer.videoplayer.ui.AdLabel;
-	import de.axelspringer.videoplayer.ui.ChapterListUi;
-	import de.axelspringer.videoplayer.ui.EndscreenTeaserplayerUi;
-	import de.axelspringer.videoplayer.ui.LogoMovieplayer;
-	import de.axelspringer.videoplayer.ui.controls.DisplayButton;
-	import de.axelspringer.videoplayer.view.base.BaseView;
-	
-	import flash.display.Loader;
-	import flash.display.MovieClip;
-	import flash.display.Sprite;
-	import flash.events.ErrorEvent;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.MouseEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.geom.Rectangle;
-	import flash.media.Video;
-	import flash.net.URLRequest;
-	import flash.system.LoaderContext;
-	
-	public class PlayerView extends BaseView
+    import de.axelspringer.videoplayer.event.ControlEvent;
+    import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+    import de.axelspringer.videoplayer.model.vo.FullscreenData;
+    import de.axelspringer.videoplayer.model.vo.SkinVO;
+    import de.axelspringer.videoplayer.view.base.BaseView;
+
+    import flash.display.MovieClip;
+    import flash.display.Sprite;
+    import flash.geom.Rectangle;
+    import flash.media.Video;
+
+    public class PlayerView extends BaseView
 	{
 		public static const NAME:String = "PlayerView";
 		
@@ -38,8 +25,6 @@ package de.axelspringer.videoplayer.view
 		
 		// movieplayer only
 		//public var chapterList:ChapterListUi;
-		public var endscreenTeaserplayer:EndscreenTeaserplayerUi;
-		public var logoMovieplayer:LogoMovieplayer;
 		//
 		
 		protected var skin:SkinVO;
@@ -85,15 +70,6 @@ package de.axelspringer.videoplayer.view
 			this.chapterList.addEventListener( ControlEvent.PROGRESS_CHANGE, onMovieProgressChange );
 			this.chapterList.visible = false;
 			this.stage.addChild( this.chapterList );*/
-			
-			this.endscreenTeaserplayer = new EndscreenTeaserplayerUi();
-			this.endscreenTeaserplayer.visible = false;
-			this.stage.addChild( this.endscreenTeaserplayer );
-			
-			this.logoMovieplayer = new LogoMovieplayer();
-			this.logoMovieplayer.visible = false;
-			this.stage.addChild( this.logoMovieplayer );
-			//
 			
 			this.adContainer = new MovieClip();
 			this.stage.addChild( this.adContainer );
@@ -238,29 +214,10 @@ package de.axelspringer.videoplayer.view
 			return new Rectangle( 0, 0, this.currentWidth, this.currentHeight );
 		}
 		
-		/**
-		 * this function is only for the movieplayer
-		 */
-		public function createChapterlist( data:Array ) :void
-		{
-			/*if( data != null && data.length > 0 )
-			{
-				this.chapterList.create( data );
-			}*/
-		}
-		
 		protected function setSize() :void
 		{
 			this.initWidth = BildTvDefines.width;
-	
-			if( false == BildTvDefines.isWidgetPlayer )
-			{
-				this.initHeight = BildTvDefines.height - BildTvDefines.HEIGHT_CONTROLS;
-			}
-			else
-			{
-				this.initHeight = BildTvDefines.height;
-			}
+		    this.initHeight = BildTvDefines.height;
 		}
 		
 		protected function updateDisplaySize() :void
@@ -301,8 +258,6 @@ package de.axelspringer.videoplayer.view
 
 //			if( BildTvDefines.isMoviePlayer )
 //			{
-				this.logoMovieplayer.x = Math.round( this.currentWidth - this.logoMovieplayer.width - 10 );
-				this.logoMovieplayer.y = 5;
 				/*this.chapterList.x = Math.round( ( this.currentWidth - ChapterListUi.WIDTH ) / 2 );
 				this.chapterList.y = Math.round( this.currentHeight - ChapterListUi.HEIGHT );*/
 //			}
@@ -311,13 +266,5 @@ package de.axelspringer.videoplayer.view
 			this.dispatchEvent( new ControlEvent( ControlEvent.RESIZE, new FullscreenData( this.isFullscreen, this.wasFullscreen ) ) );
 		}
 		
-		/**
-		 * movieplayer only
-		 */
-		public function showMovieteaserEndscreen( show:Boolean ) :void
-		{
-			this.endscreenTeaserplayer.visible = show;
-			//this.setDisplayButtonVisible( !show );
-		}
 	}
 }

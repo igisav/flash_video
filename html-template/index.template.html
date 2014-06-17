@@ -4,6 +4,7 @@
         <title>${title}</title>
         <meta name="google" value="notranslate" />         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>-->
 
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
@@ -11,6 +12,7 @@
             object:focus { outline:none; }
             #flashContent { display:none; }
             .controls {margin-top: 20px;}
+            .number {width: 50px;}
         </style>
 
             
@@ -121,6 +123,13 @@
                 track("Buffed = "+buffed);
             }
 
+            function resize()
+            {
+                var v = document.getElementById("videoplayer");
+                v.width = document.getElementById("sizeWidth").value;
+                v.height = document.getElementById("sizeHeight").value;
+            }
+
             function destroy()
             {
                 document.getElementById("videoplayer").destroy();
@@ -159,12 +168,20 @@
 
             <input type="button" value="get duration" onclick="getDuration();">
             <input type="button" value="get buffed" onclick="getBuffed();">
+
             <input type="button" value="destroy" onclick="destroy();">
+            <br>
+            <label>Breite</label>
+            <input class="number" type="text" value="1200" id="sizeWidth" onchange="document.getElementById('sizeWidth').value = this.value">
+            <label>Höhe</label>
+            <input class="number" type="number" value="800" id="sizeHeight" onchange="document.getElementById('sizeHeight').value = this.value">
+            <input type="button" value="resize" onclick="resize();">
 
 
             <hr>
             <br>
             <input type="button" value="Bild Video" onclick="load('http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4');">
+            <input type="button" value="Webrbung" onclick="load('http://ced.sascdn.com/diff/251/3275372/VF_4MRD_20s_Sony_TagOn_816x458.mp4');">
             <input type="button" value="Akamai Stream" onclick="load('http://multiplatform-f.akamaihd.net/z/multi/companion/big_bang_theory/big_bang_theory.mov_,300,600,800,1000,2500,4000,9000,k.mp4.csmil/manifest.f4m');">
             <input type="button" value="clear" onclick="document.getElementById('debug').innerHTML = '';">
             <br>

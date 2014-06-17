@@ -214,14 +214,5 @@ package de.axelspringer.videoplayer.model.vo
 			}
 		}
 		
-		public function hydrateTeaserXml( xml:XML ) :void
-		{
-			this.relatedVideos = new Array();
-			var item:XML;
-			for each( item in xml.video )
-			{
-				this.relatedVideos.push( new TeaserVO( item ) );
-			}
-		}
 	}
 }
