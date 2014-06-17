@@ -808,8 +808,6 @@ package de.axelspringer.videoplayer.controller
 				}
 
 				this.errorOccured = true;
-
-				this.dispatchEvent( new ControlEvent( ControlEvent.ERROR ) );
 			}
 		}
 
@@ -824,15 +822,6 @@ package de.axelspringer.videoplayer.controller
 			}
 
 			this.errorOccured = true;
-
-			if( e.info.description == "geoblock" )
-			{
-				this.dispatchEvent( new ControlEvent( ControlEvent.ERROR, { header:"", info:BildTvDefines.TEXT_ERROR_INFO_GEO , button:false } ) );
-			}
-			else
-			{
-				this.dispatchEvent( new ControlEvent( ControlEvent.ERROR, { header:BildTvDefines.TEXT_ERROR_LIVE_HEADER, info:BildTvDefines.TEXT_ERROR_LIVE_INFO , button:true } ) );
-			}
 		}
 
 		protected function parseStreamUrl( url:String ) :void
@@ -1053,7 +1042,6 @@ package de.axelspringer.videoplayer.controller
 			// dispatch error event to show error view in MainController
 			// use text from XML, if present, otherwise use fallback text from BildTvDefines
 			var text:String = ( this.liveVO.pingText != null && this.liveVO.pingText.split( " " ).join("") != "" ) ? this.liveVO.pingText : BildTvDefines.TEXT_ERROR_SESSION_INFO; 
-			this.dispatchEvent( new ControlEvent( ControlEvent.ERROR, {header:BildTvDefines.TEXT_ERROR_SESSION_HEADER, info:text, button:false} ) );
 		}
 		
 		protected function onSessionOk( event:ControlEvent ) :void

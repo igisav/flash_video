@@ -193,9 +193,6 @@ package de.axelspringer.videoplayer.controller
 			this.viewController.addEventListener( ControlEvent.REPLAY, onReplayClick );
 			
 			this.playerController = new PlayerController( this.viewController.playerView); //, this.viewController.controlsView, this.viewController.subtitleView
-            this.playerController.addEventListener( ControlEvent.ERROR, onError );
-			this.playerController.addEventListener( ControlEvent.ERROR_AVAILABLE, onErrorAvailable );
-			this.playerController.addEventListener( ControlEvent.ERROR_GEO, onErrorGeo );
 			this.playerController.setVolume( 0.5 );
 		}
 		
@@ -267,60 +264,6 @@ package de.axelspringer.videoplayer.controller
 		protected function onReplayClick( e:ControlEvent ) :void
 		{
 			this.playerController.replay();
-		}
-
-		protected function onError( e:ControlEvent ):void
-		{
-
-			var header:String = ( e.data.header == null ) ? BildTvDefines.TEXT_ERROR_HEADER : e.data.header;
-			var info:String = ( e.data.info == null ) ? BildTvDefines.TEXT_ERROR_INFO_DEFAULT : e.data.info;
-			var button:Boolean = ( e.data.button == null ) ? true : e.data.button;
-
-			this.showError( true, header, info );
-		}
-
-		protected function onErrorAvailable( e:ControlEvent ):void
-		{
-
-			var header:String = ( e.data.header == null ) ? BildTvDefines.TEXT_ERROR_HEADER : e.data.header;
-			var info:String = ( e.data.info == null ) ? BildTvDefines.TEXT_ERROR_INFO_DEFAULT : e.data.info;
-			var button:Boolean = ( e.data.button == null ) ? true : e.data.button;
-
-			this.showError( true, header, info );
-		}
-
-		protected function onErrorGeo( e:ControlEvent) :void
-		{
-			var header:String = BildTvDefines.TEXT_ERROR_HEADER;
-			var info:String = BildTvDefines.TEXT_ERROR_INFO_GEO;
-			this.showError( true, header, info, "GEO" );
-		}
-
-		protected function showError( show:Boolean = true, headerText:String = "", infoText:String = "", errorType:String = "") :void
-		{
-			try
-			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","Show Errorscreen :: Error String :: show Boolean = " + show.toString() + " ::  headerText = " + headerText + " :: infoText = " + infoText + " :: errorType = " + errorType);
-				ExternalInterface.call("com.xoz.events.publish","videoplayer/video/error", {'id': BildTvDefines.playerId, 'message': infoText, 'type':errorType});
-				//this.playerController.trackingController.trackPlayerEvent("ERRORSCREEN");
-			}
-			catch(e:Error)
-			{
-				trace("Kein Scriptaccess!");
-			}
-
-			/* if(BildTvDefines.size == BildTvDefines.SIZE_MICRO)
-			{
-				this.errorUi.setText( headerText, infoText, false);
-			}
-			else
-			{
-				this.errorUi.setText( headerText, infoText, relatedClips);
-			}  */
-
-
-			//this.errorUi.btnReplay.visible = showButton;
-			//this.errorUi.visible = show;
 		}
 
 		protected function onErrorClick( e:MouseEvent ) :void

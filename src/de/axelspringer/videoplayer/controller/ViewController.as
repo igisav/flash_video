@@ -60,8 +60,7 @@ package de.axelspringer.videoplayer.controller
 			this.stage.addChild( s );
 			this.playerView = new PlayerView( s );
 			this.playerView.addEventListener( ControlEvent.PLAY, onPlay );
-			this.playerView.addEventListener( ControlEvent.ERROR_CLICK, onErrorClick );
-			
+
 			if(BildTvDefines.size == BildTvDefines.SIZE_BIG || BildTvDefines.size == BildTvDefines.SIZE_MEDIUM)
 			{
 				s = new Sprite();
@@ -244,19 +243,6 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.state = STATE_PLAY;
 			this.showView( PlayerView.NAME );
-		}
-		
-		protected function onErrorClick( e:ControlEvent ) :void
-		{
-			var js:String = "javascript:location.reload();";
-			try
-			{
-				navigateToURL( new URLRequest( js ), "_self" );
-			}
-			catch( oops:Error )
-			{
-				// nix
-			}
 		}
 	}
 }

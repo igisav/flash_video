@@ -106,20 +106,6 @@ package de.axelspringer.videoplayer.controller
 		protected var savedPosition:Number = 0;
 		protected var savedBitrate:Number = 0;
 		protected var muted:Boolean=false;
-		
-		private static const CALLBACK_VOLUME_ON:String			= "VOLUME_ON";
-		private static const CALLBACK_VOLUME_OFF:String			= "VOLUME_OFF";
-		private static const CALLBACK_VOLUME_UP:String			= "VOLUME_UP";
-		private static const CALLBACK_VOLUME_DOWN:String		= "VOLUME_DOWN";
-		private static const CALLBACK_VOLUME_UPDATE:String		= "VOLUME_UPDATE";
-		private static const CALLBACK_HD_ON:String				= "HD_ON";
-		private static const CALLBACK_HD_OFF:String				= "HD_OFF";
-		private static const CALLBACK_PLAY_WITH_PREROLL:String	= "PLAY_WITH_PREROLL";
-		private static const CALLBACK_PLAY_WITHOUT_PREROLL:String= "PLAY_WITHOUT_PREROLL";
-		private static const CALLBACK_PAUSE:String				= "PAUSE";
-		private static const CALLBACK_RESUME:String				= "RESUME";
-		private static const CALLBACK_AD_CLICK:String			= "AD_CLICK";
-		private static const CALLBACK_SEEK:String				= "SEEK";
 
 		//Variables to finish a Video which can't be flushed
 		protected var previousVideoTime:Number;
@@ -210,7 +196,6 @@ package de.axelspringer.videoplayer.controller
 			
 			this.playing=false;
 			this.videoStopped=true;
-			this.showAvailableMessage();
 		}
 		
 		public function setVolume(volume:Number):void
@@ -920,7 +905,6 @@ package de.axelspringer.videoplayer.controller
 				this.playing=false;
 				//this.videoStarted=false;
 				this.videoStopped=true;
-				this.showAvailableMessage();	
 			}
 //			this.videoStopped=true;
 //			this.showAvailableMessage();
@@ -940,7 +924,6 @@ package de.axelspringer.videoplayer.controller
 
 			this.playing=false;
 			this.videoStarted=false;
-			this.showGeoMessage();
 		}
 
 		protected function onNetConnectionStatus(e:NetStatusEvent):void
@@ -1084,7 +1067,6 @@ package de.axelspringer.videoplayer.controller
 				ExternalInterface.call("com.xoz.flash_logger.logTrace","redirect complete! but its an XML and no URL " + this.videoFile);
 				this.playing=false;
 				this.videoStopped=true;
-				this.showAvailableMessage();
 			}
 			else
 			{
@@ -1168,7 +1150,6 @@ package de.axelspringer.videoplayer.controller
 						this.playing=false;
 						//this.videoStarted=false;
 						this.videoStopped=true;
-						this.showAvailableMessage();					
 					}
 	//				ExternalInterface.call("function(){if (window.console) console.log('redirect complete! but its an XML and no URL " + this.videoFile+"');}");
 				}		
@@ -1282,7 +1263,6 @@ package de.axelspringer.videoplayer.controller
 							this.playing=false;
 							//this.videoStarted=false;
 							this.videoStopped=true;
-							this.showAvailableMessage();
 						}
 					}
 					else
@@ -1302,7 +1282,6 @@ package de.axelspringer.videoplayer.controller
 							this.playing=false;
 							//this.videoStarted=false;
 							this.videoStopped=true;
-							this.showAvailableMessage();	
 						}
 					}
 					break;
@@ -1592,12 +1571,6 @@ package de.axelspringer.videoplayer.controller
 
 		protected function onError(e:Event):void
 		{
-			//trace( this + " onError: " + e.type );
-//			if( e is ErrorEvent )
-//			{
-//				trace( this + " error info: " + ErrorEvent( e ).text );
-//			}
-
 			// stop trackingTimer
 			this.playing=false;
 			this.videoStarted=false;
@@ -1613,15 +1586,6 @@ package de.axelspringer.videoplayer.controller
 			{
 				// stop overlay timer
 				clearTimeout(this.overlayTimeout);
-
-				if (e is ControlEvent && e.type == ControlEvent.ERROR)
-				{
-					this.dispatchEvent(e.clone());
-				}
-				else
-				{
-					this.dispatchEvent(new ControlEvent(ControlEvent.ERROR));
-				}
 			}
 		}
 
@@ -2140,16 +2104,6 @@ package de.axelspringer.videoplayer.controller
 			this.vastController.setSize(this.playerView.getPlayerSize(), e.data as FullscreenData);
 		}
 
-		protected function showGeoMessage():void
-		{
-			this.dispatchEvent(new ControlEvent(ControlEvent.ERROR_GEO));
-		}
-
-		protected function showAvailableMessage():void
-		{
-			this.dispatchEvent(new ControlEvent(ControlEvent.ERROR_AVAILABLE, {header: BildTvDefines.TEXT_ERROR_HEADER, info: BildTvDefines.TEXT_ERROR_INFO_AVAILABLE, button: false}));
-		}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // DIVERSE STUFF
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2604,7 +2558,6 @@ package de.axelspringer.videoplayer.controller
 			this.akamaiController.addEventListener(ControlEvent.LOAD_POSTROLL, loadPostroll);
 			this.akamaiController.addEventListener(ControlEvent.JINGLE_FINISHED, onJingleFinished);
 			this.akamaiController.addEventListener(ControlEvent.CONTENT_START, onContentStart);
-			this.akamaiController.addEventListener(ControlEvent.ERROR, onError);
 			this.akamaiController.setMovie(filmVO);
 			this.akamaiController.setVolume(this.soundTransform.volume);
 

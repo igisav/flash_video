@@ -16,11 +16,7 @@ package de.axelspringer.videoplayer.event
 		public static const CONTENT_START:String 		= "ControlEvent.CONTENT_START";
 		public static const CLOSE_UI:String 			= "ControlEvent.CLOSE_UI";
 		public static const RESIZE:String 				= "ControlEvent.RESIZE";
-		public static const ERROR:String 				= "ControlEvent.ERROR";
-		public static const ERROR_GEO:String 			= "ControlEvent.ERROR_GEO";
 		public static const ERROR_SESSION:String 		= "ControlEvent.ERROR_SESSION";
-		public static const ERROR_AVAILABLE:String 		= "ControlEvent.ERROR_AVAILABLE";
-		public static const ERROR_CLICK:String 			= "ControlEvent.ERROR_CLICK";
 		public static const LOADERANI_CHANGE:String 	= "ControlEvent.LOADERANI_CHANGE"; // preloader animation
 		public static const AD_LOAD_START:String 		= "ControlEvent.AD_LOAD_START";
 		public static const JINGLE_FINISHED:String 		= "ControlEvent.JINGLE_FINISHED";
