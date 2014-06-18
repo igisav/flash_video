@@ -1,12 +1,10 @@
 package de.axelspringer.videoplayer.view
 {
-//	import com.akamai.display.AkamaiVideoSurface;
     import de.axelspringer.videoplayer.event.ControlEvent;
     import de.axelspringer.videoplayer.model.vo.BildTvDefines;
     import de.axelspringer.videoplayer.model.vo.FullscreenData;
     import de.axelspringer.videoplayer.view.base.BaseView;
 
-    import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.geom.Rectangle;
     import flash.media.Video;
@@ -17,17 +15,8 @@ package de.axelspringer.videoplayer.view
 		
 		public var background:Sprite;
 		public var display:Video;
-//		public var displayHD:AkamaiVideoSurface;
-		public var adContainer:MovieClip;
-		//public var adLabel:AdLabel;
 		public var videoBtn:Sprite;
 		
-		// movieplayer only
-		//public var chapterList:ChapterListUi;
-		//
-		
-		//protected var displayBtn:DisplayButton;
-
 		protected var initWidth:Number;
 		protected var initHeight:Number;
 		
@@ -59,34 +48,11 @@ package de.axelspringer.videoplayer.view
 			this.display.smoothing = true;
 			this.stage.addChild( this.display );
 			
-//			this.displayHD = new AkamaiVideoSurface(true);
-//			this.stage.addChild( this.displayHD );
-
-			// movieplayer only
-			/*this.chapterList = new ChapterListUi();
-			this.chapterList.addEventListener( ControlEvent.PROGRESS_CHANGE, onMovieProgressChange );
-			this.chapterList.visible = false;
-			this.stage.addChild( this.chapterList );*/
-			
-			this.adContainer = new MovieClip();
-			this.stage.addChild( this.adContainer );
-			
-			/*this.adLabel = new AdLabel();
-			this.stage.addChild( this.adLabel );
-
-			if(!BildTvDefines.isEmbedPlayer)
-			{
-				this.adLabel.visible = false;
-			}*/
-			
 			this.videoBtn = new Sprite();
 			this.videoBtn.graphics.beginFill( 0, 0 );
 			this.videoBtn.graphics.drawRect( 0, 0, BildTvDefines.width, BildTvDefines.height );
 			this.videoBtn.graphics.endFill();
-		//	this.videoBtn.addEventListener( MouseEvent.MOUSE_OVER, onMouseOver );
-		//	this.videoBtn.addEventListener( MouseEvent.MOUSE_OUT, onMouseOut );
 			this.videoBtn.buttonMode = true;
-			//this.videoBtn.visible = false;
 			this.stage.addChild(this.videoBtn);
 			
 			this.setDisplaySizeDefault();
@@ -94,33 +60,12 @@ package de.axelspringer.videoplayer.view
 		
 		public override function resize() :void
 		{
-//			trace( this + " onResize" );
 			this.setSize();
 			this.setDisplaySizeDefault();
-		}
-		
-		public function clearDisplay( val:Boolean ) :void
-		{
-			if( val == true )
-			{
-//				this.displayHD.clear();
-			}
-			else
-			{
-				this.display.clear();
-			}
 		}
 
 		public function setPlayingStatus( playing:Boolean ) :void
 		{
-			trace(this+" setPlayingSatus "+playing);
-			/*if(this.displayBtn)
-			{
-				if(playing == true)this.displayBtn.phase = 1;
-				if(playing == false)this.displayBtn.phase = 0;
-				this.displayBtn.playing = playing;
-			} */
-		
 			// for ViewController
 			if( playing )
 			{
@@ -128,21 +73,6 @@ package de.axelspringer.videoplayer.view
 			}
 		}
 
-		/*public function setDisplayButtonVisible( visible:Boolean = true ) :void
-		{
-		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ setDisplayButtonVisible: " + visible + " ~~~~~~~~~~~~~~~~~~~~~~" );
-			if(this.displayBtn && BildTvDefines.isEmbedPlayer)
-			{
-				this.displayBtn.visible = visible;
-			}
-		}*/
-		
-		/*public function setDisplayButtonAsPlayPauseButton( isPlayPauseBtn:Boolean = true ) :void
-		{
-		trace( this + " ~~~~~~~~~~~~~~~~~~~~~~~ isPlayPauseBtn: " + isPlayPauseBtn + " ~~~~~~~~~~~~~~~~~~~~~~" );
-		//	if(this.displayBtn)this.displayBtn.isPlayPauseButton = isPlayPauseBtn;
-		}*/
-				
 		public function setDisplaySizeDefault() :void
 		{
 			this.currentWidth = this.initWidth;
@@ -169,8 +99,6 @@ package de.axelspringer.videoplayer.view
 		
 		public function setVideoRatio( ratio:Number ) :void
 		{
-//			trace( this + " setVideoRatio: " + ratio );
-			
 			this.ratio = ratio;
 			
 			this.updateDisplaySize();
@@ -189,18 +117,6 @@ package de.axelspringer.videoplayer.view
 		
 		protected function updateDisplaySize() :void
 		{
-//			trace( this + " updateDisplaySize" );
-			
-			var display:*;
-			
-			if( BildTvDefines.playsHDContent )
-			{
-//				display = this.displayHD;
-			}
-			else
-			{
-				display = this.display;			
-			}
 			display.height = this.currentHeight;
 			display.width = this.currentHeight * this.ratio;
 			if( display.width > this.currentWidth )
@@ -216,19 +132,7 @@ package de.axelspringer.videoplayer.view
 			this.background.height = this.currentHeight;
 			this.videoBtn.width = this.currentWidth;
 			this.videoBtn.height = this.currentHeight;
-			/*if(this.displayBtn)
-			{
-				this.displayBtn.x = Math.round( ( this.currentWidth - this.displayBtn.width ) / 2 );
-				this.displayBtn.y = Math.round( ( this.currentHeight - this.displayBtn.height ) / 2 );
-			}*/
-			
 
-//			if( BildTvDefines.isMoviePlayer )
-//			{
-				/*this.chapterList.x = Math.round( ( this.currentWidth - ChapterListUi.WIDTH ) / 2 );
-				this.chapterList.y = Math.round( this.currentHeight - ChapterListUi.HEIGHT );*/
-//			}
-			
 			// notify PlayerController to change size of Ad
 			this.dispatchEvent( new ControlEvent( ControlEvent.RESIZE, new FullscreenData( this.isFullscreen, this.wasFullscreen ) ) );
 		}
