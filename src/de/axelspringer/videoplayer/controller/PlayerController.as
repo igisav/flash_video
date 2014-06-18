@@ -1,7 +1,5 @@
 package de.axelspringer.videoplayer.controller
 {
-	//import com.akamai.hd.HDNetStream;
-	//import com.akamai.hd.HDNetStream;
     import com.akamai.net.f4f.ZStream;
 
     import de.axelspringer.videoplayer.event.ControlEvent;
@@ -31,25 +29,9 @@ package de.axelspringer.videoplayer.controller
     import flash.utils.Timer;
     import flash.utils.setTimeout;
 
-    //import de.axelspringer.videoplayer.model.vo.TrackingVO;
-//	import de.axelspringer.videoplayer.view.SubtitleView;
-
     public class PlayerController extends EventDispatcher
 	{
-		private static const CLIP_BUMPER_PREROLL:String="CLIP_BUMPER_PREROLL";
-		private static const CLIP_BUMPER_POSTROLL:String="CLIP_BUMPER_POSTROLL";
-		private static const CLIP_CONTENT:String="CLIP_CONTENT";
-		private static const CLIP_NONE:String="CLIP_NONE";
 		private static const TIMER_DELAY:Number=500;
-
-		// movieplayer only
-		private static const MOVIE_JINGLE_PREROLL_MOVIE:String="MOVIE_JINGLE_PREROLL_MOVIE";
-		private static const MOVIE_JINGLE_PREROLL_TRAILER:String="MOVIE_JINGLE_PREROLL_TRAILER";
-		private static const MOVIE_JINGLE_MIDROLL:String="MOVIE_JINGLE_MIDROLL";
-		private static const MOVIE_JINGLE_POSTROLL:String="MOVIE_JINGLE_POSTROLL";
-		
-		// track
-		//public var trackingController:TrackingController;
 
 		// gui
 		protected var playerView:PlayerView;
@@ -59,7 +41,6 @@ package de.axelspringer.videoplayer.controller
 		protected var ns:NetStream;
 		protected var soundTransform:SoundTransform;
 
-		//protected var hdRenderer:HDVideoRenderer;
 		protected var nsHD:ZStream;
 		// data
 		protected var videoVO:VideoVO;
@@ -69,8 +50,6 @@ package de.axelspringer.videoplayer.controller
 		protected var videoFile:String;
 		protected var videoIsStream:Boolean;
 		protected var streamConnects:uint;
-		protected var bumperVO:VideoVO;
-		protected var clip2play:String;
 		protected var hdContent:Boolean=false;
 		protected var startBitrateSetted:Boolean=false;
 
@@ -308,8 +287,6 @@ package de.axelspringer.videoplayer.controller
 		{
 			ExternalController.dispatch(ExternalController.EVENT_PLAY);
 
-			this.clip2play=CLIP_BUMPER_PREROLL;
-
             if (this.videoStarted)
             {
 
@@ -325,58 +302,14 @@ package de.axelspringer.videoplayer.controller
 		{			
 			this.previousVideoTime = this.savedPosition;
 			this.videoLoaded=0;
-			switch (this.clip2play)
-			{
-				case CLIP_BUMPER_PREROLL:
-				{
-					if (this.bumperVO != null)
-					{
-						this.currentClip=this.bumperVO;
-					}
-					else
-					{
-						this.clip2play=CLIP_CONTENT;
-						this.currentClip = this.videoVO;
-					}
 
-					break;
-				}
-				case CLIP_BUMPER_POSTROLL:
-				{
-					if (this.bumperVO != null)
-					{
-						this.currentClip=this.bumperVO;
-					}
-					else
-					{
-						this.clip2play=CLIP_NONE;
-						this.finishPlay();
-						// avoid playstart now
-						return;
-					}
-
-					break;
-				}
-				case CLIP_CONTENT:
-				{
-					this.currentClip = this.videoVO;
-
-					break;
-				}
-				case CLIP_NONE:
-				{
-					this.finishPlay();
-					// avoid playstart now
-					return;
-				}
-			}
+            this.currentClip = this.videoVO;
 
 			// start playing!
-			this.playing = this.clip2play != CLIP_NONE;
+			this.playing = true;
 			
 			if (this.videoSrcPosition == 2)
 			{
-				this.playing=true;
 				this.playerView.setPlayingStatus(true);
 			}
 
@@ -438,39 +371,6 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
-		protected function setNextClip():void
-		{
-			switch (this.clip2play)
-			{
-				case CLIP_BUMPER_PREROLL:
-				{
-					this.clip2play=CLIP_CONTENT;
-
-					break;
-				}
-				case CLIP_BUMPER_POSTROLL:
-				{
-					this.clip2play=CLIP_NONE;
-
-					break;
-				}
-				case CLIP_CONTENT:
-				{
-					if (BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer)
-					{
-						this.clip2play=CLIP_NONE;
-					}
-					else
-					{
-						this.hdContent = false;
-						this.clip2play=CLIP_BUMPER_POSTROLL;
-					}
-
-					break;
-				}
-			}
-		}
-
 		public function destroy():void
 		{
             Log.info(this + " destroy stream connection");
@@ -497,19 +397,7 @@ package de.axelspringer.videoplayer.controller
 		protected function finishPlay():void
 		{
 			destroy();
-
-			this.setNextClip();
-			this.bumperVO=null;
-
-			// check if there is another clip
-			if (this.clip2play != CLIP_NONE)
-			{
-				this.playClip();
-			}
-			else
-			{
-				this.onVideoFinish();
-			}
+		    this.onVideoFinish();
 		}
 
 		/**
@@ -936,24 +824,7 @@ package de.axelspringer.videoplayer.controller
 //					ExternalInterface.call("function(){if (window.console) console.log('STREAM NOT FOUND ERROR AT: "+this.videoFile+"  : "+e.type +"');}");
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","STREAM NOT FOUND ERROR AT: "+this.videoFile+"  : "+e.type);
 					
-					//if AdBlocker is blocking bumber or Bumber url is incorrect coninue with conten Clip
-					if( this.clip2play == CLIP_BUMPER_POSTROLL)
-					{
-						this.playing=false;
-						this.videoStopped=true;
-						this.videoBufferFlushStatus=true;
-						this.videoBufferEmptyStatus = true;
-						this.setNextClip();
-						
-					}
-					else if(this.clip2play == CLIP_BUMPER_PREROLL)
-					{
-						this.playing=false;
-						this.videoStopped=true;
-						this.setNextClip();
-						playClip();
-					}
-					else if ( BildTvDefines.isLivePlayer )
+					if ( BildTvDefines.isLivePlayer )
 					{
 						if( this.hdContent )
 						{
@@ -1015,9 +886,7 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Play.Stop":
 				{
 					this.videoStopped=true;
-					if( this.clip2play == CLIP_BUMPER_POSTROLL ) this.clip2play = CLIP_NONE;
-					//this.controlsView.setPlayingStatus( false );
-
+					finishPlay();
 					break;
 				}
 				case "NetStream.Play.UnpublishNotify":
@@ -1064,16 +933,11 @@ package de.axelspringer.videoplayer.controller
 
 				this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame, false);
 			
-				if (this.clip2play != CLIP_BUMPER_POSTROLL )
-				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","Send finishPlayer signal from CheckEndOfVideoTimer when no bumper");
-					if( true == this.videoStarted )
-					{
-						this.finishPlay();
-					}
-                    ExternalController.dispatch(ExternalController.EVENT_ENDED);
-				}
-
+                if( this.videoStarted )
+                {
+                    this.finishPlay();
+                }
+                ExternalController.dispatch(ExternalController.EVENT_ENDED);
 			}
 		}
 
@@ -1188,16 +1052,9 @@ package de.axelspringer.videoplayer.controller
 
 		protected function onError(e:Event):void
 		{
-			// stop trackingTimer
+            // TODO : playing anhalten !!!
 			this.playing=false;
 			this.videoStarted=false;
-
-			// if it was a bumper, try to continue
-			if (BildTvDefines.isBumper)
-			{
-				this.setNextClip();
-				this.playClip();
-			}
 		}
 
 		protected function onVideoEnterFrame(e:Event):void
@@ -1437,8 +1294,6 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.duration=videoVO.duration;
 
-			// if bumper or linked video, hide the big play/pause button and disable double-click timer
-			BildTvDefines.isBumper = (videoVO == this.bumperVO);
 			//HDNetwork content
 			if ( videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1 )
 			{
@@ -1649,9 +1504,6 @@ package de.axelspringer.videoplayer.controller
 			this.akamaiController=new AkamaiController(this.playerView); // , this.controlsView
 			this.akamaiController.setMovie(filmVO);
 			this.akamaiController.setVolume(this.soundTransform.volume);
-
-			// autoplay
-			this.clip2play=CLIP_CONTENT;
 		}
 
 	}
