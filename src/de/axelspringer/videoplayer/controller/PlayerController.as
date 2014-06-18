@@ -76,8 +76,15 @@ package de.axelspringer.videoplayer.controller
 
 		// stream status
 		protected var isPlaying:Boolean=false;
-		protected var videoStarted:Boolean=false;
+
+        /* Video playtime > 0, means it's received Net.Status.Play
+         * It can be paused. */
+ 		protected var videoStarted:Boolean=false;
+
+        /* NetStream.Play.Stop
+         * Video is stopped by user, error or reached the end */
 		protected var videoStopped:Boolean=false;
+
 		protected var videoLoaded:Number=0;
 		protected var videoBufferEmptyStatus:Boolean=false;
 		protected var videoBufferFlushStatus:Boolean=false;
@@ -107,7 +114,7 @@ package de.axelspringer.videoplayer.controller
 		protected var akamaiController:AkamaiController;
 
 		//protected var akamaiHDController:AkamaiHDController;
-		private var _cachedVideoUrl:String;
+		//private var _cachedVideoUrl:String;
 
 		public function PlayerController(playerView:PlayerView) //, controlsView:ControlsView, subtitleView:SubtitleView
 		{
@@ -343,61 +350,11 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
-		public function replay():void
+		public function play():void
 		{
-			//trace( "replay" );
-			//// this.trackingController.trackPlayerEvent("PLAY_AUTOREPLAY");
-			this.play();
-		}
-
-		public function play(considerAds:Boolean=true):void
-		{
-			//trace( this + " play: " + this.videoVO.videoUrl );
-
-			// track init, but not when autoplay
-			// 12.01.11 - exception for welt			
-			// 17.01.11 - disabled permanently for bild too
-//			if( !this.videoVO.autoplay || BildTvDefines.isWeltPlayer )
-//			{	
 			ExternalController.dispatch(ExternalController.EVENT_PLAY);
-			//// this.trackingController.onClipPlay();
-//			}						
 
-            // ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			this.clip2play=CLIP_BUMPER_PREROLL;
-			
-
-			/* TODO: brauche ich das?
-			if (this.showAds && considerAds)
-			{
-				//this.adPlaying = true;
-
-				if (BildTvDefines.adType == "preroll")
-				{
-					this.vastController.load(this.adData.preroll, VastDefines.ADTYPE_PREROLL);
-				}
-				else if (BildTvDefines.adType == "midroll")
-				{
-					this.vastController.load(this.adData.midroll, VastDefines.ADTYPE_MIDROLL);
-				}
-				else if (BildTvDefines.adType == "overlay")
-				{
-					this.vastController.load(this.adData.overlay, VastDefines.ADTYPE_OVERLAY);
-				}
-				else if (BildTvDefines.adType == "postroll")
-				{
-					this.vastController.load(this.adData.postroll, VastDefines.ADTYPE_POSTROLL);
-				}
-				else
-				{
-					BildTvDefines.adType = "preroll";
-					this.vastController.load(this.adData.preroll, VastDefines.ADTYPE_PREROLL);
-				}
-			}
-			else
-			{
-				this.playClip();
-			}*/
 
             if (this.videoStarted)
             {
@@ -612,29 +569,33 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
-		protected function finishPlay(event:Event=null):void
+		public function destroy():void
 		{
-			this.videoTimer.stop();
-			this.playerView.supressPlayDisplayButton(false);
-			trace(this + " finishPlay");
+            Log.info(this + " destroy stream connection");
+            this.videoTimer.stop();
 
-			if (this.hdContent == false)
-			{
-				if (this.ns != null)
-				{
-					this.ns.close();
-					this.ns=null;
-				}
-			}
-			else
-			{
-				if (this.nsHD != null)
-				{
-					this.nsHD.closeAndDestroy(); //new
-					this.nsHD=null;
-				}
-					//this.akamaiHDController.close();
-			}
+            if (this.hdContent == false)
+            {
+                if (this.ns != null)
+                {
+                    this.ns.close();
+                    this.ns=null;
+                }
+            }
+            else
+            {
+                if (this.nsHD != null)
+                {
+                    this.nsHD.closeAndDestroy(); //new
+                    this.nsHD=null;
+                }
+                //this.akamaiHDController.close();
+            }
+        }
+
+		protected function finishPlay():void
+		{
+			destroy();
 
 			this.setNextClip();
 			this.bumperVO=null;
@@ -766,7 +727,7 @@ package de.axelspringer.videoplayer.controller
 			var metaHandler2:Object=new Object();
 			this.nsHD.addClientHandler( "onMetaData", this.onMetaData);
 			this.nsHD.addClientHandler( "onPlayStatus", this.onPlayStatusHD);
-			this.nsHD.addClientHandler( "dvrAvailabilityChange", this.onDvrAvailabilityChange);
+			this.nsHD.addClientHandler( "dvrAvailabilityChange", onDvrAvailabilityChange);
 			this.nsHD.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus, false, 0, true);
 			this.nsHD.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 				
@@ -807,7 +768,7 @@ package de.axelspringer.videoplayer.controller
 				this.videoVO.videoUrl = this.videoVO.videoUrl2;
 				this.videoFile = this.videoVO.videoUrl;
 				this.videoUrl = this.videoVO.videoUrl;
-				_cachedVideoUrl = null;
+				//_cachedVideoUrl = null;
 				
 				this.playClip();							
 			}
@@ -907,7 +868,7 @@ package de.axelspringer.videoplayer.controller
 				var scriptRequest:URLRequest 	= new URLRequest(this.videoFile);
 				var scriptLoader:URLLoader 		= new URLLoader();
 					
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","POST REQUEST @ X-NoRedirect REDIRECT");
+				trace("POST REQUEST @ X-NoRedirect REDIRECT");
 					
 					
 				scriptRequest.requestHeaders.push(new URLRequestHeader("X-NoRedirect", "false"));
@@ -944,14 +905,14 @@ package de.axelspringer.videoplayer.controller
 		
 		private function onNetConnectionSucces():void
 		{
-			if( BildTvDefines.isEmbedPlayer &&  _cachedVideoUrl == null && !BildTvDefines.isBumper)
+			/*if( BildTvDefines.isEmbedPlayer &&  _cachedVideoUrl == null && !BildTvDefines.isBumper)
 			{
 				_cachedVideoUrl = this.videoFile;
 			}
 			else if( BildTvDefines.isEmbedPlayer && _cachedVideoUrl != null && (this.clip2play != CLIP_BUMPER_POSTROLL || this.clip2play != CLIP_BUMPER_PREROLL))
 			{
 				this.videoFile = _cachedVideoUrl;
-			}
+			}*/
 			
 			trace("play: redirect davor: "+ this.videoFile+"  hd? "+this.hdContent);
 
@@ -1024,7 +985,7 @@ package de.axelspringer.videoplayer.controller
 			else if(event.currentTarget.data != "")
 			{
 				
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","AFTER TRY REDIRECT IN FLASH, VALIDATE "+ event.currentTarget.data);
+				trace("AFTER TRY REDIRECT IN FLASH, VALIDATE "+ event.currentTarget.data);
 				
 				var pattern:RegExp = new RegExp("^http[s]?\:\\/\\/([^\\/]+)\\/");
 				
@@ -1043,7 +1004,7 @@ package de.axelspringer.videoplayer.controller
 				if( isUrl )
 				{
 					this.videoFile = event.currentTarget.data;
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","AFTER VALIDATE, PLAY  "+ this.videoFile);					
+					trace("AFTER VALIDATE, PLAY  "+ this.videoFile);
 					this.onNetConnectionConnect();		
 				}				
 				else
@@ -1162,7 +1123,6 @@ package de.axelspringer.videoplayer.controller
 						this.videoStopped=true;
 						this.setNextClip();
 						playClip();
-						
 					}
 					else if ( BildTvDefines.isLivePlayer ) //this.videoSrcPosition == 1)
 					{
@@ -1185,7 +1145,7 @@ package de.axelspringer.videoplayer.controller
 							this.videoVO.videoUrl = this.videoVO.videoUrl2;
 							this.videoFile = this.videoVO.videoUrl;
 							this.videoUrl = this.videoVO.videoUrl;
-							_cachedVideoUrl = null;
+							//_cachedVideoUrl = null;
 							
 							this.playClip();							
 						}
@@ -1337,10 +1297,9 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
-		protected function onDvrAvailabilityChange(evt:Object):void
+		protected static function onDvrAvailabilityChange(evt:Object):void
 		{
-			trace("HD event: " + evt.code);
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","Changed DVR Availibilty Changed to :: " + evt.code);
+			Log.info("Changed DVR Availibilty Changed to :: " + evt.code);
 		}
 		
 		protected function onPlayStatusHD(evt:Object):void
@@ -2070,47 +2029,6 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 */
-		/********************************************************************************************************
-		 * BUMPER STUFF
-		 *******************************************************************************************************/
-
-	/*	protected function loadBumperXml(url:String):void
-		{
-			trace(this + " loadBumperXml: " + url);
-
-//			ExternalInterface.call("function(){if (window.console) console.log('"+this + " loadBumperXml: " + url+"');}");
-            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
-			this.playerView.supressPlayDisplayButton(true);
-			var xmlLoader:XmlLoader=new XmlLoader();
-			xmlLoader.addEventListener(XmlEvent.XML_LOADED, onBumperXmlLoaded, false, 0, true);
-			xmlLoader.addEventListener(XmlEvent.XML_ERROR, onBumperXmlError, false, 0, true);
-			xmlLoader.loadXml(url);
-		}
-
-		protected function onBumperXmlLoaded(e:XmlEvent):void
-		{
-			trace("onBumperXmlLoaded");
-			this.dispatchEvent(new ControlEvent(ControlEvent.LOADERANI_CHANGE, {visible: false}));
-			// to get to the "link" node we have to create a temp config object
-			var config:ConfigVO=new ConfigVO();
-			config.hydrate(e.xml);
-			this.bumperVO=config.videoVO;
-//			ExternalInterface.call("function(){if (window.console) console.log('onBumperXmlLoaded:::"+config.videoVO.videoUrl+"');}");
-			this.playClip();
-			this.playerView.supressPlayDisplayButton(false);
-		}
-
-		protected function onBumperXmlError(e:XmlEvent):void
-		{
-			trace("onBumperXmlError: " + e.text);
-//			ExternalInterface.call("function(){if (window.console) console.log('onBumperXmlError: "+ e.text+"');}");
-			this.playerView.supressPlayDisplayButton(false);
-            ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
-			this.setNextClip();
-			this.playClip();
-		}
-
-		*/
 
         protected function emptyCallback(... args):void
         {

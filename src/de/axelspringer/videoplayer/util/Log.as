@@ -9,11 +9,11 @@ package de.axelspringer.videoplayer.util
         public static const JS_LOGGER:String = "js_logger";
 
         public static function error(msg:String):void {
-            log("[ERROR]" + msg + level);
+            log("[ERROR]" + msg);
         }
 
         public static function info(msg:String):void {
-            log("[INFO]" + msg + level);
+            log("[INFO]" + msg);
         }
 
         private static function log(msg:String):void {

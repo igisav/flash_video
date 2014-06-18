@@ -110,12 +110,7 @@ package de.axelspringer.videoplayer.view
 				this.display.clear();
 			}
 		}
-		
-		public function supressPlayDisplayButton( val:Boolean ) :void
-		{			
-			//if(this.displayBtn)this.displayBtn.supressShow(val);
-		}
-		
+
 		public function setPlayingStatus( playing:Boolean ) :void
 		{
 			trace(this+" setPlayingSatus "+playing);

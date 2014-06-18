@@ -93,6 +93,7 @@ package de.axelspringer.videoplayer.controller
     }
         // TODO: move this to playerController
         public function loadURL(url:String):void{
+            this.playerController.destroy();
             this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2 = url ;
 
             // TODO: hdAdaptive wird über flashvars gesetzt. Überprüfen ob default=true nicht gefährlich ist.
@@ -167,8 +168,7 @@ package de.axelspringer.videoplayer.controller
 		protected function initController() :void
 		{
 			this.viewController = new ViewController( this.stage );
-			this.viewController.addEventListener( ControlEvent.REPLAY, onReplayClick );
-			
+
 			this.playerController = new PlayerController( this.viewController.playerView); //, this.viewController.controlsView, this.viewController.subtitleView
 			this.playerController.setVolume( 0.5 );
 		}
@@ -237,11 +237,6 @@ package de.axelspringer.videoplayer.controller
 // TODO: Selim: was ist mit setzen von HD
         // var phase:Number = e.data.phase;
         // this.playerController.setHDBitrate(phase);
-
-		protected function onReplayClick( e:ControlEvent ) :void
-		{
-			this.playerController.replay();
-		}
 
 		protected function onErrorClick( e:MouseEvent ) :void
 		{
