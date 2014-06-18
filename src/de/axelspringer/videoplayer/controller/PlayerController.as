@@ -67,7 +67,6 @@ package de.axelspringer.videoplayer.controller
 		protected var videoLoaded:Number=0;
 		protected var videoBufferEmptyStatus:Boolean=false;
 		protected var videoBufferFlushStatus:Boolean=false;
-		protected var videoIsBuffering:Boolean=false;
 		protected var videoIsPublished:Boolean=false;
 		protected var paused:Boolean=false;
 		protected var metadata:Object;
@@ -75,7 +74,6 @@ package de.axelspringer.videoplayer.controller
 		protected var playtime:Number = 0; // currentTime
 		protected var savedVolume:Number=0;
 		protected var savedPosition:Number = 0;
-		protected var savedBitrate:Number = 0;
 		protected var muted:Boolean=false;
 
 		//Variables to finish a Video which can't be flushed
@@ -87,7 +85,6 @@ package de.axelspringer.videoplayer.controller
 
 		// movieplayer & liveplayer only
 		protected var filmVO:FilmVO;
-		protected var streamingVO:StreamingVO;
 		protected var akamaiController:AkamaiController;
 
 		public function PlayerController(playerView:PlayerView)

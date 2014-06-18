@@ -17,13 +17,7 @@ package de.axelspringer.videoplayer.model.vo
 		
 		public var functionNameStreamEnd:String 		= "onStreamEnd";
 		public var functionNameConnectionClose:String 	= "location.reload";
-		
-		// ads
-		public var adVO:AdVO;
-		
-		// tracking
-		//public var trackingVO:TrackingVO;
-		
+
 		// session pinger
 		public var pingUrl:String 		= "";
 		public var pingSession:String	= "";
@@ -34,46 +28,8 @@ package de.axelspringer.videoplayer.model.vo
 		public function StreamingVO()
 		{
 			super();
-			
-			this.adVO = new AdVO();
-			//this.trackingVO = new TrackingVO();
 		}
 		
-		public function hydrate( xml:XML ) :void
-		{
-			if( xml != null )
-			{
-				this.streamUrl = hasAttribute( xml, "src" ) ? xml.@src : this.streamUrl;
-				this.streamUrl2 = hasAttribute( xml, "src2" ) ? xml.@src2 : this.streamUrl2;	
-				
-				BildTvDefines.buffertimeMaximum = hasAttribute( xml.buffer[0], "dynbuffer" ) ? xml.buffer[0].@dynbuffer : BildTvDefines.buffertimeMaximum;
-				BildTvDefines.buffertimeMinimum = hasAttribute( xml.buffer[0], "startbuffer" ) ? xml.buffer[0].@startbuffer : BildTvDefines.buffertimeMinimum;
-			
-				this.adVO.hydrate( xml.ad[0] );
-				// no midrolls or overlays
-				this.adVO.midroll = "";
-				this.adVO.overlay = "";
-				
-				/*this.trackingVO.trackingEnabled = hasAttribute( xml, "tracking" ) ? ( xml.@tracking == "true" ? true : false ) : true;
-				this.trackingVO.trackFunction = hasAttribute( xml, "track" ) ? xml.@track : this.trackingVO.trackFunction;*/
-				
-				// session pinger
-				if( xml.ping[0] != null )
-				{
-					var pingXml:XML = xml.ping[0];
-					this.pingUrl = pingXml.@url;
-					this.pingSession = pingXml.@session;
-					var interval:Number = parseInt( pingXml.@interval, 10 );
-					if( !isNaN( interval ) && interval > 0 )
-					{
-						this.pingInterval = interval * 1000;
-					}
-					this.pingText = pingXml.@text;
-					this.pingDebug = ( pingXml.@debug == "true" || pingXml.@debug == "1" );
-				}
-			}
-		}
-			
 		protected function loadSmil() :void
 		{
 			var xmlLoader:XmlLoader = new XmlLoader();

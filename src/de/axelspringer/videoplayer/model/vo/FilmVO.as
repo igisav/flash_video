@@ -1,8 +1,6 @@
 package de.axelspringer.videoplayer.model.vo
 {
 	import de.axelspringer.videoplayer.model.vo.base.BaseVO;
-	
-	// import tv.tvnext.stdlib.utils.StringUtils;
 
 	public class FilmVO extends BaseVO
 	{
@@ -21,9 +19,6 @@ package de.axelspringer.videoplayer.model.vo
 		public var functionNameMail:String 	= "showEmbed";
 		public var functionNameShare:String = "showShare";
 		
-		// ads
-		public var adVO:AdVO;
-		
 		// tracking
 		//public var trackingVO:TrackingVO;
 		
@@ -38,58 +33,11 @@ package de.axelspringer.videoplayer.model.vo
 		{
 			super();
 			
-			this.adVO = new AdVO();
 			//this.trackingVO = new TrackingVO();
 			this.chapters = new Array();
 		}
 		
-		public function hydrate( xml:XML ) :void
-		{
-			if( xml != null && xml.item.length() > 0 )
-			{
-				var contentItem:XML = xml.item[0];				
-				var mediaNS:Namespace = xml.namespace( "media" );
-				
-				this.title = contentItem.mediaNS::title;
-				this.streamUrl = contentItem.mediaNS::content.@url;
-				this.streamUrl2 = contentItem.mediaNS::content.@url2;
-				this.duration = parseInt( contentItem.mediaNS::content.@duration, 10 );
-				this.thumbnailUrl = contentItem.mediaNS::thumbnail.@url;
-				
-				BildTvDefines.buffertimeMaximum = hasAttribute( xml.buffer[0], "dynbuffer" ) ? xml.buffer[0].@dynbuffer : BildTvDefines.buffertimeMaximum;
-				BildTvDefines.buffertimeMinimum = hasAttribute( xml.buffer[0], "startbuffer" ) ? xml.buffer[0].@startbuffer : BildTvDefines.buffertimeMinimum;
-			
-				this.adVO.hydrate( contentItem.ad[0] );
-				// no overlay in movies
-				this.adVO.overlay = "";
-				
-				/*this.trackingVO.trackingEnabled = true;
-				this.trackingVO.trackFunction = BildTvDefines.TRACKING_FUNCTION_BILD;
-				this.trackingVO.trackFunction = hasAttribute( xml, "track" ) ? xml.@track : this.trackingVO.trackFunction;
-				// replace DATE placeholder with XML value
-				this.trackingVO.trackFunction = StringUtils.replace( this.trackingVO.trackFunction, "%DATE%", "'" + contentItem.pubDate[0] + "'" );
-				// abuse "ivw" property for nowtilus tracking
-				this.trackingVO.ivw = TRACKING_FUNCTION_NOWTILUS;*/
-				
-				this.chapters = new Array();
-				var chapterVO:FilmChapterVO;
-				
-				// add first chapter manually as it has no time set
-				chapterVO = new FilmChapterVO();
-				chapterVO.hydrate( xml.item[0] );
-				chapterVO.chapterTime = 0;
-				this.chapters.push( chapterVO );
-				
-				// add the rest
-				for( var i:uint = 1; i < xml.item.length(); i++ )
-				{
-					chapterVO = new FilmChapterVO();
-					chapterVO.hydrate( xml.item[i] );
-					this.chapters.push( chapterVO );
-				}
-			}
-		}
-		
+
 		public function getCPCode() :String
 		{
 			var result:String = "";

@@ -23,9 +23,6 @@ package de.axelspringer.videoplayer.model.vo
 		public var relatedXml:String = "";
 		public var relatedVideos:Array;
 
-		//AdTexts
-		public var adTextTextVO:AdTimerTextVO;
-		
 		// in case we get a film.bild.de XML, use this to hydrate the data
 		public var filmVO:FilmVO;
 		
@@ -35,7 +32,6 @@ package de.axelspringer.videoplayer.model.vo
 		public function ConfigVO()
 		{
 			this.videoVO = new VideoVO();
-			this.adTextTextVO = new AdTimerTextVO();
 			this.relatedVideos = new Array();
 		}
 	}
