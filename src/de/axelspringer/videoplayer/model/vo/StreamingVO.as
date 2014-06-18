@@ -1,8 +1,6 @@
 package de.axelspringer.videoplayer.model.vo
 {
-	import de.axelspringer.videoplayer.event.XmlEvent;
 	import de.axelspringer.videoplayer.model.vo.base.BaseVO;
-	import de.axelspringer.videoplayer.util.XmlLoader;
 
 	public class StreamingVO extends BaseVO
 	{
@@ -24,54 +22,6 @@ package de.axelspringer.videoplayer.model.vo
 		public var pingInterval:uint	= 10 * 60 * 1000;	// in ms
 		public var pingText:String		= "";
 		public var pingDebug:Boolean	= false;
-		
-		public function StreamingVO()
-		{
-			super();
-		}
-		
-		protected function loadSmil() :void
-		{
-			var xmlLoader:XmlLoader = new XmlLoader();
-			xmlLoader.addEventListener( XmlEvent.XML_LOADED, onSmilLoaded, false, 0, true );
-			xmlLoader.addEventListener( XmlEvent.XML_ERROR, onSmilError, false, 0, true );
-			xmlLoader.loadXml( this.streamUrl );
-		}
-		
-		protected function onSmilLoaded( e:XmlEvent ) :void
-		{
-			var loadedXml:XML = e.xml;
-			this.hydrateSmil( loadedXml.ns::head, loadedXml.ns::body );
-		}
-		
-		protected function onSmilError( e:XmlEvent ) :void
-		{
-			trace( "onXmlError: " + e.text );
-		}
-		
-		public function hydrateSmil( smilHead:XMLList, smilBody:XMLList ) :void
-		{
-			if( smilHead != null )
-			{
-				var metaList:XMLList = smilHead.children();
-				for each (var metaElement:* in metaList)
-				{
-					if( metaElement.@name == "rtmpPlaybackBase" )     
-	              	{
-	                 	trace("connectionUrl:" + metaElement.@content);
-	                 	break;
-	                } 
-				}       
-	  		} 
-	  		 
-			if( smilBody != null )
-			{
-				var videoList:XMLList = smilBody.children().children();
-				for each (var videoElement:* in videoList)
-				{
-	               //	trace("connectionUrl:" + videoElement.@src + "        " + videoElement.@system-bitrate);
-				}          
-	  		}  			
-		}
+
 	}
 }

@@ -1,8 +1,7 @@
 package de.axelspringer.videoplayer.model.vo
 {
 	import de.axelspringer.videoplayer.model.vo.base.BaseVO;
-	import de.axelspringer.videoplayer.util.LinkUtil;
-	
+
 	public class VideoVO extends BaseVO
 	{
 		public var videoUrl:String 		= "";

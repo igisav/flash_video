@@ -1,11 +1,7 @@
 package de.axelspringer.videoplayer.model.vo
 {
 	import de.axelspringer.videoplayer.model.vo.base.BaseVO;
-	import de.axelspringer.videoplayer.util.LinkUtil;
-	
-	import flash.external.ExternalInterface;
-	import flash.utils.Dictionary;
-	
+
 	public class ConfigVO extends BaseVO
 	{
 
