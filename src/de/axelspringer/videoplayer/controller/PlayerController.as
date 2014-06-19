@@ -449,14 +449,7 @@ package de.axelspringer.videoplayer.controller
 			// action!
              ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 			
-			if( isLivestream || BildTvDefines.startTime == 0 )
-			{
-				this.ns.play( this.videoFile );
-			}
-			else
-			{			
-				this.ns.play(this.videoFile, BildTvDefines.startTime);
-			}
+            this.ns.play( this.videoFile );
 			this.videoTimer.start();
 			this.offsetVideoTime = 0;
 		}
@@ -503,19 +496,11 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.display.deblocking = 0;
 				
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
-				this.savedPosition = BildTvDefines.startTime;
-				
 				ExternalInterface.call("com.xoz.flash_logger.logTrace","FLASH PLAY: "+ this.videoFile);
 
 				this.nsHD.play( this.videoFile );
 				this.videoTimer.start();
 				this.offsetVideoTime = 0;
-				
-				if(BildTvDefines.startTime != 0) 
-				{			
-					this.playing=true;
-					this.paused=false;		
-				}			
 		}
 		
 		protected function onIOError(event:IOErrorEvent):void
@@ -1006,17 +991,7 @@ package de.axelspringer.videoplayer.controller
 					}
 				}
 			}
-			
-			if(BildTvDefines.startTime != 0) 
-			{
-				this.nsHD.seek(BildTvDefines.startTime);
-				this.savedPosition = 0;
-				BildTvDefines.startTime = 0;
-				
-				this.playing=true;
-				this.paused=false;
-			}
-			
+
 			if (data != this.metadata)
 			{
 				this.metadata=data;

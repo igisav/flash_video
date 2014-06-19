@@ -13,10 +13,8 @@ package de.axelspringer.videoplayer.view
 	{
 		public static const NAME:String = "PlayerView";
 		
-		public var background:Sprite;
 		public var display:Video;
-		public var videoBtn:Sprite;
-		
+
 		protected var initWidth:Number;
 		protected var initHeight:Number;
 		
@@ -37,23 +35,9 @@ package de.axelspringer.videoplayer.view
 		{
 			this.setSize();
 			
-			this.background = new Sprite();
-			this.background.graphics.beginFill( 0 );
-			this.background.graphics.drawRect( 0, 0, 1, 1 );
-			this.background.graphics.endFill();
-			this.stage.addChild( this.background );
-			
-			
 			this.display = new Video();
 			this.display.smoothing = true;
 			this.stage.addChild( this.display );
-			
-			this.videoBtn = new Sprite();
-			this.videoBtn.graphics.beginFill( 0, 0 );
-			this.videoBtn.graphics.drawRect( 0, 0, BildTvDefines.width, BildTvDefines.height );
-			this.videoBtn.graphics.endFill();
-			this.videoBtn.buttonMode = true;
-			this.stage.addChild(this.videoBtn);
 			
 			this.setDisplaySizeDefault();
 		}
@@ -127,11 +111,6 @@ package de.axelspringer.videoplayer.view
 			
 			display.x = Math.round( ( this.currentWidth - display.width ) / 2 );
 			display.y = Math.round( ( this.currentHeight - display.height ) / 2 );
-			
-			this.background.width = this.currentWidth;
-			this.background.height = this.currentHeight;
-			this.videoBtn.width = this.currentWidth;
-			this.videoBtn.height = this.currentHeight;
 
 			// notify PlayerController to change size of Ad
 			this.dispatchEvent( new ControlEvent( ControlEvent.RESIZE, new FullscreenData( this.isFullscreen, this.wasFullscreen ) ) );

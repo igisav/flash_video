@@ -41,9 +41,6 @@ package de.axelspringer.videoplayer.controller
 			
 			this.setSize();
 			
-			/*this.loaderAni = new LoaderAni();
-			this.root.addChild( this.loaderAni );*/
-			
 			this.root.stage.addEventListener( Event.RESIZE, onStageResize );
 		}
 		
@@ -54,9 +51,7 @@ package de.axelspringer.videoplayer.controller
 		
 		public function init( flashVars:Object ) :void
 		{
-            var startXmlURL:String = flashVars.xmlurl;
             var autoplay:String = flashVars.autoplay;
-            var time:Number = flashVars.time;
 
 			this.config = new ConfigVO();
 
@@ -68,19 +63,6 @@ package de.axelspringer.videoplayer.controller
                 return;
             }
 
-			// to load relative linked stuff in the embed-player, we need absolute urls
-			// bild.de wants us to use the url of the xml to generate absolute links
-			// as this url may also be relative, let LinkUtil decide what to use
-			trace(this + " XML: " + startXmlURL);
-			
-			//set type of Ad, playing first,
-			BildTvDefines.adType = flashVars.adType;
-			
-			if(!isNaN(time))
-			{
-				BildTvDefines.startTime = time;			
-			}
-			
 			//Prio1: get Autoplay from Flashvars, Prio2: get Autoplay from video.xml if autoplaySet is false
 			if(autoplay != null)
 			{
@@ -105,29 +87,7 @@ package de.axelspringer.videoplayer.controller
 /************************************************************************************************
  * APP CONTROL
  ************************************************************************************************/
-		
-		//private var readySignalsended:Boolean = false;
-		// private var readytimer:Timer = new Timer(2000,5);
-		
-		protected function start() :void
-		{
-				if( true == BildTvDefines.isEmbedPlayer )
-				{
-					var id:String 		= BildTvDefines.playerId;
-					try
-					{
-						ExternalInterface.call("project_objects.StateManger.setWidth", id, root.stage.stageWidth);		
-					}
-					catch(e:Error)
-					{
-					}
-				}
-			
-				this.initMode();
 
-				this.update();	
-		}
-		
 		protected function setSize() :void
 		{
 			BildTvDefines.width = this.stage.stage.stageWidth;
@@ -151,20 +111,6 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 		
-		protected function initMode() :void
-		{
-			if( BildTvDefines.isEmbedPlayer )
-			{
-				BildTvDefines.mode = BildTvDefines.MODE_EMBED;
-			}
-			else
-			{
-				BildTvDefines.mode = BildTvDefines.MODE_STAGE;
-			}
-	
-			trace( this + " mode => " + BildTvDefines.mode );
-		}
-		
 		protected function initController() :void
 		{
 			this.viewController = new ViewController( this.stage );
@@ -173,7 +119,7 @@ package de.axelspringer.videoplayer.controller
 			this.playerController.setVolume( 0.5 );
 		}
 		
-		protected function update() :void
+		protected function start() :void
 		{ 
 			this.viewController.showView( PlayerView.NAME );
 			this.viewController.setConfig( this.config );
@@ -184,18 +130,13 @@ package de.axelspringer.videoplayer.controller
 			{
 				BildTvDefines.isMoviePlayer = true;
 				BildTvDefines.isTrailerPlayer = this.config.filmVO.isTrailer();
-				// force STAGE mode to enable correct tracking
-				BildTvDefines.mode = BildTvDefines.MODE_STAGE;
 				this.playerController.setMovie( this.config.filmVO );
 			}
 			else if( this.config.streamingVO != null )
 			{
 				BildTvDefines.isStreamPlayer = true;
 				BildTvDefines.isLivePlayer = this.config.streamingVO.isLivestream;
-				// force STAGE mode to enable correct tracking
-				BildTvDefines.mode = BildTvDefines.MODE_STAGE;
-				//this.playerController.setStream( this.config.streamingVO );
-				
+
 				var videoVO:VideoVO=new VideoVO();
 				videoVO.videoUrl=this.config.streamingVO.streamUrl;
 				videoVO.videoUrl2=this.config.streamingVO.streamUrl2;
@@ -231,36 +172,19 @@ package de.axelspringer.videoplayer.controller
 				this.playerController.setClip( this.config.videoVO);
 			}
 		}
-				
-
 
 // TODO: Selim: was ist mit setzen von HD
         // var phase:Number = e.data.phase;
         // this.playerController.setHDBitrate(phase);
 
-		protected function onErrorClick( e:MouseEvent ) :void
-		{
-			var js:String = "javascript:location.reload();";
-			try
-			{
-				navigateToURL( new URLRequest( js ), "_self" );
-			}
-			catch( oops:Error )
-			{
-				// nix
-			}
-		}
-		
 		protected function onStageResize( e:Event ) :void
 		{
 			this.setSize();
 			
-			//this.errorUi.resize();
 			if( this.viewController != null )
 			{
 				this.viewController.resize();
 			}
-			//this.loaderAni.resize();
 		}
 	}
 }
