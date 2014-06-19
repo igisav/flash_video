@@ -2,12 +2,15 @@ package
 {
     import de.axelspringer.videoplayer.controller.MainController;
     import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+    import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
 
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
+    import flash.events.ErrorEvent;
     import flash.events.Event;
+    import flash.events.UncaughtErrorEvent;
     import flash.system.Security;
     import flash.ui.ContextMenu;
     import flash.ui.ContextMenuItem;
@@ -22,6 +25,8 @@ package
             Log.level = Log.TRACE;
 
             Security.allowDomain("*");
+
+            loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler);
 
             if (this.stage == null)
             {
@@ -51,6 +56,24 @@ package
             menu.hideBuiltInItems();
             menu.customItems.push(new ContextMenuItem(BildTvDefines.playerName + " " + BildTvDefines.versionNumber, true, false));
             this.contextMenu = menu;
+        }
+
+        private function uncaughtErrorHandler(event:UncaughtErrorEvent):void
+        {
+            if (event.error is Error)
+            {
+                var error:Error = event.error as Error;
+                Log.error(error.message, Log.ERROR_RUNTIME);
+            }
+            else if (event.error is ErrorEvent)
+            {
+                var errorEvent:ErrorEvent = event.error as ErrorEvent;
+                Log.error(errorEvent.toString(), Log.ERROR_RUNTIME);
+            }
+            else
+            {
+                Log.error(BildTvDefines.ERROR_RUNTIME_UNKNOWN, Log.ERROR_RUNTIME);
+            }
         }
 
     }

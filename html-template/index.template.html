@@ -24,13 +24,14 @@
             var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {
                 cb:"window.de.bild.callback",
-                autoplay:false}; //xmlurl:'xml/video4.xml',
+                id:"mediaswf_1403173000314"};
             var swfSource = "${swf}.swf";
             var params = {};
             params.quality = "high";
             params.bgcolor = "${bgcolor}";
-            params.allowscriptaccess = "sameDomain";
+            params.allowscriptaccess = "always";
             params.allowfullscreen = "true";
+            params.wmode = "transparent";
             var attributes = {};
             attributes.id = "videoplayer"; // ${application}
             attributes.name = "${application}";
@@ -64,7 +65,7 @@
                 track("EVENT: " + JSON.stringify(msg));
 
                 if(msg.type == 'initialized'){
-                    loadAndPlay(currentVideo);
+                    //loadAndPlay(currentVideo);
                 }
             };
 

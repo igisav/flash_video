@@ -1,6 +1,6 @@
 package de.axelspringer.videoplayer.util
 {
-    import flash.external.ExternalInterface;
+    import de.axelspringer.videoplayer.controller.ExternalController;
 
     public class Log
     {
@@ -8,8 +8,24 @@ package de.axelspringer.videoplayer.util
         public static const TRACE:String = "trace";
         public static const JS_LOGGER:String = "js_logger";
 
-        public static function error(msg:String):void {
+        public static const ERROR_NETWORK:String   = "Network Error";
+        public static const ERROR_RUNTIME:String   = "Runtime Error";
+        public static const ERROR_SOURCE:String    = "Source Unsupported";
+        public static const ERROR_OTHER:String     = "Other Error";
+
+        public static function error(msg:String, type:String = ""):void {
             log("[ERROR]" + msg);
+
+            var error:Object = {
+                'type': type ? type : ERROR_OTHER,
+                'value': msg
+            };
+            ExternalController.dispatch(ExternalController.EVENT_ERROR, error);
+        }
+
+        public static function warn(msg:String):void {
+            log("[WARN]" + msg);
+            ExternalController.dispatch(ExternalController.EVENT_WARN, msg);
         }
 
         public static function info(msg:String):void {

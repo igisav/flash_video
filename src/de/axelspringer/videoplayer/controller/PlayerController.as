@@ -43,7 +43,7 @@ package de.axelspringer.videoplayer.controller
 
 		protected var nsHD:ZStream;
 		// data
-		protected var videoVO:VideoVO;
+		protected var videoVO:VideoVO = new VideoVO();
 		protected var videoUrl:String;
 		protected var videoSrcPosition:Number=1;
 		protected var videoServer:String;
@@ -184,8 +184,9 @@ package de.axelspringer.videoplayer.controller
         
 		public function setClip(videoVO:VideoVO):void
 		{
-			if(videoVO.videoUrl == "")
+			if(!videoVO)
 			{
+                Log.error(BildTvDefines.ERROR_EMPTY_VIDEOCLIP);
 				return;
 			}
 			this.videoVO=videoVO;
@@ -193,7 +194,7 @@ package de.axelspringer.videoplayer.controller
 			this.videoStarted=false;
 			BildTvDefines.isBumper=false;
 
-			if( true == this.videoVO.mute )
+			if( this.videoVO.mute )
 			{
 				this.setVolume( 0 );
 			}

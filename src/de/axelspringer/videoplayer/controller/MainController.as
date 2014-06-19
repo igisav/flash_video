@@ -66,13 +66,14 @@ package de.axelspringer.videoplayer.controller
 			//Prio1: get Autoplay from Flashvars, Prio2: get Autoplay from video.xml if autoplaySet is false
 			if(autoplay != null)
 			{
-				BildTvDefines.autoplay = (autoplay == "true") ? true : false;	
+				BildTvDefines.autoplay = autoplay == "true";
 				BildTvDefines.autoplaySet= true;	
 			}			
 			
             this.start();
             ExternalController.dispatch( ExternalController.EVENT_INITIALIZED );
-    }
+        }
+
         // TODO: move this to playerController
         public function loadURL(url:String):void{
             this.playerController.destroy();
@@ -147,17 +148,8 @@ package de.axelspringer.videoplayer.controller
 			}
 			else
 			{
-				/*
-				*
-				* To Do
-				* check if videoURL Exception Handling is implemented. 
-				* for example if the videoURl Param is not set but the videoULR2 Param is set. 
-				* how does the script handle that issue
-				*
-				*/
-				
 				//Call Error when videoUrl and videoUrl2 is not set
-				if(this.config.videoVO.videoUrl == "" && this.config.videoVO.videoUrl2 == "")
+				/*if(this.config.videoVO.videoUrl == "" && this.config.videoVO.videoUrl2 == "")
 				{
                     Log.error( BildTvDefines.TEXT_ERROR_INFO_INVALID);
 					return;
@@ -167,7 +159,7 @@ package de.axelspringer.videoplayer.controller
 				if(this.config.videoVO.videoUrl == "" && this.config.videoVO.videoUrl2 != "")
 				{
 					this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2;
-				}
+				}*/
 				 
 				this.playerController.setClip( this.config.videoVO);
 			}

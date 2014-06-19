@@ -40,9 +40,9 @@ package de.axelspringer.videoplayer.controller
         public static const EVENT_EMPTIED:String	        = "emptied";
         public static const EVENT_SEEKED:String         	= "seeked";
         public static const EVENT_ERROR:String              = "error";
-        public static const EVENT_DEBUG:String              = "debug";
+        public static const EVENT_WARN:String               = "warn";
 
-        public static const DISPATCH_EVENT_DELAY:int        = 200; // in ms
+        public static const DISPATCH_EVENT_DELAY:int        = 200; // time interval for several events, in ms
 
         protected var mainController:MainController;
         protected var playerController:PlayerController;
@@ -86,6 +86,7 @@ package de.axelspringer.videoplayer.controller
 
             var time:int = getTimer();
 
+            // dispatch event in defined period of time only
             if (eventName == EVENT_PROGRESS) {
                 if (time - lastProgressTime < DISPATCH_EVENT_DELAY) {
                     return

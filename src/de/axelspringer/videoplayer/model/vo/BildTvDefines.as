@@ -26,8 +26,11 @@ package de.axelspringer.videoplayer.model.vo
 		public static const TEXT_ERROR_HEADER:String		= "EIN FEHLER IST AUFGETRETEN.";
 //		public static const TEXT_ERROR_LOAD_HEADER:String	= "ES KONNTEN NICHT ALLE DATEN GELADEN WERDEN.";
 //		public static const TEXT_ERROR_LOAD_INFO:String		= "BITTE LADEN SIE DIE SEITE NEU.";
-		public static const TEXT_ERROR_INFO_INVALID:String	= "Keine Videoquelle vorhanden.";
-		public static const TEXT_ERROR_INFO_DEFAULT:String	= "BITTE LADEN SIE DAS VIDEO NEU.";
+
+		public static const ERROR_NO_URL_FOUND:String	    = "Bei der Initialisierung ist keine Videoquelle vorhanden.";
+		public static const ERROR_RUNTIME_UNKNOWN:String	= "Runtime unknown error.";
+		public static const ERROR_EMPTY_VIDEOCLIP:String	= "Trying to set empty video clip.";
+
 		//public static const TEXT_ERROR_INFO_GEO:String		= "DIESES VIDEO IST IN IHRER REGION NICHT VERFÜGBAR.";
 		public static const TEXT_ERROR_INFO_AVAILABLE:String= "DIESES VIDEO IST NICHT MEHR GÜLTIG.";
 		public static const TEXT_ERROR_INFO_GEO:String		= "THIS VIDEO CAN NOT BE STREAMED IN YOUR REGION.";
