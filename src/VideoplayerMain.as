@@ -57,8 +57,7 @@ package
             this.contextMenu = menu;
         }
 
-        private static function uncaughtErrorHandler(event:UncaughtErrorEvent):void
-        {
+        private static function uncaughtErrorHandler(event:UncaughtErrorEvent):void {
             if (event.error is Error)
             {
                 var error:Error = event.error as Error;
