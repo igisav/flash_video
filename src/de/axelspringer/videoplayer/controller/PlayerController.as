@@ -16,7 +16,6 @@ package de.axelspringer.videoplayer.controller
     import flash.events.NetStatusEvent;
     import flash.events.SecurityErrorEvent;
     import flash.events.TimerEvent;
-    import flash.external.ExternalInterface;
     import flash.media.SoundTransform;
     import flash.net.NetConnection;
     import flash.net.NetStream;
@@ -235,14 +234,14 @@ package de.axelspringer.videoplayer.controller
 		public function resume():void
 		{
 			this.videoTimer.start();
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","------------RESUME STREAM!----------------");
-			 if (this.videoStarted)
+			Log.info("------------RESUME STREAM!----------------");
+			if (this.videoStarted)
 			{
 				if (this.hdContent == false)
 				{
 					this.ns.bufferTime=Const.buffertimeMinimum;
 
-					trace(this + " set buffertime to " + this.ns.bufferTime);
+					Log.info(this + " set buffertime to " + this.ns.bufferTime);
 
 					this.ns.resume();
 						// sometimes the stream just won't resume, so force it with a seek to the current position - not sure why but it works
@@ -250,20 +249,18 @@ package de.axelspringer.videoplayer.controller
 				}
 				else
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","DVR Availability:"+this.nsHD.dvrAvailability);
+					Log.info("DVR Availability:"+this.nsHD.dvrAvailability);
 					
 					if( Const.isLivePlayer && this.nsHD.dvrAvailability != "none")
 					{
-						
 						//seek first and then resume, only in livestream
-						ExternalInterface.call("com.xoz.flash_logger.logTrace","first seek, then resume, because DVR is available");
+						Log.info("first seek, then resume, because DVR is available");
 						this.nsHD.seek(this.nsHD.duration);
 					}
 					else
 					{
-						ExternalInterface.call("com.xoz.flash_logger.logTrace","only resume, because DVR is not available");
-						
-						this.nsHD.resume();					
+                        Log.info("only resume, because DVR is not available");
+						this.nsHD.resume();
 					}
 				}
 
@@ -333,7 +330,6 @@ package de.axelspringer.videoplayer.controller
 				//check if nc is already connected
 				if( this.nc.connected && this.nc.uri == "null" )
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","POST REQUEST @ playClip if noStream and this.nc.connected && this.nc.uri == null");
 					redirectConnection();
 				}
 				else
@@ -351,7 +347,6 @@ package de.axelspringer.videoplayer.controller
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				if( this.nc.connected && this.nc.uri == this.videoServer )
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","POST REQUEST @ playClip if Stream and this.nc.connected && this.nc.uri != null");
 					redirectConnection();
 				}
 				else
@@ -389,7 +384,7 @@ package de.axelspringer.videoplayer.controller
 		 */
 		protected function set playing(value:Boolean):void
 		{
-			trace(this + " ------ set playing  " + value);
+			Log.info(this + " ------ set playing  " + value);
 			this.isPlaying=value;
 		}
 
@@ -415,7 +410,7 @@ package de.axelspringer.videoplayer.controller
 				this.ns.bufferTime=Const.buffertimeMinimum;
 			}
 
-			trace(this + " set buffertime to " + this.ns.bufferTime);
+			Log.info(this + " set buffertime to " + this.ns.bufferTime);
 
 			var metaHandler:Object=new Object();
 			metaHandler.onMetaData=this.onMetaData;
@@ -442,7 +437,7 @@ package de.axelspringer.videoplayer.controller
 		
 		protected function onHDNetConnectionConnect():void
 		{
-			trace( this + " onNetConnectionConnect: " + this.videoFile );
+			Log.info( this + " onNetConnectionConnect: " + this.videoFile );
 
             // TODO: check what this for???
 			this.nc = new NetConnection();
@@ -483,7 +478,7 @@ package de.axelspringer.videoplayer.controller
             this.playerView.display.deblocking = 0;
 
             ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
-            ExternalInterface.call("com.xoz.flash_logger.logTrace","FLASH PLAY: "+ this.videoFile);
+            Log.info("FLASH PLAY: "+ this.videoFile);
 
             this.nsHD.play( this.videoFile );
             this.videoTimer.start();
@@ -515,7 +510,7 @@ package de.axelspringer.videoplayer.controller
 		protected function onNetConnectionRefused():void
 		{
 			// no, we really can't play this - stop trying	
-			trace(this + " onNetConnectionRefused");
+			Log.info(this + " onNetConnectionRefused");
 
 			this.playing=false;
 			this.videoStarted=false;
@@ -558,7 +553,7 @@ package de.axelspringer.videoplayer.controller
 		
 		private function redirectConnection():void
 		{
-            trace("play: redirect davor: "+ this.videoFile+"  hd? "+this.hdContent);
+            Log.info("play: redirect davor: "+ this.videoFile+"  hd? "+this.hdContent);
 
 			if( Const.isBumper )
 			{
@@ -581,15 +576,11 @@ package de.axelspringer.videoplayer.controller
 			{
 				var scriptRequest:URLRequest 	= new URLRequest(this.videoFile);
 				var scriptLoader:URLLoader 		= new URLLoader();
-					
-				trace("POST REQUEST @ X-NoRedirect REDIRECT");
-					
-					
 				scriptRequest.requestHeaders.push(new URLRequestHeader("X-NoRedirect", "false"));
 				scriptRequest.method = URLRequestMethod.POST;
 				scriptRequest.data = new URLVariables("NoRedirect=false");
-					
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","TRY REDIRECT IN FLASH");
+
+                Log.info("TRY REDIRECT IN FLASH");
 					
 				if( this.hdContent == false ) 
 				{				
@@ -637,13 +628,13 @@ package de.axelspringer.videoplayer.controller
 		
 			if(event.currentTarget.data as XML)
 			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","redirect complete! but its an XML and no URL " + this.videoFile);
+                Log.info("redirect complete! but its an XML and no URL " + this.videoFile);
 				this.playing=false;
 				this.videoStopped=true;
 			}
 			else
 			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","redirect complete! " + this.videoFile);
+                Log.info("redirect complete! " + this.videoFile);
 				this.onHDNetConnectionConnect();		
 			}		
 			
@@ -651,41 +642,33 @@ package de.axelspringer.videoplayer.controller
 
 		protected function rDLoaded(event:Event):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","REDIRECT FINISHED");
-			
-//			ExternalInterface.call("function(){if (window.console) console.log('play: redirect fertig: "+ this.videoFile+"');}");
-			if(this.videoFile.indexOf("localhost") != -1 ) 
+			if(this.videoFile.indexOf("localhost") != -1 )
 			{
 				this.onNetConnectionConnect();	
 			}
 			else if(event.currentTarget.data != "")
 			{
 				
-				trace("AFTER TRY REDIRECT IN FLASH, VALIDATE "+ event.currentTarget.data);
+				Log.info("AFTER TRY REDIRECT IN FLASH, VALIDATE "+ event.currentTarget.data);
 				
 				var pattern:RegExp = new RegExp("^http[s]?\:\\/\\/([^\\/]+)\\/");
 				
 				var urls:Array = String(event.currentTarget.data).match(pattern);
 				var isUrl:Boolean = (urls && urls.length > 0 );
 				
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","URL PASSED THE VALIDATOR: "+isUrl);
 				if( isUrl )
 				{
 					this.videoFile = event.currentTarget.data;
-					trace("AFTER VALIDATE, PLAY  "+ this.videoFile);
-					this.onNetConnectionConnect();		
+					this.onNetConnectionConnect();
 				}				
 				else
 				{
 					urls = this.videoFile.match(pattern);
 					isUrl = (urls && urls.length > 0 );
 					
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","THEN VALIDATE OLD URL : "+ isUrl);
-					
 					if( isUrl )
 					{
-						ExternalInterface.call("com.xoz.flash_logger.logTrace","AFTER VALIDATE, PLAY  "+ this.videoFile);
-						this.onNetConnectionConnect();		
+						this.onNetConnectionConnect();
 					}
 					else
 					{
@@ -697,14 +680,13 @@ package de.axelspringer.videoplayer.controller
 			}
 			else
 			{
-//				'AFTER TRY REDIRECT IN FLASH, PLAY MP4  "+ this.videoFile +"');}");
-				this.onNetConnectionConnect();		
+				this.onNetConnectionConnect();
 			}
 		}
 				
 		protected function onNetStreamStatus(e:NetStatusEvent):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","NETSTREAM STATUS: "+e.info.code);
+            Log.info("NETSTREAM STATUS: "+e.info.code);
 			switch (e.info.code)
 			{
 				case "NetStream.Buffer.Flush":
@@ -725,7 +707,7 @@ package de.axelspringer.videoplayer.controller
 					{
 						if( Const.isLivePlayer && this.nsHD.dvrAvailability != "none" )
 						{
-							trace("-------------seeked and now resume the stream!");
+                            Log.info("-------------seeked and now resume the stream!");
 							this.nsHD.resume();			
 						}
 					}
@@ -819,7 +801,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				case "NetStream.Play.UnpublishNotify":
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logInfo"," Stream not live at the Moment...so try to reconnect");
+                    Log.info(" Stream not live at the Moment...so try to reconnect");
 					this.videoIsPublished = false;
 					this.reconnectLivestreamTimer.start();
 
@@ -838,7 +820,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				case "NetStream.Play.Transition":
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","Bitratetransition: time:" + this.nsHD.time + "   index:"+e.info);		
+                    Log.info("Bitratetransition: time:" + this.nsHD.time + "   index:"+e.info);
 					break;
 				}		
 			}
@@ -876,7 +858,7 @@ package de.axelspringer.videoplayer.controller
 		
 		protected function onPlayStatusHD(evt:Object):void
 		{
-			trace( this + " onPlayStatusHD :: " + evt.code );
+			Log.info( this + " onPlayStatusHD :: " + evt.code );
 			switch( evt.code )
 			{
 				case "NetStream.Play.Empty": 
@@ -892,7 +874,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				case "NetStream.Play.TransitionComplete":
 				{
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","Bitratetransition changed...finish: " + evt.index + " time:" + this.nsHD.time);
+                    Log.info("Bitratetransition changed...finish: " + evt.index + " time:" + this.nsHD.time);
 					break;
 				}
 				case "NetStream.Seek.Notify":
@@ -1111,7 +1093,7 @@ package de.axelspringer.videoplayer.controller
           */
 		protected function setCurrentTime(time:Number):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logInfo"," onProgressChange - seekPoint: " + time);
+            Log.info(" onProgressChange - seekPoint: " + time);
             if (Const.isMoviePlayer || Const.isStreamPlayer)
             {
                 this.akamaiController.onProgressChange(time);
@@ -1124,7 +1106,7 @@ package de.axelspringer.videoplayer.controller
                         // set lower buffer time to enable fast video start after seeking
                         this.ns.bufferTime=Const.buffertimeMinimum;
 
-                        trace(this + " set buffertime to " + this.ns.bufferTime);
+                        Log.info(this + " set buffertime to " + this.ns.bufferTime);
 
                         this.ns.seek(time);
                     }
@@ -1158,7 +1140,7 @@ package de.axelspringer.videoplayer.controller
 			 *
 			 */
 
-			trace(this + " parseStreamUrl - try #" + this.streamConnects);
+			Log.info(this + " parseStreamUrl - try #" + this.streamConnects);
 
 			var result:Boolean=true;
 			var x:int=this.videoUrl.indexOf("://"); // get the protocol and save it to videoServer, omit it in the urlParts
@@ -1375,7 +1357,7 @@ package de.axelspringer.videoplayer.controller
 				
 		private function doSwitchBitrate(step:Number) : void {
 			if ( this.nsHD && this.nsHD.manualSwitchMode == true ) {
-				trace(" doSwitchBitrate : "+step);
+				Log.info(" doSwitchBitrate : "+step);
 				var time:Number = this.savedPosition;
 //				if (this.nsHD.isLiveStream)time = this.nsHD.duration;
 				if (this.nsHD.isLiveStream)time = this.nsHD.timeAsUTC;

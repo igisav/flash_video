@@ -21,7 +21,6 @@ package de.axelspringer.videoplayer.controller
 	import flash.events.EventDispatcher;
 	import flash.events.NetStatusEvent;
 	import flash.events.TimerEvent;
-	import flash.external.ExternalInterface;
 	import flash.media.SoundTransform;
 	import flash.utils.setTimeout;
 	
@@ -93,20 +92,6 @@ package de.axelspringer.videoplayer.controller
 			this.midrollTimer = new PausableTimer( 10 * 60 * 1000 );
 			this.midrollTimer.addEventListener( TimerEvent.TIMER, onMidrollTimer );
 
-			// callbacks for MoviePlayer
-			try
-			{
-				ExternalInterface.addCallback( "playMovie", externalPlay );
-				ExternalInterface.addCallback( "pauseMovie", externalPause );
-				// callback for LivePlayer
-				ExternalInterface.addCallback( "gameOver", gameOver );
-				// for testing only
-				ExternalInterface.addCallback( "stopStream", stopStream );
-			}
-			catch( error:Error )
-			{
-				trace("Kein Scriptaccess!");
-			}
 		}
 
 		public function setMovie( filmVO:FilmVO ) :void
@@ -327,16 +312,6 @@ package de.axelspringer.videoplayer.controller
 				else
 				{
 					this.rewindStream( 0 );
-				}
-
-				// always call JS
-				try
-				{
-					ExternalInterface.call( this.liveVO.functionNameStreamEnd );
-				}
-				catch( error:Error )
-				{
-					trace( this + " Error: cannot call JS: " + error.message );
 				}
 			}
 		}

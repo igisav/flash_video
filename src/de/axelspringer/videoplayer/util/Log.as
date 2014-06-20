@@ -13,7 +13,7 @@ package de.axelspringer.videoplayer.util
             log("[ERROR]" + msg);
 
             var error:Object = {
-                'type': type ? type : Const.ERROR_TYPE_OTHER,
+                'type' : type ? type : Const.ERROR_TYPE_OTHER,
                 'value': msg
             };
             ExternalController.dispatch(ExternalController.EVENT_ERROR, error);
@@ -29,10 +29,12 @@ package de.axelspringer.videoplayer.util
         }
 
         private static function log(msg:String):void {
-            if (level == JS_LOGGER) {
-               // ExternalInterface.call("ddd", msg);
-            } else if (level == TRACE) {
-                trace ( msg );
+            if (level == JS_LOGGER)
+            {
+                ExternalController.dispatch(ExternalController.EVENT_WARN, msg);
+            } else if (level == TRACE)
+            {
+                trace(msg);
             }
         }
     }
