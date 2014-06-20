@@ -109,10 +109,6 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 
-// TODO: Selim: was ist mit setzen von HD
-        // var phase:Number = e.data.phase;
-        // this.playerController.setHDBitrate(phase);
-
 		protected function onStageResize( e:Event = null ) :void
 		{
             Const.width = this.stage.stage.stageWidth;

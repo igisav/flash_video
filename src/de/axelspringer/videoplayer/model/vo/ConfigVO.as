@@ -1,8 +1,6 @@
 package de.axelspringer.videoplayer.model.vo
 {
-	import de.axelspringer.videoplayer.model.vo.base.BaseVO;
-
-	public class ConfigVO extends BaseVO
+	public class ConfigVO
 	{
 		// VideoInfo
 		public var videoVO:VideoVO;

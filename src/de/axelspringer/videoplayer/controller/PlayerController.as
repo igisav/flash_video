@@ -5,7 +5,6 @@ package de.axelspringer.videoplayer.controller
     import de.axelspringer.videoplayer.event.ControlEvent;
     import de.axelspringer.videoplayer.model.vo.Const;
     import de.axelspringer.videoplayer.model.vo.FilmVO;
-    import de.axelspringer.videoplayer.model.vo.StreamingVO;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
     import de.axelspringer.videoplayer.view.PlayerView;
@@ -1311,7 +1310,11 @@ package de.axelspringer.videoplayer.controller
             return bufferTime
         }
 
-		
+
+        // TODO: Selim: was ist mit setzen von HD
+        // var phase:Number = e.data.phase;
+        // this.playerController.setHDBitrate(phase);
+
 		/*public function apiCall(type:String, params:Object):void
 		{
 				case CALLBACK_HD_ON:
