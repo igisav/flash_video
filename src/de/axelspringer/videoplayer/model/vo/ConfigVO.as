@@ -4,19 +4,8 @@ package de.axelspringer.videoplayer.model.vo
 
 	public class ConfigVO extends BaseVO
 	{
-
-		public var playerWidth:Number	= -1;
-		public var playerHeight:Number	= -1;
-		
-		// Id (welt player only)
-		public var id:String = "";
-		
 		// VideoInfo
 		public var videoVO:VideoVO;
-
-		// related clips
-		public var endScreenEnabled:Boolean = true;
-		public var relatedXml:String = "";
 		public var relatedVideos:Array;
 
 		// in case we get a film.bild.de XML, use this to hydrate the data

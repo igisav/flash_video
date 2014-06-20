@@ -24,7 +24,6 @@ package de.axelspringer.videoplayer.model.vo
 		public static var isBumper:Boolean = false;
 		public static var autoplay:Boolean;
 		public static var autoplaySet:Boolean;
-		public static var size:String;
 		public static var width:int;
 		public static var height:int;
 		public static var buffertimeMinimum:Number = 0.5;

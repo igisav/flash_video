@@ -307,11 +307,6 @@ package de.axelspringer.videoplayer.controller
 			// start playing!
 			this.playing = true;
 			
-			if (this.videoSrcPosition == 2)
-			{
-				this.playerView.setPlayingStatus(true);
-			}
-
 			if (this.videoIsStream)
 			{
 				// disable seeking for livestreams -> duration is -1
@@ -400,7 +395,6 @@ package de.axelspringer.videoplayer.controller
 		{
 			trace(this + " ------ set playing  " + value);
 			this.isPlaying=value;
-			this.playerView.setPlayingStatus(value);
 		}
 
 		protected function get playing():Boolean

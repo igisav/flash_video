@@ -357,11 +357,7 @@ package de.axelspringer.videoplayer.controller
 
 		protected function set playing( value:Boolean ) :void
 		{
-//			trace(this+" ------  playing  "+value);
 			this.isPlaying = value;
-			// this.controlsView.setPlayingStatus( value );
-			this.playerView.setPlayingStatus( value );
-			// this.trackingController.setPlayingStatus( value );
 		}
 
 		protected function get playing() :Boolean
