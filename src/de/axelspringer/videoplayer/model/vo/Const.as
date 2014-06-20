@@ -31,8 +31,6 @@ package de.axelspringer.videoplayer.model.vo
 		public static var isLivePlayer:Boolean = false;			// is a tokenized Akamai Stream - live
 		public static var versionNumber:String;
 		public static var isBumper:Boolean = false;
-		public static var autoplay:Boolean;
-		public static var autoplaySet:Boolean;
 		public static var width:int;
 		public static var height:int;
 		public static var buffertimeMinimum:Number = 0.5;

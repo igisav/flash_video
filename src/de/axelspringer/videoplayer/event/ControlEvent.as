@@ -4,14 +4,8 @@ package de.axelspringer.videoplayer.event
 
 	public class ControlEvent extends Event
 	{
-		public static const PAUSE:String 				= "ControlEvent.PAUSE";
-		public static const RESUME:String 				= "ControlEvent.RESUME";
-		public static const PROGRESS_CHANGE:String 		= "ControlEvent.PROGRESS_CHANGE";
-		public static const CONTENT_START:String 		= "ControlEvent.CONTENT_START";
 		public static const RESIZE:String 				= "ControlEvent.RESIZE";
 		public static const ERROR_SESSION:String 		= "ControlEvent.ERROR_SESSION";
-		public static const LOAD_MIDROLL:String 		= "ControlEvent.LOAD_MIDROLL";
-		public static const LOAD_POSTROLL:String 		= "ControlEvent.LOAD_POSTROLL";
 		public static const SESSION_OK:String 			= "ControlEvent.SESSION_OK";
 		
 		public var data:Object;

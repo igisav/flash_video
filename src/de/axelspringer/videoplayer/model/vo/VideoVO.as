@@ -14,10 +14,6 @@ package de.axelspringer.videoplayer.model.vo
 		public var autoplay:Boolean 		= false;
 		public var autorepeat:Boolean 		= false;
 		public var startHDQuality:Boolean 	= false;
-		public var hdAdaptive:Boolean 		= false;
-
-		public function VideoVO()
-		{
-		}
+		public var hdAdaptive:Boolean 		= true;
 	}
 }

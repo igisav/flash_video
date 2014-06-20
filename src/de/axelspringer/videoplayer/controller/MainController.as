@@ -11,10 +11,6 @@ package de.axelspringer.videoplayer.controller
 
     // TODO: rufe destroy() und töte den NetStream, wenn der Benutzer flash schliesst
 
-    // TODO: keine Unterstützung für AMD live stream H.264
-    // Beispiel: http://multiplatform-f.akamaihd.net/z/multi/companion/big_bang_theory/big_bang_theory.mov_,300,600,800,1000,2500,4000,9000,k.mp4.csmil/manifest.f4m
-    // siehe: http://support.akamai.com/flash/
-
     public class MainController
 	{
 		protected var root:Sprite;
@@ -45,41 +41,33 @@ package de.axelspringer.videoplayer.controller
 		
 		public function init( flashVars:Object ) :void
 		{
-            var autoplay:String = flashVars.autoplay;
-
 			this.config = new ConfigVO();
 
             this.initController();
 
             var external:ExternalController = new ExternalController();
-            var externalSuccess:Error = external.init(this, this.playerController, flashVars.cb);
+            var externalSuccess:Error = ExternalController.init(this.playerController, flashVars.cb);
 
             if (externalSuccess != null) {
                 postDebugText(externalSuccess.message);
                 return;
             }
 
-			//Prio1: get Autoplay from Flashvars, Prio2: get Autoplay from video.xml if autoplaySet is false
-			if(autoplay != null)
+            var autoplay:String = flashVars.autoplay;
+			if(autoplay != "")
 			{
-				Const.autoplay = autoplay == "true";
-				Const.autoplaySet= true;
+                this.config.videoVO.autoplay = true;
+			}
+
+            var hdAdaptive:String = flashVars.hdAdaptive;
+			if(hdAdaptive != "")
+			{
+                this.config.videoVO.hdAdaptive = true;
 			}
 			
-            this.start();
+            this.setVideo();
             ExternalController.dispatch( ExternalController.EVENT_INITIALIZED );
         }
-
-        // TODO: move this to playerController
-        public function loadURL(url:String):void{
-            this.playerController.destroy();
-            this.config.videoVO.videoUrl = url ;
-
-            // TODO: hdAdaptive wird über flashvars gesetzt. Überprüfen ob default=true nicht gefährlich ist.
-            this.config.videoVO.hdAdaptive = true;
-            this.start();
-        }
-
 
 /************************************************************************************************
  * APP CONTROL
@@ -92,7 +80,7 @@ package de.axelspringer.videoplayer.controller
 			this.playerController = new PlayerController( this.viewController); //, this.viewController.controlsView, this.viewController.subtitleView
 		}
 		
-		protected function start() :void
+		protected function setVideo() :void
 		{ 
             this.playerController.setVolume( 0.5 );
 

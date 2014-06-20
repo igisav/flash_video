@@ -89,9 +89,6 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.soundTransform = new SoundTransform();
 
-			// chapterlist may dispatch progress change
-			this.playerView.addEventListener( ControlEvent.PROGRESS_CHANGE, onChapterChange );
-
 			// midrolls every 10 minutes
 			this.midrollTimer = new PausableTimer( 10 * 60 * 1000 );
 			this.midrollTimer.addEventListener( TimerEvent.TIMER, onMidrollTimer );
@@ -171,8 +168,6 @@ package de.axelspringer.videoplayer.controller
 
 		public function startLivestream() :void
 		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.CONTENT_START ) );
-
 			this.initializingMovieStream = false;
             ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 
@@ -742,8 +737,6 @@ package de.axelspringer.videoplayer.controller
 			{
 				// this.trackingController.onClipEnd();
                 ExternalController.dispatch(ExternalController.EVENT_ENDED);
-
-				this.dispatchEvent( new ControlEvent( ControlEvent.LOAD_POSTROLL ) );
 			}
 		}
 
@@ -859,8 +852,6 @@ package de.axelspringer.videoplayer.controller
 			trace( this + " onMidrollTimer" );
 
 			this.midrollTimer.stop();
-
-			this.dispatchEvent( new ControlEvent( ControlEvent.LOAD_MIDROLL ) );
 		}
 
 		protected function playMovieJingle( url:String, type:String ) :void
@@ -885,21 +876,7 @@ package de.axelspringer.videoplayer.controller
 		 */
 		protected function externalPlay() :void
 		{
-			//trace( "----------------> " + this + " externalPlay" );
-			
-			/*if( this.isJinglePlaying )
-			{
-				this.jingleController.resume();
-			}
-			else */
-            if( this.isAdPlaying )
-			{
-				this.dispatchEvent( new ControlEvent( ControlEvent.RESUME ) );
-			}
-			else
-			{
-				this.resume();
-			}
+            this.resume();
 		}
 		
 		/**
@@ -907,21 +884,7 @@ package de.axelspringer.videoplayer.controller
 		 */
 		protected function externalPause() :void
 		{
-			trace( "----------------> " + this + " externalPause" );
-			
-			/*if( this.isJinglePlaying )
-			{
-				this.jingleController.pause();
-			}
-			else*/
-            if( this.isAdPlaying )
-			{
-				this.dispatchEvent( new ControlEvent( ControlEvent.PAUSE ) );
-			}
-			else
-			{
-				this.pause( false );
-			}
+            this.pause( false );
 		}
 		
 		/**

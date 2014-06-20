@@ -22,7 +22,7 @@ package de.axelspringer.videoplayer.controller
         public static const CURRENT_TIME:String	= "currentTime";
         public static const DURATION:String		= "getDuration";
         public static const BUFFERED:String		= "getBuffered";
-        public static const DESTROY:String		= "destroy";
+        // public static const DESTROY:String		= "destroy";
 
         /*          EVENTS
                 FROM FLASH TO JAVASCRIPT
@@ -44,26 +44,19 @@ package de.axelspringer.videoplayer.controller
 
         public static const DISPATCH_EVENT_DELAY:int        = 200; // time interval for several events, in ms
 
-        protected var mainController:MainController;
-        protected var playerController:PlayerController;
-
         private static var jsEventCallback:String;
         private static var lastProgressTime:int = 0;
         private static var lastTimeUpdateTime:int = 0;
 
-        // TODO: mainController als Parameter hier entfernen
-        public function init(mainController:MainController, playerController:PlayerController, jsCallback:String):Error
+        public static function init(playerController:PlayerController, jsCallback:String):Error
         {
-            this.mainController = mainController;
-            this.playerController = playerController;
-
             jsEventCallback = jsCallback;
 
             if (ExternalInterface.available)
             {
                 try
                 {
-                    bind();
+                    bind(playerController);
                 }
                 catch(e:Error)
                 {
@@ -111,8 +104,8 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.call(jsEventCallback, msg);
         }
 
-        private function bind():void {
-            ExternalInterface.addCallback(LOAD, mainController.loadURL);
+        private static function bind(playerController:PlayerController):void {
+            ExternalInterface.addCallback(LOAD, playerController.loadURL);
             ExternalInterface.addCallback(PLAY, playerController.play);
             ExternalInterface.addCallback(PAUSE, playerController.pause);
             ExternalInterface.addCallback(VOLUME, playerController.volume);

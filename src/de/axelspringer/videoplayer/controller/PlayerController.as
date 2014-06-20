@@ -207,15 +207,7 @@ package de.axelspringer.videoplayer.controller
 			 
 			this.playerView.display.clear();
 			
-			// check autoplay
-			trace("autoplay = " + videoVO.autoplay + ":::" + Const.autoplay);
-			if (Const.autoplaySet == false)
-			{
-				Const.autoplay=videoVO.autoplay;
-				Const.autoplaySet=true;
-			}
-
-			if (Const.autoplay)
+			if (this.videoVO.autoplay)
 			{
 				this.play();
 			}
@@ -628,13 +620,13 @@ package de.axelspringer.videoplayer.controller
 
         protected function onRedirectError(event:Error):void
         {
-            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
+            Log.error(Const.ERROR_REDIRECT + event, Const.ERROR_TYPE_NETWORK);
             this.onNetConnectionConnect();
         }
 
 		protected function onRedirectHDError(event:Error):void
 		{
-            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
+            Log.error(Const.ERROR_REDIRECT + event, Const.ERROR_TYPE_NETWORK);
 			this.onHDNetConnectionConnect();
 			
 		}
@@ -1263,6 +1255,15 @@ package de.axelspringer.videoplayer.controller
 		/********************************************************************************************************
 		 * EXTERNAL CALLBACKS
 		 *******************************************************************************************************/
+
+        public function loadURL(url:String):void{
+            this.destroy();
+
+            var newVideo:VideoVO = new VideoVO();
+            newVideo.videoUrl = url ;
+
+            this.setClip(newVideo);
+        }
 
         public function volume(value:Number = NaN):Number {
             if (!isNaN(value)) {
