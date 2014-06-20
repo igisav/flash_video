@@ -1,14 +1,12 @@
 package de.axelspringer.videoplayer.controller
 {
-    import de.axelspringer.videoplayer.event.*;
-    import de.axelspringer.videoplayer.model.vo.*;
-    import de.axelspringer.videoplayer.util.Log;
+    import de.axelspringer.videoplayer.model.vo.ConfigVO;
+    import de.axelspringer.videoplayer.model.vo.Const;
+    import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.view.PlayerView;
 
-    import flash.display.*;
-    import flash.events.*;
-    import flash.external.ExternalInterface;
-    import flash.net.*;
+    import flash.display.Sprite;
+    import flash.events.Event;
     import flash.text.TextField;
 
     // TODO: rufe destroy() und töte den NetStream, wenn der Benutzer flash schliesst
@@ -43,11 +41,6 @@ package de.axelspringer.videoplayer.controller
 			this.onStageResize();
 			
 			this.root.stage.addEventListener( Event.RESIZE, onStageResize );
-		}
-		
-		protected function forwardControlEvent( e:ControlEvent ) :void
-		{
-			this.viewController.dispatchEvent( new ControlEvent( e.type, e.data ) );
 		}
 		
 		public function init( flashVars:Object ) :void
@@ -124,19 +117,6 @@ package de.axelspringer.videoplayer.controller
 			}
 			else
 			{
-				//Call Error when videoUrl and videoUrl2 is not set
-				/*if(this.config.videoVO.videoUrl == "" && this.config.videoVO.videoUrl2 == "")
-				{
-                    Log.error( BildTvDefines.TEXT_ERROR_INFO_INVALID);
-					return;
-				}
-				
-				//set videoURL2 for videoURL when videoURL2 is set and and videoURL not
-				if(this.config.videoVO.videoUrl == "" && this.config.videoVO.videoUrl2 != "")
-				{
-					this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2;
-				}*/
-				 
 				this.playerController.setClip( this.config.videoVO);
 			}
 		}

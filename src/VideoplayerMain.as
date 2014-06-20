@@ -2,7 +2,6 @@ package
 {
     import de.axelspringer.videoplayer.controller.MainController;
     import de.axelspringer.videoplayer.model.vo.Const;
-    import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
 
     import flash.display.Sprite;
@@ -58,21 +57,21 @@ package
             this.contextMenu = menu;
         }
 
-        private function uncaughtErrorHandler(event:UncaughtErrorEvent):void
+        private static function uncaughtErrorHandler(event:UncaughtErrorEvent):void
         {
             if (event.error is Error)
             {
                 var error:Error = event.error as Error;
-                Log.error(error.message, Log.ERROR_RUNTIME);
+                Log.error(error.message, Const.ERROR_TYPE_RUNTIME);
             }
             else if (event.error is ErrorEvent)
             {
                 var errorEvent:ErrorEvent = event.error as ErrorEvent;
-                Log.error(errorEvent.toString(), Log.ERROR_RUNTIME);
+                Log.error(errorEvent.toString(), Const.ERROR_TYPE_RUNTIME);
             }
             else
             {
-                Log.error(Const.ERROR_RUNTIME_UNKNOWN, Log.ERROR_RUNTIME);
+                Log.error(Const.ERROR_RUNTIME_UNKNOWN, Const.ERROR_TYPE_RUNTIME);
             }
         }
 

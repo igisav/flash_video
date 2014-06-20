@@ -298,7 +298,12 @@ package de.axelspringer.videoplayer.controller
 		}
 
 		protected function playClip():void
-		{			
+		{
+            if (this.videoVO.videoUrl == "") {
+                Log.error(Const.ERROR_NO_URL_FOUND, Const.ERROR_TYPE_SOURCE);
+                return;
+            }
+
 			this.previousVideoTime = this.savedPosition;
 			this.videoLoaded=0;
 
@@ -495,15 +500,16 @@ package de.axelspringer.videoplayer.controller
 		}
 		
 		protected function onIOError(event:IOErrorEvent):void
-		{		
+		{
+            var msg:String = event.type + ": " + event.toString();
 			if(this.nsHD && ZStream(event.currentTarget).duration != 0)
 			{
-				ExternalInterface.call("com.xoz.flash_logger.logTrace"," +++ kein nächstes Segment in der bitrate gefunden, ERROR 403 im HDCore +++" );
-				trace("kein nächstes Segment in der bitrate gefunden...type: " + event.type);
-				return;
-			}
-			
-			trace( "isPlaying: " + this.isPlaying + "  playing:" + this.playing + " videoStarted:" + this.videoStarted )
+                msg = Const.ERROR_HD_CORE;
+                Log.error(msg, Const.ERROR_TYPE_NETWORK);
+                return;
+            }
+            Log.error(msg, Const.ERROR_TYPE_NETWORK);
+
             this.playing=false;
             this.videoStopped=true;
 		}
@@ -526,16 +532,12 @@ package de.axelspringer.videoplayer.controller
 
 		protected function onNetConnectionStatus(e:NetStatusEvent):void
 		{
+			Log.info (e.info.code)
 			switch (e.info.code)
 			{
 				case "NetConnection.Connect.Success":
 				{
-					//this.onNetConnectionRefused(); //GEO ERROR TEST
-					//check if videoFile is a token for ... switch the Listener for hd Cotent and normal Content
-					//Loading file via URLLoader maybe causes crossdomain and Security Issues ... plz check
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","onNetConnectionStatus - NetConnection.Connect.Success");
 					this.redirectConnection();
-					
 					break;
 				}
 				case "NetConnection.Connect.Rejected":
@@ -550,11 +552,13 @@ package de.axelspringer.videoplayer.controller
 							return;
 						}
 					}
+                    Log.error(e.info.code, Const.ERROR_TYPE_NETWORK);
 					break;
 				}
 				case "NetConnection.Connect.Refused":
 				case "NetConnection.Connect.Failed":
 				{
+                    Log.error(e.info.code, Const.ERROR_TYPE_NETWORK);
 					setTimeout(onNetConnectionFail, 100);
 					break;
 				}
@@ -601,8 +605,8 @@ package de.axelspringer.videoplayer.controller
 					//toDo ... check Problesm with Security and crossdomain.xml if content can't be loaded
 						
 					scriptLoader.addEventListener(Event.COMPLETE, rDLoaded);
-					scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-					scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadError2);
+					scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectError);
+					scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectError);
 					try
 					{
 						scriptLoader.load(scriptRequest);
@@ -615,30 +619,30 @@ package de.axelspringer.videoplayer.controller
 				else 
 				{	
 					scriptLoader.addEventListener(Event.COMPLETE, rHDLoaded);
-					scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadHDError);
-					scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadHDError2);
+					scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectHDError);
+					scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectHDError);
 					scriptLoader.load(scriptRequest);
 				}
 			}
 		}
 
+        protected function onRedirectError(event:Error):void
+        {
+            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
+            this.onNetConnectionConnect();
+        }
 
-		protected function onLoadHDError2(event:SecurityErrorEvent):void
+		protected function onRedirectHDError(event:Error):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","HD REDIRECT SECURE ERROR");
-		}
-		
-		protected function onLoadHDError(event:IOErrorEvent):void
-		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","HD REDIRECT IO ERROR, CONTINIUE WITH OLD URL");
+            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
 			this.onHDNetConnectionConnect();
 			
 		}
 		
 		protected function rHDLoaded(event:Event):void
 		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","HD REDIRECT FINISHED");
 			this.videoFile = event.currentTarget.data;
+            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
 		
 			if(event.currentTarget.data as XML)
 			{
@@ -653,20 +657,7 @@ package de.axelspringer.videoplayer.controller
 			}		
 			
 		}
-		
-		protected function onLoadError(event:IOErrorEvent):void
-		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","REDIRECT IO ERROR , NO REDIRECT FOR THIS URL. PLAY FIRST URL");
-			this.onNetConnectionConnect();
-		}
-		
-		protected function onLoadError2(event:SecurityErrorEvent):void
-		{
-			ExternalInterface.call("com.xoz.flash_logger.logTrace","REDIRECT SECURE ERROR, NO REDIRECT FOR THIS URL. PLAY FIRST URL");
-//			trace("redirect laden ging schief security!!");
-			this.onNetConnectionConnect();
-		}
-		
+
 		protected function rDLoaded(event:Event):void
 		{
 			ExternalInterface.call("com.xoz.flash_logger.logTrace","REDIRECT FINISHED");
@@ -779,12 +770,7 @@ package de.axelspringer.videoplayer.controller
 				}
 				case "NetStream.Play.StreamNotFound":
 				{
-					/*trace("...............................................................");
-					trace("...................Stream not found Error at Livestream "+this.videoFile+".....................");
-					trace("...............................................................");*/
-					
-//					ExternalInterface.call("function(){if (window.console) console.log('STREAM NOT FOUND ERROR AT: "+this.videoFile+"  : "+e.type +"');}");
-					ExternalInterface.call("com.xoz.flash_logger.logTrace","STREAM NOT FOUND ERROR AT: "+this.videoFile+"  : "+e.type);
+                    Log.error(e.info.code, Const.ERROR_TYPE_SOURCE);
 					
 					if ( Const.isLivePlayer )
 					{
@@ -957,6 +943,7 @@ package de.axelspringer.videoplayer.controller
 					}
 					catch(e:Error)
 					{
+                        Log.error("OnMetaData Error: " + e.toString(), Const.ERROR_TYPE_NETWORK);
 					}
 				}
 			}
@@ -996,6 +983,8 @@ package de.axelspringer.videoplayer.controller
             // TODO : playing anhalten !!!
 			this.playing=false;
 			this.videoStarted=false;
+            var msg:String = e.type + ": " + e;
+            Log.error(msg, Const.ERROR_TYPE_NETWORK);
 		}
 
 		protected function onVideoEnterFrame(e:Event):void
@@ -1373,9 +1362,10 @@ package de.axelspringer.videoplayer.controller
 					this.doSwitchBitrate(-1);
 				}
 			}
-			catch(e:Error)
+			catch(error:Error)
 			{
-				trace( e.message );
+                var msg:String = error.message == "" ? Const.ERROR_HD_BITRATE : error.message;
+                Log.error(msg, Const.ERROR_TYPE_NETWORK);
 			}
 		}
 				

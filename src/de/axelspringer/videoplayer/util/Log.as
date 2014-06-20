@@ -1,6 +1,7 @@
 package de.axelspringer.videoplayer.util
 {
     import de.axelspringer.videoplayer.controller.ExternalController;
+    import de.axelspringer.videoplayer.model.vo.Const;
 
     public class Log
     {
@@ -8,16 +9,11 @@ package de.axelspringer.videoplayer.util
         public static const TRACE:String = "trace";
         public static const JS_LOGGER:String = "js_logger";
 
-        public static const ERROR_NETWORK:String   = "Network Error";
-        public static const ERROR_RUNTIME:String   = "Runtime Error";
-        public static const ERROR_SOURCE:String    = "Source Unsupported";
-        public static const ERROR_OTHER:String     = "Other Error";
-
         public static function error(msg:String, type:String = ""):void {
             log("[ERROR]" + msg);
 
             var error:Object = {
-                'type': type ? type : ERROR_OTHER,
+                'type': type ? type : Const.ERROR_TYPE_OTHER,
                 'value': msg
             };
             ExternalController.dispatch(ExternalController.EVENT_ERROR, error);
