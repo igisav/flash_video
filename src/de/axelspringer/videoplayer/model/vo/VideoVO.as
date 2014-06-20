@@ -6,9 +6,6 @@ package de.axelspringer.videoplayer.model.vo
 	{
 		public var videoUrl:String 		= "";
 
-        // TODO: wozu ist das?
-		public var videoUrl2:String 	= "";
-
 		/**
 		 * duration in seconds
 		 */

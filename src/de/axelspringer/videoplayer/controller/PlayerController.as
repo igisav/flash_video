@@ -310,7 +310,7 @@ package de.axelspringer.videoplayer.controller
 			if (this.videoIsStream)
 			{
 				// disable seeking for livestreams -> duration is -1
-				if (this.videoVO.videoUrl.substr(0, 4) == "rtmp" || this.videoVO.videoUrl2.substr(0, 4) == "rtmp")
+				if (this.videoVO.videoUrl.substr(0, 4) == "rtmp")
 				{
 					if( Const.isLivePlayer )
 					{
@@ -504,19 +504,8 @@ package de.axelspringer.videoplayer.controller
 			}
 			
 			trace( "isPlaying: " + this.isPlaying + "  playing:" + this.playing + " videoStarted:" + this.videoStarted )
-			if( this.videoUrl != videoVO.videoUrl2 )
-			{
-				this.videoVO.videoUrl = this.videoVO.videoUrl2;
-				this.videoFile = this.videoVO.videoUrl;
-				this.videoUrl = this.videoVO.videoUrl;
-
-				this.playClip();							
-			}
-			else
-			{
-				this.playing=false;
-				this.videoStopped=true;
-			}
+            this.playing=false;
+            this.videoStopped=true;
 		}
 		
 		protected function onNetConnectionFail():void
@@ -811,19 +800,8 @@ package de.axelspringer.videoplayer.controller
 					}
 					else
 					{
-						if( this.videoUrl != videoVO.videoUrl2 )
-						{
-							this.videoVO.videoUrl = this.videoVO.videoUrl2;
-							this.videoFile = this.videoVO.videoUrl;
-							this.videoUrl = this.videoVO.videoUrl;
-
-							this.playClip();							
-						}
-						else
-						{
-							this.playing=false;
-							this.videoStopped=true;
-						}
+                        this.playing=false;
+                        this.videoStopped=true;
 					}
 					break;
 				}
@@ -1268,18 +1246,10 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.hdContent=false;
 				// streaming
-				if (videoVO.videoUrl.substr(0, 4) == "rtmp" || videoVO.videoUrl2.substr(0, 4) == "rtmp")
+				if (videoVO.videoUrl.substr(0, 4) == "rtmp")
 				{
-					if (videoVO.videoUrl.substr(0, 4) == "rtmp")
-					{
-						this.videoUrl=videoVO.videoUrl;
-					}
-					else if (videoVO.videoUrl2.substr(0, 4) == "rtmp")
-					{
-						this.videoUrl=videoVO.videoUrl2;
-					}
+				    this.videoUrl=videoVO.videoUrl;
 					this.videoIsStream=true;
-
 					this.videoServer="";
 					this.videoFile="";
 				}
@@ -1287,16 +1257,8 @@ package de.axelspringer.videoplayer.controller
 				else
 				{
 					this.videoIsStream=false;
-
 					this.videoServer=null;
-					if (videoVO.videoUrl.substr(0, 4) != "rtmp" && this.videoSrcPosition == 1)
-					{
-						this.videoUrl=videoVO.videoUrl;
-					}
-					else if (videoVO.videoUrl2.substr(0, 4) != "rtmp" && this.videoSrcPosition == 2)
-					{
-						this.videoUrl=videoVO.videoUrl2;
-					}
+					this.videoUrl=videoVO.videoUrl;
 					this.videoFile=this.videoUrl;
 				}
 
@@ -1459,7 +1421,6 @@ package de.axelspringer.videoplayer.controller
 
 			this.videoVO=new VideoVO();
 			this.videoVO.videoUrl=filmVO.streamUrl;
-			this.videoVO.videoUrl2=filmVO.streamUrl2;
 			this.videoVO.duration=filmVO.duration;
 			this.videoVO.autoplay=true;
 

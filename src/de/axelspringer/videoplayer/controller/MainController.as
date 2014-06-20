@@ -80,7 +80,7 @@ package de.axelspringer.videoplayer.controller
         // TODO: move this to playerController
         public function loadURL(url:String):void{
             this.playerController.destroy();
-            this.config.videoVO.videoUrl = this.config.videoVO.videoUrl2 = url ;
+            this.config.videoVO.videoUrl = url ;
 
             // TODO: hdAdaptive wird über flashvars gesetzt. Überprüfen ob default=true nicht gefährlich ist.
             this.config.videoVO.hdAdaptive = true;
@@ -117,7 +117,6 @@ package de.axelspringer.videoplayer.controller
 
 				var videoVO:VideoVO=new VideoVO();
 				videoVO.videoUrl=this.config.streamingVO.streamUrl;
-				videoVO.videoUrl2=this.config.streamingVO.streamUrl2;
 				videoVO.duration=this.config.streamingVO.duration;
 				videoVO.autoplay=this.config.streamingVO.autoplay;
 				

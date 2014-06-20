@@ -152,13 +152,9 @@ package de.axelspringer.videoplayer.controller
 			this.duration = liveVO.duration;
 
 			var videoVO:VideoVO = new VideoVO();
-//			videoVO.headline = liveVO.title;
 			videoVO.videoUrl = liveVO.streamUrl;
-			videoVO.videoUrl2 = liveVO.streamUrl2;
-//			videoVO.imageUrl = liveVO.thumbnailUrl;
 			videoVO.duration = liveVO.duration;
 			videoVO.autoplay = liveVO.autoplay;
-			// this.trackingController.setClip( videoVO, liveVO.trackingVO );
 
 			this.parseStreamUrl( this.streamUrl );
 
@@ -536,7 +532,6 @@ package de.axelspringer.videoplayer.controller
 				// set tracking info here because now we have the duration
 				var videoVO:VideoVO = new VideoVO();
 				videoVO.videoUrl = this.filmVO.streamUrl;
-				videoVO.videoUrl2 = this.filmVO.streamUrl2;
 				videoVO.duration = this.duration;
 				videoVO.autoplay = true;
 				// this.trackingController.setClip( videoVO, this.filmVO.trackingVO );
