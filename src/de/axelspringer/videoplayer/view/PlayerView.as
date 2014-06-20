@@ -11,8 +11,6 @@ package de.axelspringer.videoplayer.view
 
     public class PlayerView extends BaseView
 	{
-		public static const NAME:String = "PlayerView";
-		
 		public var display:Video;
 
 		protected var initWidth:Number;
@@ -33,13 +31,11 @@ package de.axelspringer.videoplayer.view
 		
 		protected function init() :void
 		{
-			this.setSize();
-			
 			this.display = new Video();
 			this.display.smoothing = true;
 			this.stage.addChild( this.display );
 			
-			this.setDisplaySizeDefault();
+            resize();
 		}
 		
 		public override function resize() :void

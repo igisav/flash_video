@@ -5,9 +5,6 @@ package de.axelspringer.videoplayer.model.vo
 		/*
 		 * constant values
 		 */
-		public static const SIZE_MEDIUM:String				= "normal";
-		public static const SIZE_BIG:String					= "big";				
-
 		public static const ERROR_NO_URL_FOUND:String	    = "Bei der Initialisierung ist keine Videoquelle vorhanden.";
 		public static const ERROR_RUNTIME_UNKNOWN:String	= "Runtime unknown error.";
 		public static const ERROR_EMPTY_VIDEOCLIP:String	= "Trying to set empty video clip.";

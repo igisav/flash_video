@@ -25,7 +25,7 @@ package de.axelspringer.videoplayer.controller
 
 		// controller
 		protected var playerController:PlayerController;
-		protected var viewController:ViewController;
+		protected var viewController:PlayerView;
 			
 		public function MainController( root:Sprite )
 		{
@@ -40,7 +40,7 @@ package de.axelspringer.videoplayer.controller
 		{
 			this.stage.removeEventListener( Event.ADDED_TO_STAGE, addedToStage );
 			
-			this.setSize();
+			this.onStageResize();
 			
 			this.root.stage.addEventListener( Event.RESIZE, onStageResize );
 		}
@@ -92,23 +92,15 @@ package de.axelspringer.videoplayer.controller
  * APP CONTROL
  ************************************************************************************************/
 
-		protected function setSize() :void
-		{
-			Const.width = this.stage.stage.stageWidth;
-			Const.height = this.stage.stage.stageHeight;
-		}
-		
 		protected function initController() :void
 		{
-			this.viewController = new ViewController( this.stage );
+			this.viewController = new PlayerView( this.stage );
 
-			this.playerController = new PlayerController( this.viewController.playerView); //, this.viewController.controlsView, this.viewController.subtitleView
+			this.playerController = new PlayerController( this.viewController); //, this.viewController.controlsView, this.viewController.subtitleView
 		}
 		
 		protected function start() :void
 		{ 
-			this.viewController.showView( PlayerView.NAME );
-			this.viewController.setConfig( this.config );
             this.playerController.setVolume( 0.5 );
 
 			// different action depending on type of player - video player vs. movie player vs. live player
@@ -154,14 +146,10 @@ package de.axelspringer.videoplayer.controller
         // var phase:Number = e.data.phase;
         // this.playerController.setHDBitrate(phase);
 
-		protected function onStageResize( e:Event ) :void
+		protected function onStageResize( e:Event = null ) :void
 		{
-			this.setSize();
-			
-			if( this.viewController != null )
-			{
-				this.viewController.resize();
-			}
+            Const.width = this.stage.stage.stageWidth;
+            Const.height = this.stage.stage.stageHeight;
 		}
 
         private var debug:TextField;
