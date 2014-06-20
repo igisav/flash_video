@@ -52,7 +52,7 @@ package de.axelspringer.videoplayer.controller
         private static var lastTimeUpdateTime:int = 0;
 
         // TODO: mainController als Parameter hier entfernen
-        public function init(mainController:MainController, playerController:PlayerController, jsCallback:String):Boolean
+        public function init(mainController:MainController, playerController:PlayerController, jsCallback:String):Error
         {
             this.mainController = mainController;
             this.playerController = playerController;
@@ -67,20 +67,24 @@ package de.axelspringer.videoplayer.controller
                 }
                 catch(e:Error)
                 {
-                    Log.error("Error by adding callback");
-                    return false;
+                    Log.error("Error by adding callback. Not all JS-Functions are available.");
+                    return e;
                 }
             }
             else
             {
                 Log.error("ExternalInterface is not available!");
-                return false;
+                return new Error("ExternalInterface is not available!");
             }
-            return true;
+            return null;
         }
 
         public static function dispatch(eventName:String, value:* = null):void
         {
+
+            if (!ExternalInterface.available) {
+                return;
+            }
             /*var supress:Array = [EVENT_PROGRESS, EVENT_TIMEUPDATE, EVENT_LOADED_METADATA];
             if (supress.indexOf(eventName) >= 0) {return}*/
 

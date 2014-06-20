@@ -115,6 +115,6 @@ package de.axelspringer.videoplayer.view
 			// notify PlayerController to change size of Ad
 			this.dispatchEvent( new ControlEvent( ControlEvent.RESIZE, new FullscreenData( this.isFullscreen, this.wasFullscreen ) ) );
 		}
-		
+
 	}
 }

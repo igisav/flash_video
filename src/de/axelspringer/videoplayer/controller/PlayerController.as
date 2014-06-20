@@ -98,10 +98,14 @@ package de.axelspringer.videoplayer.controller
 		protected function initPlayer():void
 		{
 			this.nc=new NetConnection();
-			this.nc.addEventListener(NetStatusEvent.NET_STATUS, onNetConnectionStatus);
-			this.nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
-			this.nc.addEventListener(AsyncErrorEvent.ASYNC_ERROR, onError);
-			this.nc.addEventListener(IOErrorEvent.IO_ERROR, onError);
+			this.nc.addEventListener(NetStatusEvent.NET_STATUS, onNetConnectionStatus, false, 0, true);
+			this.nc.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+			this.nc.addEventListener(AsyncErrorEvent.ASYNC_ERROR, onError, false, 0, true);
+			this.nc.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+            var client:Object={};
+            client.onBWCheck=this.emptyCallback;
+            client.onBWDone=this.emptyCallback;
+            this.nc.client=client;
 
 			//checkEndOfVideoTimer init
 			this.checkEndOfVideoTimer = new Timer(TIMER_DELAY);
@@ -114,10 +118,7 @@ package de.axelspringer.videoplayer.controller
 			this.reconnectLivestreamTimer.addEventListener(TimerEvent.TIMER, onReconnectLivestream);
 			this.reconnectLivestreamTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onReconnectLivestreamLimitReached);
 
-			var client:Object=new Object();
-			client.onBWCheck=this.emptyCallback;
-			client.onBWDone=this.emptyCallback;
-			this.nc.client=client;
+
 
 			this.soundTransform=new SoundTransform();
 
@@ -342,7 +343,7 @@ package de.axelspringer.videoplayer.controller
 				if( this.nc.connected && this.nc.uri == "null" )
 				{
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","POST REQUEST @ playClip if noStream and this.nc.connected && this.nc.uri == null");
-					onNetConnectionSucces();
+					redirectConnection();
 				}
 				else
 				{
@@ -360,7 +361,7 @@ package de.axelspringer.videoplayer.controller
 				if( this.nc.connected && this.nc.uri == this.videoServer )
 				{
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","POST REQUEST @ playClip if Stream and this.nc.connected && this.nc.uri != null");
-					onNetConnectionSucces();
+					redirectConnection();
 				}
 				else
 				{
@@ -386,17 +387,11 @@ package de.axelspringer.videoplayer.controller
             {
                 if (this.nsHD != null)
                 {
-                    this.nsHD.closeAndDestroy(); //new
-                    this.nsHD=null;
+                    this.nsHD.closeAndDestroy();
+                    //this.nsHD=null;
                 }
             }
         }
-
-		protected function finishPlay():void
-		{
-			destroy();
-		    this.onVideoFinish();
-		}
 
 		/**
 		 * general flag - true if anything is playing (content or ad)
@@ -455,15 +450,17 @@ package de.axelspringer.videoplayer.controller
 			this.offsetVideoTime = 0;
 		}
 		
-		protected function onHDNetConnectionConnect(savedPosition:Number = 0, statusLoad:Boolean = false):void
+		protected function onHDNetConnectionConnect():void
 		{
 			trace( this + " onNetConnectionConnect: " + this.videoFile );
+
+            // TODO: check what this for???
 			this.nc = new NetConnection();
 			this.nc.connect(null);
 			
-			if ( this.nsHD ) 
+			if ( this.nsHD && !isNaN(this.nsHD.time) )
 			{
-				this.nsHD.closeAndDestroy();				
+				this.nsHD.closeAndDestroy();
 			}
 			
 			this.nsHD=new ZStream(this.nc);	
@@ -485,23 +482,22 @@ package de.axelspringer.videoplayer.controller
 				}				
 			}
 
-			var metaHandler2:Object=new Object();
 			this.nsHD.addClientHandler( "onMetaData", this.onMetaData);
 			this.nsHD.addClientHandler( "onPlayStatus", this.onPlayStatusHD);
 			this.nsHD.addClientHandler( "dvrAvailabilityChange", onDvrAvailabilityChange);
 			this.nsHD.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus, false, 0, true);
 			this.nsHD.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 				
-				this.playerView.display.attachNetStream(this.nsHD);
-				this.playerView.display.smoothing = true;
-				this.playerView.display.deblocking = 0;
-				
-                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
-				ExternalInterface.call("com.xoz.flash_logger.logTrace","FLASH PLAY: "+ this.videoFile);
+            this.playerView.display.attachNetStream(this.nsHD);
+            this.playerView.display.smoothing = true;
+            this.playerView.display.deblocking = 0;
 
-				this.nsHD.play( this.videoFile );
-				this.videoTimer.start();
-				this.offsetVideoTime = 0;
+            ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
+            ExternalInterface.call("com.xoz.flash_logger.logTrace","FLASH PLAY: "+ this.videoFile);
+
+            this.nsHD.play( this.videoFile );
+            this.videoTimer.start();
+            this.offsetVideoTime = 0;
 		}
 		
 		protected function onIOError(event:IOErrorEvent):void
@@ -555,7 +551,7 @@ package de.axelspringer.videoplayer.controller
 					//check if videoFile is a token for ... switch the Listener for hd Cotent and normal Content
 					//Loading file via URLLoader maybe causes crossdomain and Security Issues ... plz check
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","onNetConnectionStatus - NetConnection.Connect.Success");
-					this.onNetConnectionSucces();
+					this.redirectConnection();
 					
 					break;
 				}
@@ -582,7 +578,7 @@ package de.axelspringer.videoplayer.controller
 			}
 		}
 		
-		private function onNetConnectionSucces():void
+		private function redirectConnection():void
 		{
             trace("play: redirect davor: "+ this.videoFile+"  hd? "+this.hdContent);
 
@@ -869,7 +865,7 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Play.Stop":
 				{
 					this.videoStopped=true;
-					finishPlay();
+					onFinishPlay();
 					break;
 				}
 				case "NetStream.Play.UnpublishNotify":
@@ -918,7 +914,7 @@ package de.axelspringer.videoplayer.controller
 			
                 if( this.videoStarted )
                 {
-                    this.finishPlay();
+                    this.onFinishPlay();
                 }
                 ExternalController.dispatch(ExternalController.EVENT_ENDED);
 			}
@@ -942,7 +938,7 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Play.Complete": 
 				{
 					this.videoBufferFlushStatus=true;
-					this.finishPlay();		
+					this.onFinishPlay();
 					break;
 				}
 				case "NetStream.Play.TransitionComplete":
@@ -1105,7 +1101,7 @@ package de.axelspringer.videoplayer.controller
 				this.videoBufferFlushStatus=false;
 				this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame, false);
 
-				this.finishPlay();
+				this.onFinishPlay();
 				if (!BildTvDefines.isBumper)
 				{
                     ExternalController.dispatch(ExternalController.EVENT_ENDED);
@@ -1127,7 +1123,7 @@ package de.axelspringer.videoplayer.controller
 			this.previousVideoTime=currentVideoTime;
 		}
 
-		protected function onVideoFinish():void
+		protected function onFinishPlay():void
 		{
             ExternalController.dispatch(ExternalController.EVENT_ENDED);
 

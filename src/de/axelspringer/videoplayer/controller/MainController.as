@@ -9,6 +9,7 @@ package de.axelspringer.videoplayer.controller
     import flash.events.*;
     import flash.external.ExternalInterface;
     import flash.net.*;
+    import flash.text.TextField;
 
     // TODO: rufe destroy() und töte den NetStream, wenn der Benutzer flash schliesst
 
@@ -58,8 +59,10 @@ package de.axelspringer.videoplayer.controller
             this.initController();
 
             var external:ExternalController = new ExternalController();
-            var externalSuccess:Boolean = external.init(this, this.playerController, flashVars.cb);
-			if (!externalSuccess) {
+            var externalSuccess:Error = external.init(this, this.playerController, flashVars.cb);
+
+            if (externalSuccess != null) {
+                postDebugText(externalSuccess.message);
                 return;
             }
 
@@ -68,7 +71,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				BildTvDefines.autoplay = autoplay == "true";
 				BildTvDefines.autoplaySet= true;	
-			}			
+			}
 			
             this.start();
             ExternalController.dispatch( ExternalController.EVENT_INITIALIZED );
@@ -117,14 +120,13 @@ package de.axelspringer.videoplayer.controller
 			this.viewController = new ViewController( this.stage );
 
 			this.playerController = new PlayerController( this.viewController.playerView); //, this.viewController.controlsView, this.viewController.subtitleView
-			this.playerController.setVolume( 0.5 );
 		}
 		
 		protected function start() :void
 		{ 
 			this.viewController.showView( PlayerView.NAME );
 			this.viewController.setConfig( this.config );
-			
+            this.playerController.setVolume( 0.5 );
 
 			// different action depending on type of player - video player vs. movie player vs. live player
 			if( this.config.filmVO != null )
@@ -178,5 +180,15 @@ package de.axelspringer.videoplayer.controller
 				this.viewController.resize();
 			}
 		}
+
+        private var debug:TextField;
+        public function postDebugText(msg:String) :void
+        {
+            if (!debug) {
+                debug = new TextField();
+                this.stage.addChild(debug);
+            }
+            debug.appendText(msg);
+        }
 	}
 }

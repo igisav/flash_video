@@ -32,11 +32,7 @@ package de.axelspringer.videoplayer.controller
 	{
 		private static const CLIP_CONTENT:String 					= "CLIP_CONTENT";
 		private static const CLIP_NONE:String 						= "CLIP_NONE";
-		private static const MOVIE_JINGLE_PREROLL_MOVIE:String		= "MOVIE_JINGLE_PREROLL_MOVIE";
-		private static const MOVIE_JINGLE_PREROLL_TRAILER:String	= "MOVIE_JINGLE_PREROLL_TRAILER";
-		private static const MOVIE_JINGLE_MIDROLL:String			= "MOVIE_JINGLE_MIDROLL";
-		private static const MOVIE_JINGLE_POSTROLL:String			= "MOVIE_JINGLE_POSTROLL";
-		
+
 		// gui
 		protected var playerView:PlayerView;
 		// protected var controlsView:ControlsView;
@@ -63,7 +59,6 @@ package de.axelspringer.videoplayer.controller
 		protected var streamSList:String;
 		
 		// status
-		protected var clip2play:String;
 		protected var isPlaying:Boolean;
 		protected var isAdPlaying:Boolean;
 		//protected var isJinglePlaying:Boolean;
@@ -87,8 +82,6 @@ package de.axelspringer.videoplayer.controller
 			super( this );
 			
 			this.playerView = playerView;
-			// this.trackingController = trackingController;
-
 			this.init();
 		}
 
@@ -99,11 +92,6 @@ package de.axelspringer.videoplayer.controller
 			// chapterlist may dispatch progress change
 			this.playerView.addEventListener( ControlEvent.PROGRESS_CHANGE, onChapterChange );
 
-			// controller for jingles -> different stream!
-			/*this.jingleController = new JinglePlayerController( this.playerView );
-			this.jingleController.addEventListener( ControlEvent.JINGLE_FINISHED, onJingleFinished );
-			this.jingleController.addEventListener( ControlEvent.LOADERANI_CHANGE, forwardEvent );
-*/
 			// midrolls every 10 minutes
 			this.midrollTimer = new PausableTimer( 10 * 60 * 1000 );
 			this.midrollTimer.addEventListener( TimerEvent.TIMER, onMidrollTimer );
@@ -322,11 +310,6 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.display.attachNetStream( this.netstream );
 		}
 
-		public function playMidrollJingle() :void
-		{
-			this.playMovieJingle( this.filmVO.jingleFileMidroll, MOVIE_JINGLE_MIDROLL );
-		}
-
 		public function finishPlay() :void
 		{
 			trace( this + " finishPlay" );
@@ -339,7 +322,7 @@ package de.axelspringer.videoplayer.controller
 
 			if( BildTvDefines.isMoviePlayer )
 			{
-				this.playMovieJingle( filmVO.jingleFilePostroll, MOVIE_JINGLE_POSTROLL );
+				// this.playMovieJingle( filmVO.jingleFilePostroll, MOVIE_JINGLE_POSTROLL );
 			}
 			else	// streamplayer
 			{
@@ -447,18 +430,9 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.display.attachNetStream( null );
 			this.playerView.display.attachNetStream( this.netstream );
 
-			// rewind
-//			this.pause( false );
 			this.netstream.seek( toPosition );
 			this.netstream.resume();
 
-			// refresh info
-			// this.controlsView.setDuration( this.duration );
-			// this.controlsView.updateTime( 0 );
-			// this.controlsView.updatePlayProgress( 0 );
-			//this.playerView.chapterList.updateTime( 0 );
-
-			this.clip2play = CLIP_CONTENT;
 			this.trackReplay = true;
 		}
 
@@ -904,59 +878,8 @@ package de.axelspringer.videoplayer.controller
 
 			// pause stream
 			this.pause( false );
-
-			// play jingle
-			//this.isJinglePlaying = true;
-			this.clip2play = type;
-			//this.jingleController.playJingle( this.filmVO.jingleServer, url, this.soundTransform );
 		}
 
-		protected function onJingleFinished( event:ControlEvent ) :void
-		{
-			trace( this + " onJingleFinished: " + this.clip2play );
-
-			//this.isJinglePlaying = false;
-			//this.playerView.chapterList.visible = (this.filmVO.chapters.length > 1);
-
-			switch( this.clip2play )
-			{
-				case MOVIE_JINGLE_PREROLL_MOVIE:
-				case MOVIE_JINGLE_PREROLL_TRAILER:
-				{
-					this.clip2play = CLIP_CONTENT;
-					this.initializingMovieStream = false;
-					this.startStream();
-
-					break;
-				}
-				case MOVIE_JINGLE_MIDROLL:
-				{
-					this.clip2play = CLIP_CONTENT;
-					this.dispatchEvent( event.clone() );
-					// this.trackingController.trackAd();
-					
-					break;
-				}
-				case MOVIE_JINGLE_POSTROLL:
-				{
-//					this.clip2play = CLIP_NONE;
-//					this.dispatchEvent( new ControlEvent( ControlEvent.VIDEO_FINISH ) );
-					
-					if( BildTvDefines.isTrailerPlayer )
-					{
-						this.doRewind = true;
-						this.rewindStream( this.netstream.time - 1 );
-					}
-					else
-					{
-						this.rewindStream( 0 );
-					}
-					
-					break;
-				}
-			}
-		}
-		
 		protected function forwardEvent( event:Event ) :void
 		{
 			this.dispatchEvent( event.clone() );
@@ -1041,7 +964,7 @@ package de.axelspringer.videoplayer.controller
 			
 			// dispatch error event to show error view in MainController
 			// use text from XML, if present, otherwise use fallback text from BildTvDefines
-			var text:String = ( this.liveVO.pingText != null && this.liveVO.pingText.split( " " ).join("") != "" ) ? this.liveVO.pingText : BildTvDefines.TEXT_ERROR_SESSION_INFO; 
+			var text:String = ( this.liveVO.pingText != null && this.liveVO.pingText.split( " " ).join("") != "" ) ? this.liveVO.pingText : BildTvDefines.ERROR_SESSION_INFO;
 		}
 		
 		protected function onSessionOk( event:ControlEvent ) :void
