@@ -3,7 +3,7 @@ package de.axelspringer.videoplayer.controller
     import com.akamai.net.f4f.ZStream;
 
     import de.axelspringer.videoplayer.event.ControlEvent;
-    import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+    import de.axelspringer.videoplayer.model.vo.Const;
     import de.axelspringer.videoplayer.model.vo.FilmVO;
     import de.axelspringer.videoplayer.model.vo.StreamingVO;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
@@ -156,7 +156,7 @@ package de.axelspringer.videoplayer.controller
 
 			if (this.hdContent == false )
 			{
-				if ((BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer )&& akamaiController != null)
+				if ((Const.isMoviePlayer || Const.isStreamPlayer )&& akamaiController != null)
 				{
 					this.akamaiController.setVolume(volume);
 				}
@@ -187,13 +187,13 @@ package de.axelspringer.videoplayer.controller
 		{
 			if(!videoVO)
 			{
-                Log.error(BildTvDefines.ERROR_EMPTY_VIDEOCLIP);
+                Log.error(Const.ERROR_EMPTY_VIDEOCLIP);
 				return;
 			}
 			this.videoVO=videoVO;
 			this.playing=false;
 			this.videoStarted=false;
-			BildTvDefines.isBumper=false;
+			Const.isBumper=false;
 
 			if( this.videoVO.mute )
 			{
@@ -208,14 +208,14 @@ package de.axelspringer.videoplayer.controller
 			this.playerView.display.clear();
 			
 			// check autoplay
-			trace("autoplay = " + videoVO.autoplay + ":::" + BildTvDefines.autoplay);
-			if (BildTvDefines.autoplaySet == false)
+			trace("autoplay = " + videoVO.autoplay + ":::" + Const.autoplay);
+			if (Const.autoplaySet == false)
 			{
-				BildTvDefines.autoplay=videoVO.autoplay;
-				BildTvDefines.autoplaySet=true;
+				Const.autoplay=videoVO.autoplay;
+				Const.autoplaySet=true;
 			}
 
-			if (BildTvDefines.autoplay)
+			if (Const.autoplay)
 			{
 				this.play();
 			}
@@ -249,7 +249,7 @@ package de.axelspringer.videoplayer.controller
 			{
 				if (this.hdContent == false)
 				{
-					this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
+					this.ns.bufferTime=Const.buffertimeMinimum;
 
 					trace(this + " set buffertime to " + this.ns.bufferTime);
 
@@ -261,7 +261,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","DVR Availability:"+this.nsHD.dvrAvailability);
 					
-					if( BildTvDefines.isLivePlayer && this.nsHD.dvrAvailability != "none")
+					if( Const.isLivePlayer && this.nsHD.dvrAvailability != "none")
 					{
 						
 						//seek first and then resume, only in livestream
@@ -317,10 +317,10 @@ package de.axelspringer.videoplayer.controller
 				// disable seeking for livestreams -> duration is -1
 				if (this.videoVO.videoUrl.substr(0, 4) == "rtmp" || this.videoVO.videoUrl2.substr(0, 4) == "rtmp")
 				{
-					if( BildTvDefines.isLivePlayer )
+					if( Const.isLivePlayer )
 					{
 
-						if(!BildTvDefines.isBumper ) 
+						if(!Const.isBumper )
 						{
 							this.duration = -1;
 						}						
@@ -331,9 +331,9 @@ package de.axelspringer.videoplayer.controller
 			}
 			else
 			{
-				if( BildTvDefines.isLivePlayer )
+				if( Const.isLivePlayer )
 				{
-					if(!BildTvDefines.isBumper ) 
+					if(!Const.isBumper )
 					{
 						this.duration = -1;
 					}
@@ -418,11 +418,11 @@ package de.axelspringer.videoplayer.controller
 			this.ns.soundTransform=this.soundTransform;
 			if( isLivestream )
 			{
-				this.ns.bufferTime=BildTvDefines.liveBuffertimeMinimum;
+				this.ns.bufferTime=Const.liveBuffertimeMinimum;
 			}
 			else
 			{
-				this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
+				this.ns.bufferTime=Const.buffertimeMinimum;
 			}
 
 			trace(this + " set buffertime to " + this.ns.bufferTime);
@@ -582,7 +582,7 @@ package de.axelspringer.videoplayer.controller
 		{
             trace("play: redirect davor: "+ this.videoFile+"  hd? "+this.hdContent);
 
-			if( BildTvDefines.isBumper )
+			if( Const.isBumper )
 			{
 				this.onNetConnectionConnect();
 			}
@@ -754,11 +754,11 @@ package de.axelspringer.videoplayer.controller
 					// set lower buffer here to enable fast video start after pause
 					if (this.hdContent == false)
 					{
-						this.ns.bufferTime= BildTvDefines.buffertimeMinimum;
+						this.ns.bufferTime= Const.buffertimeMinimum;
 					}
 					else 
 					{
-						if( BildTvDefines.isLivePlayer && this.nsHD.dvrAvailability != "none" )
+						if( Const.isLivePlayer && this.nsHD.dvrAvailability != "none" )
 						{
 							trace("-------------seeked and now resume the stream!");
 							this.nsHD.resume();			
@@ -775,7 +775,7 @@ package de.axelspringer.videoplayer.controller
                     ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					// set higher buffer now to enable constant playback
-					if (this.hdContent == false) this.ns.bufferTime = BildTvDefines.buffertimeMaximum;
+					if (this.hdContent == false) this.ns.bufferTime = Const.buffertimeMaximum;
 
 					break;
 				}
@@ -787,7 +787,7 @@ package de.axelspringer.videoplayer.controller
 						// set lower buffer here to enable fast video start
 						if (this.hdContent == false)
 						{
-							this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
+							this.ns.bufferTime=Const.buffertimeMinimum;
 						}
 					}
                     ExternalController.dispatch(ExternalController.EVENT_EMPTIED);
@@ -803,7 +803,7 @@ package de.axelspringer.videoplayer.controller
 //					ExternalInterface.call("function(){if (window.console) console.log('STREAM NOT FOUND ERROR AT: "+this.videoFile+"  : "+e.type +"');}");
 					ExternalInterface.call("com.xoz.flash_logger.logTrace","STREAM NOT FOUND ERROR AT: "+this.videoFile+"  : "+e.type);
 					
-					if ( BildTvDefines.isLivePlayer )
+					if ( Const.isLivePlayer )
 					{
 						if( this.hdContent )
 						{
@@ -842,7 +842,7 @@ package de.axelspringer.videoplayer.controller
 						if( this.nsHD.isLiveStream )
 						{
 							this.duration = -1;
-							BildTvDefines.isLivePlayer = true;
+							Const.isLivePlayer = true;
 							this.videoVO.duration=Number(this.duration);
 						}
 					}
@@ -949,7 +949,7 @@ package de.axelspringer.videoplayer.controller
 				case "NetStream.Seek.Notify":
 				{
                     ExternalController.dispatch(ExternalController.EVENT_SEEKED);
-					if( BildTvDefines.isLivePlayer )
+					if( Const.isLivePlayer )
 					{
 						this.nsHD.resume();			
 					}
@@ -1014,7 +1014,7 @@ package de.axelspringer.videoplayer.controller
 				else
 				{
 					this.duration = -1;
-					BildTvDefines.isLivePlayer = true;
+					Const.isLivePlayer = true;
 				}
 			}
 		}
@@ -1102,7 +1102,7 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame, false);
 
 				this.onFinishPlay();
-				if (!BildTvDefines.isBumper)
+				if (!Const.isBumper)
 				{
                     ExternalController.dispatch(ExternalController.EVENT_ENDED);
 				}
@@ -1114,7 +1114,7 @@ package de.axelspringer.videoplayer.controller
 				}
 			}
 			
-			if( BildTvDefines.isLivePlayer && this.videoIsPublished == false )
+			if( Const.isLivePlayer && this.videoIsPublished == false )
 			{
 				this.playClip();
 				this.reconnectLivestreamTimer.stop();
@@ -1128,7 +1128,7 @@ package de.axelspringer.videoplayer.controller
             ExternalController.dispatch(ExternalController.EVENT_ENDED);
 
 			// live player: let akamaiController finish
-			if (BildTvDefines.isStreamPlayer || BildTvDefines.isMoviePlayer)
+			if (Const.isStreamPlayer || Const.isMoviePlayer)
 			{
 				this.akamaiController.finishPlay();
 				return;
@@ -1145,7 +1145,7 @@ package de.axelspringer.videoplayer.controller
 
 			this.playing=false;
 			this.videoStarted=false;
-			BildTvDefines.isBumper=false;
+			Const.isBumper=false;
 
 			if (this.videoVO.autorepeat)
 			{
@@ -1160,7 +1160,7 @@ package de.axelspringer.videoplayer.controller
 		protected function setCurrentTime(time:Number):void
 		{
 			ExternalInterface.call("com.xoz.flash_logger.logInfo"," onProgressChange - seekPoint: " + time);
-            if (BildTvDefines.isMoviePlayer || BildTvDefines.isStreamPlayer)
+            if (Const.isMoviePlayer || Const.isStreamPlayer)
             {
                 this.akamaiController.onProgressChange(time);
             }
@@ -1170,7 +1170,7 @@ package de.axelspringer.videoplayer.controller
                     if (this.ns != null && (this.videoIsStream || time <= this.videoLoaded * this.duration))
                     {
                         // set lower buffer time to enable fast video start after seeking
-                        this.ns.bufferTime=BildTvDefines.buffertimeMinimum;
+                        this.ns.bufferTime=Const.buffertimeMinimum;
 
                         trace(this + " set buffertime to " + this.ns.bufferTime);
 

@@ -69,8 +69,8 @@ package de.axelspringer.videoplayer.controller
 			//Prio1: get Autoplay from Flashvars, Prio2: get Autoplay from video.xml if autoplaySet is false
 			if(autoplay != null)
 			{
-				BildTvDefines.autoplay = autoplay == "true";
-				BildTvDefines.autoplaySet= true;	
+				Const.autoplay = autoplay == "true";
+				Const.autoplaySet= true;
 			}
 			
             this.start();
@@ -94,25 +94,8 @@ package de.axelspringer.videoplayer.controller
 
 		protected function setSize() :void
 		{
-			BildTvDefines.width = this.stage.stage.stageWidth;
-			BildTvDefines.height = this.stage.stage.stageHeight;
-			
-			if( BildTvDefines.width < BildTvDefines.WIDTH_MINIMUM )
-			{
-				BildTvDefines.size = BildTvDefines.SIZE_MICRO;
-			}
-			else if( BildTvDefines.width < BildTvDefines.WIDTH_ARTICLE )
-			{
-				BildTvDefines.size = BildTvDefines.SIZE_MINI;
-			}
-			else if( BildTvDefines.width < BildTvDefines.WIDTH_BIG)
-			{ 
-				BildTvDefines.size = BildTvDefines.SIZE_MEDIUM;
-			}
-			else
-			{
-				BildTvDefines.size = BildTvDefines.SIZE_BIG;
-			}
+			Const.width = this.stage.stage.stageWidth;
+			Const.height = this.stage.stage.stageHeight;
 		}
 		
 		protected function initController() :void
@@ -131,14 +114,14 @@ package de.axelspringer.videoplayer.controller
 			// different action depending on type of player - video player vs. movie player vs. live player
 			if( this.config.filmVO != null )
 			{
-				BildTvDefines.isMoviePlayer = true;
-				BildTvDefines.isTrailerPlayer = this.config.filmVO.isTrailer();
+				Const.isMoviePlayer = true;
+				Const.isTrailerPlayer = this.config.filmVO.isTrailer();
 				this.playerController.setMovie( this.config.filmVO );
 			}
 			else if( this.config.streamingVO != null )
 			{
-				BildTvDefines.isStreamPlayer = true;
-				BildTvDefines.isLivePlayer = this.config.streamingVO.isLivestream;
+				Const.isStreamPlayer = true;
+				Const.isLivePlayer = this.config.streamingVO.isLivestream;
 
 				var videoVO:VideoVO=new VideoVO();
 				videoVO.videoUrl=this.config.streamingVO.streamUrl;

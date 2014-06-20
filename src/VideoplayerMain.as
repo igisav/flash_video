@@ -1,7 +1,7 @@
 package
 {
     import de.axelspringer.videoplayer.controller.MainController;
-    import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+    import de.axelspringer.videoplayer.model.vo.Const;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
 
@@ -20,7 +20,7 @@ package
         protected var mainController:MainController;
 
         public function VideoplayerMain() {
-            BildTvDefines.versionNumber = "1.0";
+            Const.versionNumber = "1.0";
 
             Log.level = Log.TRACE;
 
@@ -54,7 +54,7 @@ package
             // add release number to context menu
             var menu:ContextMenu = new ContextMenu();
             menu.hideBuiltInItems();
-            menu.customItems.push(new ContextMenuItem(BildTvDefines.playerName + " " + BildTvDefines.versionNumber, true, false));
+            menu.customItems.push(new ContextMenuItem(Const.playerName + " " + Const.versionNumber, true, false));
             this.contextMenu = menu;
         }
 
@@ -72,7 +72,7 @@ package
             }
             else
             {
-                Log.error(BildTvDefines.ERROR_RUNTIME_UNKNOWN, Log.ERROR_RUNTIME);
+                Log.error(Const.ERROR_RUNTIME_UNKNOWN, Log.ERROR_RUNTIME);
             }
         }
 

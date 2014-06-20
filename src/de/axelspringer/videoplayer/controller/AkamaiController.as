@@ -6,7 +6,7 @@ package de.axelspringer.videoplayer.controller
 	import com.akamai.net.AkamaiConnection;
 	import com.akamai.net.AkamaiDynamicNetStream;
 	import de.axelspringer.videoplayer.event.ControlEvent;
-	import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+	import de.axelspringer.videoplayer.model.vo.Const;
 	import de.axelspringer.videoplayer.model.vo.FilmVO;
 	import de.axelspringer.videoplayer.model.vo.StreamingVO;
 	import de.axelspringer.videoplayer.model.vo.VideoVO;
@@ -237,10 +237,10 @@ package de.axelspringer.videoplayer.controller
 				var newTime:Number = seekPoint * this.duration;
 
 				// set lower buffer time to enable fast video start after seeking
-				var bufferTime:uint = BildTvDefines.buffertimeMinimum;
-				if( BildTvDefines.isLivePlayer )
+				var bufferTime:uint = Const.buffertimeMinimum;
+				if( Const.isLivePlayer )
 				{
-					bufferTime = BildTvDefines.buffertimeMinimum;
+					bufferTime = Const.buffertimeMinimum;
 				}
 				this.netstream.bufferTime = bufferTime;
 
@@ -271,7 +271,7 @@ package de.axelspringer.videoplayer.controller
 				this.netstream.pause();
 				this.playing = false;
 
-				if( BildTvDefines.isMoviePlayer && !BildTvDefines.isTrailerPlayer )
+				if( Const.isMoviePlayer && !Const.isTrailerPlayer )
 				{
 					this.midrollTimer.pause();
 				}
@@ -286,10 +286,10 @@ package de.axelspringer.videoplayer.controller
 //				this.playing = true;
 
 				// set lower buffer here to enable fast video start after pause
-				var bufferTime:uint = BildTvDefines.buffertimeMinimum;
-				if( BildTvDefines.isLivePlayer )
+				var bufferTime:uint = Const.buffertimeMinimum;
+				if( Const.isLivePlayer )
 				{
-					bufferTime = BildTvDefines.buffertimeMinimum;
+					bufferTime = Const.buffertimeMinimum;
 				}
 				this.netstream.bufferTime = bufferTime;
 
@@ -320,14 +320,14 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.display.stage.dispatchEvent( new Event( Event.RESIZE ) );
 			}
 
-			if( BildTvDefines.isMoviePlayer )
+			if( Const.isMoviePlayer )
 			{
 				// this.playMovieJingle( filmVO.jingleFilePostroll, MOVIE_JINGLE_POSTROLL );
 			}
 			else	// streamplayer
 			{
 				// livestreams
-				if( BildTvDefines.isLivePlayer )
+				if( Const.isLivePlayer )
 				{
 					// this.controlsView.enable( false );
 					// this.playerView.setDisplayButtonVisible( false );
@@ -399,7 +399,7 @@ package de.axelspringer.videoplayer.controller
 				{
 					this.playerView.createChapterlist( this.filmVO.chapters );
 				}*/
-				if( BildTvDefines.isLivePlayer )
+				if( Const.isLivePlayer )
 				{
 					// this.controlsView.enableSeeking( false );
 				}
@@ -453,7 +453,7 @@ package de.axelspringer.videoplayer.controller
 				case "NetConnection.Connect.Failed":
 				case "NetConnection.Connect.Closed":
 				{
-					if( BildTvDefines.isStreamPlayer )
+					if( Const.isStreamPlayer )
 					{
 						this.onLivestreamError( e );
 					}
@@ -472,10 +472,10 @@ package de.axelspringer.videoplayer.controller
 			trace( this + " onConnectionConnect" );
 
 			this.netstream = new AkamaiDynamicNetStream( this.connection );
-			var bufferTime:uint = BildTvDefines.buffertimeMinimum;
-			if( BildTvDefines.isLivePlayer )
+			var bufferTime:uint = Const.buffertimeMinimum;
+			if( Const.isLivePlayer )
 			{
-				bufferTime = BildTvDefines.buffertimeMinimum;
+				bufferTime = Const.buffertimeMinimum;
 			}
 			this.netstream.bufferTime = bufferTime;
 
@@ -570,10 +570,10 @@ package de.axelspringer.videoplayer.controller
 					this.videoBufferEmptyStatus = false;
 
 					// set lower buffer here to enable fast video start after pause
-					bufferTime = BildTvDefines.buffertimeMinimum;
-					if( BildTvDefines.isLivePlayer )
+					bufferTime = Const.buffertimeMinimum;
+					if( Const.isLivePlayer )
 					{
-						bufferTime = BildTvDefines.buffertimeMinimum;
+						bufferTime = Const.buffertimeMinimum;
 					}
 					this.netstream.bufferTime = bufferTime;
 
@@ -589,7 +589,7 @@ package de.axelspringer.videoplayer.controller
                     ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 
 					// set higher buffer now to enable constant playback
-					this.netstream.bufferTime = BildTvDefines.buffertimeMaximum;
+					this.netstream.bufferTime = Const.buffertimeMaximum;
 
 					trace( this + " set buffertime to " + this.netstream.bufferTime );
 
@@ -603,10 +603,10 @@ package de.axelspringer.videoplayer.controller
                         ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 
 						// set lower buffer here to enable fast video start
-						bufferTime = BildTvDefines.buffertimeMinimum;
-						if( BildTvDefines.isLivePlayer )
+						bufferTime = Const.buffertimeMinimum;
+						if( Const.isLivePlayer )
 						{
-							bufferTime = BildTvDefines.buffertimeMinimum;
+							bufferTime = Const.buffertimeMinimum;
 						}
 						this.netstream.bufferTime = bufferTime;
 
@@ -653,7 +653,7 @@ package de.axelspringer.videoplayer.controller
 			if( this.videoStopped == true &&
 					( ( this.videoBufferEmptyStatus == true && this.videoBufferFlushStatus == true && !this.paused )
 					||
-					( BildTvDefines.isStreamPlayer && this.playing ) )
+					( Const.isStreamPlayer && this.playing ) )
 				)
 			{
 				this.onStreamFinished();
@@ -715,7 +715,7 @@ package de.axelspringer.videoplayer.controller
 			this.videoStarted = true;
 
 			// start midroll timer
-			if( BildTvDefines.isMoviePlayer && !BildTvDefines.isTrailerPlayer )
+			if( Const.isMoviePlayer && !Const.isTrailerPlayer )
 			{
 				this.midrollTimer.start();
 			}
@@ -738,7 +738,7 @@ package de.axelspringer.videoplayer.controller
 
 			this.midrollTimer.stop();
 
-			if( BildTvDefines.isStreamPlayer )
+			if( Const.isStreamPlayer )
 			{
 				// stop session pinger
 				if( this.sessionPinger != null )
@@ -964,7 +964,7 @@ package de.axelspringer.videoplayer.controller
 			
 			// dispatch error event to show error view in MainController
 			// use text from XML, if present, otherwise use fallback text from BildTvDefines
-			var text:String = ( this.liveVO.pingText != null && this.liveVO.pingText.split( " " ).join("") != "" ) ? this.liveVO.pingText : BildTvDefines.ERROR_SESSION_INFO;
+			var text:String = ( this.liveVO.pingText != null && this.liveVO.pingText.split( " " ).join("") != "" ) ? this.liveVO.pingText : Const.ERROR_SESSION_INFO;
 		}
 		
 		protected function onSessionOk( event:ControlEvent ) :void

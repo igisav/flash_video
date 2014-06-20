@@ -1,7 +1,7 @@
 package de.axelspringer.videoplayer.view
 {
     import de.axelspringer.videoplayer.event.ControlEvent;
-    import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+    import de.axelspringer.videoplayer.model.vo.Const;
     import de.axelspringer.videoplayer.model.vo.FullscreenData;
     import de.axelspringer.videoplayer.view.base.BaseView;
 
@@ -95,8 +95,8 @@ package de.axelspringer.videoplayer.view
 		
 		protected function setSize() :void
 		{
-			this.initWidth = BildTvDefines.width;
-		    this.initHeight = BildTvDefines.height;
+			this.initWidth = Const.width;
+		    this.initHeight = Const.height;
 		}
 		
 		protected function updateDisplaySize() :void

@@ -23,8 +23,7 @@
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
             var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {
-                cb:"window.de.bild.callback",
-                id:"mediaswf_1403173000314"};
+                cb:"window.de.bild.callback"};
             var swfSource = "${swf}.swf";
             var params = {};
             params.quality = "high";
@@ -54,7 +53,10 @@
                 window.de.bild = {};
             }
 
-           // var currentVideo = "rtmp://cp88082.edgefcs.net/ondemand/mp4:trailer/72041_46322.flv";
+            //var currentVideo = "rtmp://cp88082.edgefcs.net/ondemand/mp4:trailer/72041_46322.flv";
+
+            //var currentVideo = "rtmp://cp81905.live.edgefcs.net/live/Livecam@17357";
+
             var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
 
             window.de.bild.callback = function(msg) {
@@ -65,7 +67,7 @@
                 track("EVENT: " + JSON.stringify(msg));
 
                 if(msg.type == 'initialized'){
-                    //loadAndPlay(currentVideo);
+                    loadAndPlay(currentVideo);
                 }
             };
 
@@ -150,6 +152,16 @@
                 document.getElementById("videoplayer").destroy();
             }
 
+            function loadVideo(url)
+            {
+                currentVideo = url;
+                swfobject.embedSWF(
+                        swfSource, "videoplayer",
+                        800, 475,
+                        swfVersionStr, xiSwfUrlStr,
+                        flashvars, params, attributes);
+            }
+
         </script>
     </head>
 
@@ -192,11 +204,11 @@
             <input class="number" type="number" value="800" id="sizeHeight" onchange="document.getElementById('sizeHeight').value = this.value">
             <input type="button" value="resize" onclick="resize();">
             <hr>
-            <input type="button" value="Bild Video" onclick="loadAndPlay('http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4');">
-            <input type="button" value="Werbung" onclick="loadAndPlay('http://ced.sascdn.com/diff/251/3275372/VF_4MRD_20s_Sony_TagOn_816x458.mp4');">
-            <input type="button" value="Akamai Stream" onclick="loadAndPlay('http://multiplatform-f.akamaihd.net/z/multi/companion/big_bang_theory/big_bang_theory.mov_,300,600,800,1000,2500,4000,9000,k.mp4.csmil/manifest.f4m');">
-            <input type="button" value="Progressive H.264" onclick="loadAndPlay('http://mediapm.edgesuite.net/ovp/content/demo/video/elephants_dream/elephants_dream_768x428_24.0fps_608kbps.mp4');">
-            <input type="button" value="FLV on-demand" onclick="loadAndPlay('rtmp://cp88082.edgefcs.net/ondemand/mp4:trailer/72041_46322.flv');">
+            <input type="button" value="Bild Video" onclick="loadVideo('http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4');">
+            <input type="button" value="Werbung" onclick="loadVideo('http://ced.sascdn.com/diff/251/3275372/VF_4MRD_20s_Sony_TagOn_816x458.mp4');">
+            <input type="button" value="Akamai Stream" onclick="loadVideo('http://multiplatform-f.akamaihd.net/z/multi/companion/big_bang_theory/big_bang_theory.mov_,300,600,800,1000,2500,4000,9000,k.mp4.csmil/manifest.f4m');">
+            <input type="button" value="Progressive H.264" onclick="loadVideo('http://mediapm.edgesuite.net/ovp/content/demo/video/elephants_dream/elephants_dream_768x428_24.0fps_608kbps.mp4');">
+            <input type="button" value="FLV on-demand" onclick="loadVideo('rtmp://cp88082.edgefcs.net/ondemand/mp4:trailer/72041_46322.flv');">
 
             <br>
         </div>

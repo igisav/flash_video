@@ -1,7 +1,7 @@
 package de.axelspringer.videoplayer.controller
 {
 	import de.axelspringer.videoplayer.event.ControlEvent;
-	import de.axelspringer.videoplayer.model.vo.BildTvDefines;
+	import de.axelspringer.videoplayer.model.vo.Const;
 	import de.axelspringer.videoplayer.model.vo.ConfigVO;
 //	import de.axelspringer.videoplayer.model.vo.SkinVO;
 //	import de.axelspringer.videoplayer.model.vo.base.SkinBaseVO;
@@ -61,7 +61,7 @@ package de.axelspringer.videoplayer.controller
 			this.playerView = new PlayerView( s );
 			this.playerView.addEventListener( ControlEvent.PLAY, onPlay );
 
-			if(BildTvDefines.size == BildTvDefines.SIZE_BIG || BildTvDefines.size == BildTvDefines.SIZE_MEDIUM)
+			if(Const.size == Const.SIZE_BIG || Const.size == Const.SIZE_MEDIUM)
 			{
 				s = new Sprite();
 				this.stage.addChild( s );
