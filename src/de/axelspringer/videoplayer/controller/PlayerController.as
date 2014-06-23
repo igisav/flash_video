@@ -352,6 +352,7 @@ package de.axelspringer.videoplayer.controller
             {
                 if (this.ns != null)
                 {
+                    this.ns.removeEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
                     this.ns.close();
                     this.ns = null;
                 }
@@ -360,8 +361,10 @@ package de.axelspringer.videoplayer.controller
             {
                 if (this.nsHD != null)
                 {
+                    this.nsHD.removeEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus);
+                    this.nsHD.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
                     this.nsHD.closeAndDestroy();
-                    //this.nsHD=null;
+                    this.nsHD = null;
                 }
             }
         }
@@ -454,7 +457,7 @@ package de.axelspringer.videoplayer.controller
             this.nsHD.addClientHandler("onPlayStatus", this.onPlayStatusHD);
             this.nsHD.addClientHandler("dvrAvailabilityChange", onDvrAvailabilityChange);
             this.nsHD.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus, false, 0, true);
-            this.nsHD.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+            this.nsHD.addEventListener(IOErrorEvent.IO_ERROR, onIOError, false, 0, true);
 
             this.playerView.display.attachNetStream(this.nsHD);
             this.playerView.display.smoothing = true;
@@ -564,9 +567,9 @@ package de.axelspringer.videoplayer.controller
                 {
                     //toDo ... check Problesm with Security and crossdomain.xml if content can't be loaded
 
-                    scriptLoader.addEventListener(Event.COMPLETE, rDLoaded);
-                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectError);
-                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectError);
+                    scriptLoader.addEventListener(Event.COMPLETE, rDLoaded, false, 0, true);
+                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectError, false, 0, true);
+                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectError, false, 0, true);
                     try
                     {
                         scriptLoader.load(scriptRequest);
@@ -578,9 +581,9 @@ package de.axelspringer.videoplayer.controller
                 }
                 else
                 {
-                    scriptLoader.addEventListener(Event.COMPLETE, rHDLoaded);
-                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectHDError);
-                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectHDError);
+                    scriptLoader.addEventListener(Event.COMPLETE, rHDLoaded, false, 0, true);
+                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectHDError, false, 0, true);
+                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectHDError, false, 0, true);
                     scriptLoader.load(scriptRequest);
                 }
             }
