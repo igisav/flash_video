@@ -42,7 +42,6 @@ package de.axelspringer.videoplayer.controller
 
             this.initController();
 
-            var external:ExternalController = new ExternalController();
             var externalSuccess:Error = ExternalController.init(this.playerController, flashVars.cb);
 
             if (externalSuccess != null)

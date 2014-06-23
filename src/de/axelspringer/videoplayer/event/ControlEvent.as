@@ -10,9 +10,9 @@ package de.axelspringer.videoplayer.event
 		
 		public var data:Object;
 		
-		public function ControlEvent( type:String, data:Object = null, bubbles:Boolean = false, cancelable:Boolean = false )
+		public function ControlEvent( name:String, data:Object = null, bubbles:Boolean = false, cancelable:Boolean = false )
 		{
-			super( type, bubbles, cancelable );
+			super( name, bubbles, cancelable );
 			
 			this.data = ( data == null ) ? {} : data;
 		}

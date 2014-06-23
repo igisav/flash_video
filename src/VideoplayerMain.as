@@ -14,6 +14,9 @@ package
     import flash.ui.ContextMenu;
     import flash.ui.ContextMenuItem;
 
+    // TODO: Bug: Öffnen von lokale html-Seite mit eingebetten Flash (nicht vom Server) wirft Fehler in ExternalController
+    // TODO: Umschalten von Videos soll dynamisch sein (also, nicht durch ersetzen von <object> mit swfObject),
+
     public class VideoplayerMain extends Sprite
     {
         protected var mainController:MainController;

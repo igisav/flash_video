@@ -183,7 +183,6 @@ package de.axelspringer.videoplayer.controller
             this.videoVO = videoVO;
             this.playing = false;
             this.videoStarted = false;
-            Const.isBumper = false;
 
             if (this.videoVO.mute)
             {
@@ -296,11 +295,7 @@ package de.axelspringer.videoplayer.controller
                 {
                     if (Const.isLivePlayer)
                     {
-
-                        if (!Const.isBumper)
-                        {
-                            this.duration = -1;
-                        }
+                        this.duration = -1;
                     }
                     this.streamConnects = 1;
                     this.playStream();
@@ -310,11 +305,7 @@ package de.axelspringer.videoplayer.controller
             {
                 if (Const.isLivePlayer)
                 {
-                    if (!Const.isBumper)
-                    {
-                        this.duration = -1;
-                    }
-
+                    this.duration = -1;
                 }
                 //check if nc is already connected
                 if (this.nc.connected && this.nc.uri == "null")
@@ -399,7 +390,7 @@ package de.axelspringer.videoplayer.controller
 
             Log.info(this + " set buffertime to " + this.ns.bufferTime);
 
-            var metaHandler:Object = new Object();
+            var metaHandler:Object = {};
             metaHandler.onMetaData = this.onMetaData;
             this.ns.client = metaHandler;
 
@@ -500,7 +491,7 @@ package de.axelspringer.videoplayer.controller
         }
 
         protected function onNetConnectionStatus(e:NetStatusEvent):void {
-            Log.info(e.info.code)
+            Log.info(e.info.code);
             switch (e.info.code)
             {
                 case "NetConnection.Connect.Success":
@@ -536,10 +527,6 @@ package de.axelspringer.videoplayer.controller
         private function redirectConnection():void {
             Log.info("play: redirect davor: " + this.videoFile + "  hd? " + this.hdContent);
 
-            if (Const.isBumper)
-            {
-                this.onNetConnectionConnect();
-            }
             if (this.videoFile.indexOf("http://cmbildde-preview/tok.ak/") == -1 &&
                     this.videoFile.indexOf(".ak.token.bild.de/") == -1 &&
                     ( this.videoFile.indexOf(".ak.token.") == -1 && this.videoFile.indexOf(".bdedev.de/") == -1 ))
@@ -823,7 +810,6 @@ package de.axelspringer.videoplayer.controller
                 {
                     this.onFinishPlay();
                 }
-                ExternalController.dispatch(ExternalController.EVENT_ENDED);
             }
         }
 
@@ -1007,11 +993,6 @@ package de.axelspringer.videoplayer.controller
                 this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame, false);
 
                 this.onFinishPlay();
-                if (!Const.isBumper)
-                {
-                    ExternalController.dispatch(ExternalController.EVENT_ENDED);
-                }
-
 
                 if (this.checkEndOfVideoTimer.running)
                 {
@@ -1049,7 +1030,6 @@ package de.axelspringer.videoplayer.controller
 
             this.playing = false;
             this.videoStarted = false;
-            Const.isBumper = false;
 
             if (this.videoVO.autorepeat)
             {

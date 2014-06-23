@@ -213,12 +213,7 @@ package de.axelspringer.videoplayer.controller
 				var newTime:Number = seekPoint * this.duration;
 
 				// set lower buffer time to enable fast video start after seeking
-				var bufferTime:uint = Const.buffertimeMinimum;
-				if( Const.isLivePlayer )
-				{
-					bufferTime = Const.buffertimeMinimum;
-				}
-				this.netstream.bufferTime = bufferTime;
+				this.netstream.bufferTime = Const.buffertimeMinimum;
 
 				trace( this + " set buffertime to " + this.netstream.bufferTime );
 
@@ -262,12 +257,7 @@ package de.axelspringer.videoplayer.controller
 //				this.playing = true;
 
 				// set lower buffer here to enable fast video start after pause
-				var bufferTime:uint = Const.buffertimeMinimum;
-				if( Const.isLivePlayer )
-				{
-					bufferTime = Const.buffertimeMinimum;
-				}
-				this.netstream.bufferTime = bufferTime;
+                this.netstream.bufferTime = Const.buffertimeMinimum;
 
 				trace( this + " set buffertime to " + this.netstream.bufferTime );
 
@@ -434,12 +424,7 @@ package de.axelspringer.videoplayer.controller
 			trace( this + " onConnectionConnect" );
 
 			this.netstream = new AkamaiDynamicNetStream( this.connection );
-			var bufferTime:uint = Const.buffertimeMinimum;
-			if( Const.isLivePlayer )
-			{
-				bufferTime = Const.buffertimeMinimum;
-			}
-			this.netstream.bufferTime = bufferTime;
+			this.netstream.bufferTime = Const.buffertimeMinimum;
 
 			trace( this + " set buffertime to " + this.netstream.bufferTime );
 
@@ -531,12 +516,7 @@ package de.axelspringer.videoplayer.controller
 					this.videoBufferEmptyStatus = false;
 
 					// set lower buffer here to enable fast video start after pause
-					bufferTime = Const.buffertimeMinimum;
-					if( Const.isLivePlayer )
-					{
-						bufferTime = Const.buffertimeMinimum;
-					}
-					this.netstream.bufferTime = bufferTime;
+					this.netstream.bufferTime = Const.buffertimeMinimum;
 
 					trace( this + " set buffertime to " + this.netstream.bufferTime );
                     ExternalController.dispatch(ExternalController.EVENT_SEEKED);
@@ -564,12 +544,7 @@ package de.axelspringer.videoplayer.controller
                         ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 
 						// set lower buffer here to enable fast video start
-						bufferTime = Const.buffertimeMinimum;
-						if( Const.isLivePlayer )
-						{
-							bufferTime = Const.buffertimeMinimum;
-						}
-						this.netstream.bufferTime = bufferTime;
+                        this.netstream.bufferTime = Const.buffertimeMinimum;
 
 						trace( this + " set buffertime to " + this.netstream.bufferTime );
 					}
@@ -710,7 +685,6 @@ package de.axelspringer.videoplayer.controller
 
 			if( ! this.errorOccured )
 			{
-				// this.trackingController.onClipEnd();
                 ExternalController.dispatch(ExternalController.EVENT_ENDED);
 			}
 		}

@@ -15,7 +15,7 @@ package de.axelspringer.videoplayer.model.vo
 		public function ConfigVO()
 		{
 			this.videoVO = new VideoVO();
-			this.relatedVideos = new Array();
+			this.relatedVideos = [];
 		}
 	}
 }
