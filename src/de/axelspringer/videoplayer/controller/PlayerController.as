@@ -1238,27 +1238,10 @@ package de.axelspringer.videoplayer.controller
             return bufferTime
         }
 
-
-        // TODO: Selim: was ist mit setzen von HD
-        // var phase:Number = e.data.phase;
-        // this.playerController.setHDBitrate(phase);
-
-        /*public function apiCall(type:String, params:Object):void
-         {
-         case CALLBACK_HD_ON:
-         {
-         this.videoVO.startHDQuality = true;
-         this.setHDBitrate();
-         break;
-         }
-         case CALLBACK_HD_OFF:
-         {
-         this.videoVO.startHDQuality = false;
-         this.setHDBitrate();
-         break;
-         }
-         }
-         */
+        public function enableHD(value:String):void {
+            this.videoVO.startHDQuality = value != "false";
+            this.setHDBitrate();
+        }
 
         protected function emptyCallback(...args):void {
             // nix drin

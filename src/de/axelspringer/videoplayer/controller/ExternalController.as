@@ -22,6 +22,7 @@ package de.axelspringer.videoplayer.controller
         public static const CURRENT_TIME:String	= "currentTime";
         public static const DURATION:String		= "getDuration";
         public static const BUFFERED:String		= "getBuffered";
+        public static const ENABLE_HD:String	= "enableHD";
         // public static const DESTROY:String		= "destroy";
 
         /*          EVENTS
@@ -113,6 +114,7 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.addCallback(CURRENT_TIME, playerController.currentTime);
             ExternalInterface.addCallback(DURATION, playerController.getDuration);
             ExternalInterface.addCallback(BUFFERED, playerController.getBufferTime);
+            ExternalInterface.addCallback(ENABLE_HD, playerController.enableHD);
         }
     }
 }

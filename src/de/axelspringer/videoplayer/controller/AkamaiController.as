@@ -34,9 +34,7 @@ package de.axelspringer.videoplayer.controller
 
 		// gui
 		protected var playerView:PlayerView;
-		// protected var controlsView:ControlsView;
-		// protected var trackingController:TrackingController;
-		
+
 		// stream
 		protected var connection:AkamaiConnection;
 		protected var netstream:AkamaiDynamicNetStream;
@@ -44,8 +42,7 @@ package de.axelspringer.videoplayer.controller
 		
 		// midrolls
 		protected var midrollTimer:PausableTimer;
-		// protected var jingleController:JinglePlayerController;
-		
+
 		// data
 		protected var filmVO:FilmVO;
 		protected var liveVO:StreamingVO;
@@ -60,7 +57,6 @@ package de.axelspringer.videoplayer.controller
 		// status
 		protected var isPlaying:Boolean;
 		protected var isAdPlaying:Boolean;
-		//protected var isJinglePlaying:Boolean;
 		protected var paused:Boolean;
 		protected var videoBufferEmptyStatus:Boolean;
 		protected var videoBufferFlushStatus:Boolean;
@@ -108,20 +104,6 @@ package de.axelspringer.videoplayer.controller
 			this.initMovieStream();
 		}
 
-		/*public function startPlaying() :void
-		{
-			this.dispatchEvent( new ControlEvent( ControlEvent.CONTENT_START ) );
-
-			// start jingle, movie starts automatically in onJingleFinished
-			if( BildTvDefines.isTrailerPlayer )
-			{
-				this.playMovieJingle( this.filmVO.jingleFilePrerollTrailer, MOVIE_JINGLE_PREROLL_MOVIE );
-			}
-			else
-			{
-				this.playMovieJingle( this.filmVO.jingleFilePrerollMovie, MOVIE_JINGLE_PREROLL_MOVIE );
-			}
-		}*/
 
 		public function setStream( liveVO:StreamingVO ) :void
 		{
@@ -156,9 +138,6 @@ package de.axelspringer.videoplayer.controller
 			this.initializingMovieStream = false;
             ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 
-			// geoblock test
-//			this.onConnectionStatus( new NetStatusEvent( "", false, false, {code:"NetConnection.Connect.Rejected", description:"geoblock"} ) );
-
 			// if we have a session check url, ping once to check session before the stream starts
 			// otherwise start playing now
 			if( this.sessionPinger.isInitialized )
@@ -181,20 +160,12 @@ package de.axelspringer.videoplayer.controller
 			if( this.playing )
 			{
 				this.pause();
-				// this.trackingController.onClipPause();
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, false);
 			}
 			else if( this.videoStarted )
 			{
-				if( this.trackReplay )
-				{
-					// if( BildTvDefines.debugFlag )
-					// this.trackingController.onClipPlay();
-				}
-
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
 				this.resume();
-				// this.trackingController.onClipResume();
 			}
 			else
 			{
@@ -218,13 +189,11 @@ package de.axelspringer.videoplayer.controller
 				trace( this + " set buffertime to " + this.netstream.bufferTime );
 
 				this.netstream.seek( newTime );
-				//this.playerView.chapterList.updateTime( newTime );
 			}
 		}
 
 		public function setVolume( volume:Number ) :void
 		{
-			// this.controlsView.setVolume( volume );
 			this.soundTransform.volume = volume;
 
 			if( this.netstream != null )
@@ -254,7 +223,6 @@ package de.axelspringer.videoplayer.controller
 			if( this.videoStarted )
 			{
 				this.paused = false;
-//				this.playing = true;
 
 				// set lower buffer here to enable fast video start after pause
                 this.netstream.bufferTime = Const.buffertimeMinimum;
@@ -267,9 +235,6 @@ package de.axelspringer.videoplayer.controller
 
 		public function resumeAfterMidroll() :void
 		{
-			// refresh clip info
-			// this.controlsView.setDuration( this.duration );
-
 			this.resume();
 
 			// re-attach netstream
@@ -286,11 +251,7 @@ package de.axelspringer.videoplayer.controller
 				this.playerView.display.stage.dispatchEvent( new Event( Event.RESIZE ) );
 			}
 
-			if( Const.isMoviePlayer )
-			{
-				// this.playMovieJingle( filmVO.jingleFilePostroll, MOVIE_JINGLE_POSTROLL );
-			}
-			else	// streamplayer
+			if( !Const.isMoviePlayer )
 			{
 				// livestreams
 				if( Const.isLivePlayer )
@@ -343,18 +304,6 @@ package de.axelspringer.videoplayer.controller
 			{
 				this.playing = true;
 				this.paused = false;
-				// this.controlsView.setDuration( this.duration );
-				// this.controlsView.updateTime( 0 );
-				// this.controlsView.updatePlayProgress( 0 );
-
-				/*if( BildTvDefines.isMoviePlayer && this.filmVO.chapters.length > 1 )
-				{
-					this.playerView.createChapterlist( this.filmVO.chapters );
-				}*/
-				if( Const.isLivePlayer )
-				{
-					// this.controlsView.enableSeeking( false );
-				}
 			}
 
 			this.connection = new AkamaiConnection();
@@ -472,10 +421,6 @@ package de.axelspringer.videoplayer.controller
 			if( e.data.duration != null )
 			{
 				this.duration = Number( e.data.duration );
-				if( !this.initializingMovieStream )
-				{
-					// this.controlsView.setDuration( this.duration );
-				}
 			}
 
 			if( this.initializingMovieStream )
@@ -489,12 +434,6 @@ package de.axelspringer.videoplayer.controller
 				videoVO.videoUrl = this.filmVO.streamUrl;
 				videoVO.duration = this.duration;
 				videoVO.autoplay = true;
-				// this.trackingController.setClip( videoVO, this.filmVO.trackingVO );
-
-				// track playClick
-
-				/*if( BildTvDefines.debugFlag )
-				this.trackingController.onClipPlay();*/
 			}
 		}
 
@@ -598,23 +537,16 @@ package de.axelspringer.videoplayer.controller
 
 		protected function onVideoEnterFrame( e:Event ):void
 		{
-			//trace( "progress: " + this.netstream.time );
-
 			if( this.paused )
 			{
 				return;
 			}
 
-			// this.controlsView.updateTime( this.netstream.time );
-			// this.trackingController.updatePlayProgress( this.netstream.time );
             ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, this.netstream.time);
 
 			if( this.duration > 0 )
 			{
 				var progress:Number = this.netstream.time / this.duration;
-
-				// this.controlsView.updatePlayProgress( progress );
-				//this.playerView.chapterList.updateTime( this.netstream.time );
 			}
 		}
 
@@ -642,7 +574,6 @@ package de.axelspringer.videoplayer.controller
 
 			if( !this.videoStarted || this.trackReplay )
 			{
-				// this.trackingController.onClipStart();
                 ExternalController.dispatch(ExternalController.EVENT_PLAYING);
 				this.trackReplay = false;
 			}
