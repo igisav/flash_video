@@ -260,6 +260,9 @@ package de.axelspringer.videoplayer.controller
         }
 
         public function play():void {
+            if (isPlaying) {
+                return;
+            }
             ExternalController.dispatch(ExternalController.EVENT_PLAY);
 
             if (this.videoStarted)
@@ -555,36 +558,34 @@ package de.axelspringer.videoplayer.controller
                     //toDo ... check Problesm with Security and crossdomain.xml if content can't be loaded
 
                     scriptLoader.addEventListener(Event.COMPLETE, rDLoaded, false, 0, true);
-                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectError, false, 0, true);
-                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectError, false, 0, true);
+                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectIOError, false, 0, true);
+                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectSecurityError, false, 0, true);
                     try
                     {
                         scriptLoader.load(scriptRequest);
                     }
                     catch (sec:SecurityError)
                     {
-                        this.onNetConnectionConnect();
+                        Log.error(Const.ERROR_REDIRECT + sec, Const.ERROR_TYPE_NETWORK);
                     }
                 }
                 else
                 {
                     scriptLoader.addEventListener(Event.COMPLETE, rHDLoaded, false, 0, true);
-                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectHDError, false, 0, true);
-                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectHDError, false, 0, true);
+                    scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectIOError, false, 0, true);
+                    scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectSecurityError, false, 0, true);
                     scriptLoader.load(scriptRequest);
                 }
             }
         }
 
-        protected function onRedirectError(event:Error):void {
-            Log.error(Const.ERROR_REDIRECT + event, Const.ERROR_TYPE_NETWORK);
-            this.onNetConnectionConnect();
+        protected function onRedirectSecurityError(event:SecurityErrorEvent):void {
+            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
         }
 
-        protected function onRedirectHDError(event:Error):void {
-            Log.error(Const.ERROR_REDIRECT + event, Const.ERROR_TYPE_NETWORK);
-            this.onHDNetConnectionConnect();
-
+        protected function onRedirectIOError(event:IOErrorEvent):void {
+            Log.error(Const.ERROR_REDIRECT  + event.type, Const.ERROR_TYPE_NETWORK);
+            //this.onHDNetConnectionConnect();
         }
 
         protected function rHDLoaded(event:Event):void {

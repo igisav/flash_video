@@ -51,13 +51,13 @@ package de.axelspringer.videoplayer.controller
             }
 
             var autoplay:String = flashVars.autoplay;
-            if (autoplay != "")
+            if (autoplay && autoplay != "")
             {
                 this.config.videoVO.autoplay = true;
             }
 
             var hdAdaptive:String = flashVars.hdAdaptive;
-            if (hdAdaptive != "")
+            if (hdAdaptive && hdAdaptive != "")
             {
                 this.config.videoVO.hdAdaptive = true;
             }
