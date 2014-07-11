@@ -321,6 +321,8 @@ package de.axelspringer.videoplayer.controller
         private function _destroy():void {
             Log.info(this + " destroy stream connection");
             this.videoTimer.stop();
+            this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
+            this.playerView.display.attachNetStream(null);
 
             if (this.hdContent == false)
             {
@@ -375,11 +377,6 @@ package de.axelspringer.videoplayer.controller
             // TODO: check what this for???
             this.nc = new NetConnection();
             this.nc.connect(null);
-
-            if (this.nsHD && !isNaN(this.nsHD.time))
-            {
-                this.nsHD.closeAndDestroy();
-            }
 
             this.nsHD = new ZStream(this.nc);
             this.nsHD.soundTransform = this.soundTransform;
