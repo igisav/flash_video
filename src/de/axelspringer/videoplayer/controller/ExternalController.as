@@ -23,7 +23,7 @@ package de.axelspringer.videoplayer.controller
         public static const DURATION:String		= "getDuration";
         public static const BUFFERED:String		= "getBuffered";
         public static const ENABLE_HD:String	= "enableHD";
-        // public static const DESTROY:String		= "destroy";
+        public static const DESTROY:String		= "destroy";
 
         /*          EVENTS
                 FROM FLASH TO JAVASCRIPT
@@ -115,6 +115,7 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.addCallback(DURATION, playerController.getDuration);
             ExternalInterface.addCallback(BUFFERED, playerController.getBufferTime);
             ExternalInterface.addCallback(ENABLE_HD, playerController.enableHD);
+            ExternalInterface.addCallback(DESTROY, playerController.destroy);
         }
     }
 }

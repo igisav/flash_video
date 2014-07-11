@@ -318,7 +318,7 @@ package de.axelspringer.videoplayer.controller
             }
         }
 
-        public function destroy():void {
+        private function _destroy():void {
             Log.info(this + " destroy stream connection");
             this.videoTimer.stop();
 
@@ -1124,7 +1124,7 @@ package de.axelspringer.videoplayer.controller
          *******************************************************************************************************/
 
         public function loadURL(url:String):void {
-            this.destroy();
+            _destroy();
 
             var newVideo:VideoVO = new VideoVO();
             newVideo.videoUrl = url;
@@ -1191,6 +1191,14 @@ package de.axelspringer.videoplayer.controller
             if (!this.isRTMP) {
                 this.videoVO.startHDQuality = value != "false";
                 this.setHDBitrate();
+            }
+        }
+
+        public function destroy():void {
+            if (this.isRTMP) {
+                this.akamaiController.destroy();
+            } else {
+                this._destroy();
             }
         }
 
