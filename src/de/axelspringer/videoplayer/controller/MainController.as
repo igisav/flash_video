@@ -1,6 +1,5 @@
 package de.axelspringer.videoplayer.controller
 {
-    import de.axelspringer.videoplayer.model.vo.ConfigVO;
     import de.axelspringer.videoplayer.model.vo.Const;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.view.PlayerView;
@@ -15,7 +14,6 @@ package de.axelspringer.videoplayer.controller
     {
         protected var root:Sprite;
         protected var stage:Sprite;
-        protected var config:ConfigVO;
 
         // controller
         protected var playerController:PlayerController;
@@ -38,7 +36,7 @@ package de.axelspringer.videoplayer.controller
         }
 
         public function init(flashVars:Object):void {
-            this.config = new ConfigVO();
+            var video:VideoVO = new VideoVO();
 
             this.initController();
 
@@ -53,16 +51,17 @@ package de.axelspringer.videoplayer.controller
             var autoplay:String = flashVars.autoplay;
             if (autoplay && autoplay != "")
             {
-                this.config.videoVO.autoplay = true;
+                video.autoplay = true;
             }
 
             var hdAdaptive:String = flashVars.hdAdaptive;
             if (hdAdaptive && hdAdaptive != "")
             {
-                this.config.videoVO.hdAdaptive = true;
+                video.hdAdaptive = true;
             }
 
-            this.setVideo();
+            this.playerController.setVolume(0.5);
+            this.playerController.setClip(video);
             ExternalController.dispatch(ExternalController.EVENT_INITIALIZED);
         }
 
@@ -74,34 +73,6 @@ package de.axelspringer.videoplayer.controller
             this.viewController = new PlayerView(this.stage);
 
             this.playerController = new PlayerController(this.viewController); //, this.viewController.controlsView, this.viewController.subtitleView
-        }
-
-        protected function setVideo():void {
-            this.playerController.setVolume(0.5);
-
-            // different action depending on type of player - video player vs. movie player vs. live player
-            if (this.config.filmVO != null)
-            {
-                Const.isMoviePlayer = true;
-                Const.isTrailerPlayer = this.config.filmVO.isTrailer();
-                this.playerController.setMovie(this.config.filmVO);
-            }
-            else if (this.config.streamingVO != null)
-            {
-                Const.isStreamPlayer = true;
-                Const.isLivePlayer = this.config.streamingVO.isLivestream;
-
-                var videoVO:VideoVO = new VideoVO();
-                videoVO.videoUrl = this.config.streamingVO.streamUrl;
-                videoVO.duration = this.config.streamingVO.duration;
-                videoVO.autoplay = this.config.streamingVO.autoplay;
-
-                this.playerController.setClip(videoVO);
-            }
-            else
-            {
-                this.playerController.setClip(this.config.videoVO);
-            }
         }
 
         protected function onStageResize(e:Event = null):void {

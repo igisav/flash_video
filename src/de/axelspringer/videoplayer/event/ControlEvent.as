@@ -5,9 +5,7 @@ package de.axelspringer.videoplayer.event
 	public class ControlEvent extends Event
 	{
 		public static const RESIZE:String 				= "ControlEvent.RESIZE";
-		public static const ERROR_SESSION:String 		= "ControlEvent.ERROR_SESSION";
-		public static const SESSION_OK:String 			= "ControlEvent.SESSION_OK";
-		
+
 		public var data:Object;
 		
 		public function ControlEvent( name:String, data:Object = null, bubbles:Boolean = false, cancelable:Boolean = false )

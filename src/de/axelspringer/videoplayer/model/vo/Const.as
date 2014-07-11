@@ -18,22 +18,17 @@ package de.axelspringer.videoplayer.model.vo
 		public static const ERROR_HD_BITRATE:String	        = "Setting HD bitrate failed.";
 		public static const ERROR_HD_CORE:String	        = "403: HD Core. Kein nächstes Segment in der bitrate gefunden";
 		public static const ERROR_REDIRECT:String           = "Redirect error: ";
-		public static const ERROR_SESSION_INFO:String	    = "SIE SIND NICHT EINGELOGGT.";
-		
+
 		/*
 		 * dynamic values
 		 */
 		 
 		public static var playerName:String = "Axel Springer Videoplayer";
-		public static var isMoviePlayer:Boolean = false;		// is a Nowtilus tokenized Akamai Stream - trailer or full movie
-		public static var isTrailerPlayer:Boolean = false;		// is a Nowtilus tokenized Akamai Stream - trailer
-		public static var isStreamPlayer:Boolean = false;		// is a tokenized Akamai Stream - VOD or live
 		public static var isLivePlayer:Boolean = false;			// is a tokenized Akamai Stream - live
 		public static var versionNumber:String;
 		public static var width:int;
 		public static var height:int;
 		public static var buffertimeMinimum:Number = 0.5;
 		public static var buffertimeMaximum:Number = 10;
-		public static var liveBuffertimeMinimum:Number = 3;
 	}
 }

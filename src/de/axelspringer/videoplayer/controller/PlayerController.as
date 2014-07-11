@@ -4,14 +4,12 @@ package de.axelspringer.videoplayer.controller
 
     import de.axelspringer.videoplayer.event.ControlEvent;
     import de.axelspringer.videoplayer.model.vo.Const;
-    import de.axelspringer.videoplayer.model.vo.FilmVO;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
     import de.axelspringer.videoplayer.view.PlayerView;
 
     import flash.events.AsyncErrorEvent;
     import flash.events.Event;
-    import flash.events.EventDispatcher;
     import flash.events.IOErrorEvent;
     import flash.events.NetStatusEvent;
     import flash.events.SecurityErrorEvent;
@@ -27,7 +25,7 @@ package de.axelspringer.videoplayer.controller
     import flash.utils.Timer;
     import flash.utils.setTimeout;
 
-    public class PlayerController extends EventDispatcher
+    public class PlayerController
     {
         private static const TIMER_DELAY:Number = 500;
 
@@ -45,7 +43,7 @@ package de.axelspringer.videoplayer.controller
         protected var videoUrl:String;
         protected var videoServer:String;
         protected var videoFile:String;
-        protected var videoIsStream:Boolean;
+        protected var isRTMP:Boolean;
         protected var streamConnects:uint;
         protected var hdContent:Boolean = false;
         protected var startBitrateSetted:Boolean = false;
@@ -80,13 +78,9 @@ package de.axelspringer.videoplayer.controller
         protected var checkEndOfVideoTimer:Timer;
         protected var reconnectLivestreamTimer:Timer;
 
-        // movieplayer & liveplayer only
-        protected var filmVO:FilmVO;
         protected var akamaiController:AkamaiController;
 
         public function PlayerController(playerView:PlayerView) {
-            super(this);
-
             this.playerView = playerView;
             this.initPlayer()
         }
@@ -127,7 +121,7 @@ package de.axelspringer.videoplayer.controller
             this.reconnectLivestreamTimer.removeEventListener(TimerEvent.TIMER, onReconnectLivestream);
             this.reconnectLivestreamTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onReconnectLivestreamLimitReached);
 
-            this.playing = false;
+            this.isPlaying = false;
             this.videoStopped = true;
         }
 
@@ -145,26 +139,23 @@ package de.axelspringer.videoplayer.controller
                 this.savedVolume = volume;
             }
 
+            if (isRTMP && akamaiController != null)
+            {
+                this.akamaiController.setVolume(volume);
+                return;
+            }
+
+            this.soundTransform.volume = volume;
+
             if (this.hdContent == false)
             {
-                if ((Const.isMoviePlayer || Const.isStreamPlayer ) && akamaiController != null)
+                if (this.ns != null)
                 {
-                    this.akamaiController.setVolume(volume);
-                }
-                else
-                {
-                    this.soundTransform.volume = volume;
-
-                    if (this.ns != null)
-                    {
-                        this.ns.soundTransform = this.soundTransform;
-                    }
+                    this.ns.soundTransform = this.soundTransform;
                 }
             }
             else
             {
-                this.soundTransform.volume = volume;
-
                 if (this.nsHD != null)
                 {
                     this.nsHD.soundTransform = this.soundTransform;
@@ -181,17 +172,27 @@ package de.axelspringer.videoplayer.controller
                 return;
             }
             this.videoVO = videoVO;
-            this.playing = false;
+            this.isPlaying = false;
             this.videoStarted = false;
+
+            this.duration = videoVO.duration;
+            this.videoUrl = videoVO.videoUrl;
+            this.videoFile = videoVO.videoUrl;
+            this.videoServer = "";
+
+            //HDNetwork content
+            this.hdContent = (videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1);
+
+            // streaming
+            this.isRTMP = (videoVO.videoUrl.substr(0, 4) == "rtmp");
+            if (this.isRTMP)
+            {
+                setAkamaiStream();
+            }
 
             if (this.videoVO.mute)
             {
                 this.setVolume(0);
-            }
-
-            if (videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1)
-            {
-                this.hdContent = true;
             }
 
             this.playerView.display.clear();
@@ -203,6 +204,12 @@ package de.axelspringer.videoplayer.controller
         }
 
         public function pause():void {
+            if (this.isRTMP)
+            {
+                this.akamaiController.pause();
+                return;
+            }
+
             this.videoTimer.stop();
             ExternalController.dispatch(ExternalController.EVENT_PAUSE);
             if (this.videoStarted)
@@ -216,12 +223,12 @@ package de.axelspringer.videoplayer.controller
                     if (this.nsHD) this.nsHD.pause();
                 }
 
-                this.playing = false;
+                this.isPlaying = false;
                 this.paused = true;
             }
         }
 
-        public function resume():void {
+        private function resume():void {
             this.videoTimer.start();
             Log.info("------------RESUME STREAM!----------------");
             if (this.videoStarted)
@@ -254,13 +261,20 @@ package de.axelspringer.videoplayer.controller
                 }
 
                 // set lower buffer here to enable fast video start after pause
-                this.playing = true;
+                this.isPlaying = true;
                 this.paused = false;
             }
         }
 
         public function play():void {
-            if (isPlaying) {
+            if (this.isRTMP)
+            {
+                this.akamaiController.play();
+                return;
+            }
+
+            if (isPlaying)
+            {
                 return;
             }
             ExternalController.dispatch(ExternalController.EVENT_PLAY);
@@ -286,55 +300,21 @@ package de.axelspringer.videoplayer.controller
             this.previousVideoTime = this.savedPosition;
             this.videoLoaded = 0;
 
-            this.currentClip = this.videoVO;
-
             // start playing!
-            this.playing = true;
+            this.isPlaying = true;
 
-            if (this.videoIsStream)
+            if (Const.isLivePlayer)
             {
-                // disable seeking for livestreams -> duration is -1
-                if (this.videoVO.videoUrl.substr(0, 4) == "rtmp")
-                {
-                    if (Const.isLivePlayer)
-                    {
-                        this.duration = -1;
-                    }
-                    this.streamConnects = 1;
-                    this.playStream();
-                }
+                this.duration = -1;
+            }
+            //check if nc is already connected
+            if (this.nc.connected && this.nc.uri == "null")
+            {
+                redirectConnection();
             }
             else
             {
-                if (Const.isLivePlayer)
-                {
-                    this.duration = -1;
-                }
-                //check if nc is already connected
-                if (this.nc.connected && this.nc.uri == "null")
-                {
-                    redirectConnection();
-                }
-                else
-                {
-                    this.nc.connect(null);
-                }
-
-            }
-        }
-
-        protected function playStream():void {
-            if (this.parseStreamUrl())
-            {
-                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
-                if (this.nc.connected && this.nc.uri == this.videoServer)
-                {
-                    redirectConnection();
-                }
-                else
-                {
-                    this.nc.connect(this.videoServer);
-                }
+                this.nc.connect(null);
             }
         }
 
@@ -363,18 +343,6 @@ package de.axelspringer.videoplayer.controller
             }
         }
 
-        /**
-         * general flag - true if anything is playing (content or ad)
-         */
-        protected function set playing(value:Boolean):void {
-            Log.info(this + " ------ set playing  " + value);
-            this.isPlaying = value;
-        }
-
-        protected function get playing():Boolean {
-            return this.isPlaying;
-        }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // STREAM EVENTS HANDLER
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -382,15 +350,7 @@ package de.axelspringer.videoplayer.controller
         protected function onNetConnectionConnect():void {
             this.ns = new NetStream(this.nc);
             this.ns.soundTransform = this.soundTransform;
-            if (isLivestream)
-            {
-                this.ns.bufferTime = Const.liveBuffertimeMinimum;
-            }
-            else
-            {
-                this.ns.bufferTime = Const.buffertimeMinimum;
-            }
-
+            this.ns.bufferTime = Const.buffertimeMinimum;
             Log.info(this + " set buffertime to " + this.ns.bufferTime);
 
             var metaHandler:Object = {};
@@ -400,13 +360,6 @@ package de.axelspringer.videoplayer.controller
             this.ns.addEventListener(NetStatusEvent.NET_STATUS, onNetStreamStatus, false, 0, true);
 
             this.playerView.display.attachNetStream(this.ns);
-
-            // play!
-            // for akamai live streams
-            if (this.videoIsStream)
-            {
-                this.nc.call("FCSubscribe", null, this.videoFile);
-            }
 
             // action!
             ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
@@ -429,10 +382,9 @@ package de.axelspringer.videoplayer.controller
             }
 
             this.nsHD = new ZStream(this.nc);
-
             this.nsHD.soundTransform = this.soundTransform;
 
-            if (true == this.isLivestream || true == this.videoVO.hdAdaptive)
+            if (true == this.videoVO.hdAdaptive)
             {
                 this.nsHD.manualSwitchMode = false;
                 this.startBitrateSetted = true;
@@ -475,21 +427,21 @@ package de.axelspringer.videoplayer.controller
             }
             Log.error(msg, Const.ERROR_TYPE_NETWORK);
 
-            this.playing = false;
+            this.isPlaying = false;
             this.videoStopped = true;
         }
 
         protected function onNetConnectionFail():void {
             // connection was refused, probably bad parsing - retry if possible
             this.streamConnects++;
-            this.playStream();
+            this.reparseUrl();
         }
 
         protected function onNetConnectionRefused():void {
             // no, we really can't play this - stop trying
             Log.info(this + " onNetConnectionRefused");
 
-            this.playing = false;
+            this.isPlaying = false;
             this.videoStarted = false;
         }
 
@@ -510,7 +462,7 @@ package de.axelspringer.videoplayer.controller
                         {
                             this.videoUrl = e.info.ex.redirect + "/" + this.videoFile;
                             this.streamConnects = 1;
-                            setTimeout(playStream, 100);
+                            setTimeout(reparseUrl, 100);
                             return;
                         }
                     }
@@ -523,6 +475,21 @@ package de.axelspringer.videoplayer.controller
                     Log.error(e.info.code, Const.ERROR_TYPE_NETWORK);
                     setTimeout(onNetConnectionFail, 100);
                     break;
+                }
+            }
+        }
+
+        protected function reparseUrl():void {
+            if (this.parseStreamUrl())
+            {
+                ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
+                if (this.nc.connected && this.nc.uri == this.videoServer)
+                {
+                    redirectConnection();
+                }
+                else
+                {
+                    this.nc.connect(this.videoServer);
                 }
             }
         }
@@ -584,7 +551,7 @@ package de.axelspringer.videoplayer.controller
         }
 
         protected function onRedirectIOError(event:IOErrorEvent):void {
-            Log.error(Const.ERROR_REDIRECT  + event.type, Const.ERROR_TYPE_NETWORK);
+            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
             //this.onHDNetConnectionConnect();
         }
 
@@ -595,7 +562,7 @@ package de.axelspringer.videoplayer.controller
             if (event.currentTarget.data as XML)
             {
                 Log.info("redirect complete! but its an XML and no URL " + this.videoFile);
-                this.playing = false;
+                this.isPlaying = false;
                 this.videoStopped = true;
             }
             else
@@ -637,7 +604,7 @@ package de.axelspringer.videoplayer.controller
                     }
                     else
                     {
-                        this.playing = false;
+                        this.isPlaying = false;
                         //this.videoStarted=false;
                         this.videoStopped = true;
                     }
@@ -717,13 +684,13 @@ package de.axelspringer.videoplayer.controller
                         }
                         else
                         {
-                            this.playing = false;
+                            this.isPlaying = false;
                             this.videoStopped = true;
                         }
                     }
                     else
                     {
-                        this.playing = false;
+                        this.isPlaying = false;
                         this.videoStopped = true;
                     }
                     break;
@@ -760,7 +727,6 @@ package de.axelspringer.videoplayer.controller
                 case "NetStream.Play.Stop":
                 {
                     this.videoStopped = true;
-                    onFinishPlay();
                     break;
                 }
                 case "NetStream.Play.UnpublishNotify":
@@ -915,7 +881,7 @@ package de.axelspringer.videoplayer.controller
 
         protected function onError(e:Event):void {
             // TODO : playing anhalten !!!
-            this.playing = false;
+            this.isPlaying = false;
             this.videoStarted = false;
             var msg:String = e.type + ": " + e;
             Log.error(msg, Const.ERROR_TYPE_NETWORK);
@@ -923,7 +889,7 @@ package de.axelspringer.videoplayer.controller
 
         protected function onVideoEnterFrame(e:Event):void {
 
-            if (this.playing)
+            if (this.isPlaying)
             {
                 this.playtime = -1;
                 if (this.hdContent == false)
@@ -955,10 +921,11 @@ package de.axelspringer.videoplayer.controller
                         this.playtime = this.nsHD.time + ( this.videoVO.duration - this.nsHD.duration );
                     }
                 }
+
                 ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, this.playtime);
             }
 
-            if (!this.videoIsStream && this.videoLoaded < 1)
+            if (this.videoLoaded < 1 && !this.isRTMP)
             {
                 if (this.hdContent == false)
                 {
@@ -966,11 +933,14 @@ package de.axelspringer.videoplayer.controller
                 }
                 else if (this.nsHD)
                 {
-                    this.videoLoaded = this.nsHD.bytesLoaded / this.nsHD.bytesTotal;
-                    if (this.nsHD.bytesTotal == 0) this.videoLoaded = 0;
+
+                    if (this.nsHD.bytesTotal == 0) {
+                        this.videoLoaded = nsHD.duration > 0 ? (nsHD.time + nsHD.bufferLength)/nsHD.duration : 0;
+                    } else {
+                        this.videoLoaded = this.nsHD.bytesLoaded / this.nsHD.bytesTotal;
+                    }
                 }
                 ExternalController.dispatch(ExternalController.EVENT_PROGRESS, this.videoLoaded);
-
             }
         }
 
@@ -983,10 +953,17 @@ package de.axelspringer.videoplayer.controller
 
 
         protected function checkEndOfVideo(event:TimerEvent):void {
-            var currentVideoTime:Number = this.hdContent == false ? this.ns.time : this.nsHD.time;
+            var currentVideoTime:Number = -1;
+            if (this.hdContent && this.nsHD)
+            {
+                currentVideoTime = this.nsHD.time;
+            } else if (!this.hdContent && this.ns)
+            {
+                currentVideoTime = this.ns.time;
+            }
             var timeHasntChanged:Boolean = (currentVideoTime == this.previousVideoTime);
 
-            if (this.videoStopped == true && this.videoBufferEmptyStatus != true && this.videoBufferFlushStatus == true && this.playing == true && timeHasntChanged == true)
+            if (this.videoStopped == true && this.videoBufferEmptyStatus != true && this.videoBufferFlushStatus == true && this.isPlaying == true && timeHasntChanged == true)
             {
                 this.videoStopped = false;
                 this.videoBufferEmptyStatus = false;
@@ -1014,7 +991,7 @@ package de.axelspringer.videoplayer.controller
             ExternalController.dispatch(ExternalController.EVENT_ENDED);
 
             // live player: let akamaiController finish
-            if (Const.isStreamPlayer || Const.isMoviePlayer)
+            if (this.isRTMP)
             {
                 this.akamaiController.finishPlay();
                 return;
@@ -1029,7 +1006,7 @@ package de.axelspringer.videoplayer.controller
                 if (this.nsHD != null) this.nsHD.pause();
             }
 
-            this.playing = false;
+            this.isPlaying = false;
             this.videoStarted = false;
 
             if (this.videoVO.autorepeat)
@@ -1044,38 +1021,29 @@ package de.axelspringer.videoplayer.controller
          */
         protected function setCurrentTime(time:Number):void {
             Log.info(" onProgressChange - seekPoint: " + time);
-            if (Const.isMoviePlayer || Const.isStreamPlayer)
+            if (this.hdContent == false)
             {
-                this.akamaiController.onProgressChange(time);
+                if (this.ns != null && (time <= this.videoLoaded * this.duration))
+                {
+                    // set lower buffer time to enable fast video start after seeking
+                    this.ns.bufferTime = Const.buffertimeMinimum;
+
+                    Log.info(this + " set buffertime to " + this.ns.bufferTime);
+
+                    this.ns.seek(time);
+                }
             }
             else
             {
-                if (this.hdContent == false)
+                if (this.nsHD != null)
                 {
-                    if (this.ns != null && (this.videoIsStream || time <= this.videoLoaded * this.duration))
-                    {
-                        // set lower buffer time to enable fast video start after seeking
-                        this.ns.bufferTime = Const.buffertimeMinimum;
+                    var newHDTime:Number = time * this.duration;
 
-                        Log.info(this + " set buffertime to " + this.ns.bufferTime);
-
-                        this.ns.seek(time);
-                    }
-                }
-                else
-                {
-                    if (this.nsHD != null)
-                    {
-                        var newHDTime:Number = time * this.duration;
-
-                        this.savedPosition = newHDTime;
-                        this.offsetVideoTime = 0;
-                        this.nsHD.seek(newHDTime + (this.nsHD.duration - this.videoVO.duration));
-                    }
+                    this.savedPosition = newHDTime;
+                    this.offsetVideoTime = 0;
+                    this.nsHD.seek(newHDTime + (this.nsHD.duration - this.videoVO.duration));
                 }
             }
-
-
         }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1087,7 +1055,7 @@ package de.axelspringer.videoplayer.controller
              * rtmp://cp34973.live.edgefcs.net/live/Flash_Live_Benchmark@632
              * rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/ovp/content/test/video/spacealonehd_sounas_640_300.mp4
              * rtmp://pssimn24livefs.fplive.net/pssimn24live-live/n24livestream1/n24livestream1
-             *
+             * rtmp://pssimn24livefs.fplive.net/pssimn24live-live/stream1
              */
 
             Log.info(this + " parseStreamUrl - try #" + this.streamConnects);
@@ -1097,6 +1065,8 @@ package de.axelspringer.videoplayer.controller
             this.videoServer = this.videoUrl.substring(0, x + 2); // omit the last /, it gets added in the loop
             this.videoFile = "";
             var urlParts:Array = this.videoUrl.substring(x + 3).split("/");
+
+            //var meinServer:String = URLUtil.getServerNameWithPort(this.videoUrl);
 
             if (this.streamConnects < urlParts.length)
             {
@@ -1108,6 +1078,7 @@ package de.axelspringer.videoplayer.controller
                     var slash:int = this.videoUrl.lastIndexOf("/", points);
                     this.videoServer = this.videoUrl.substring(0, slash);
                     this.videoFile = this.videoUrl.substring(slash + 1);
+
                 }
                 // go backwards through url and try every server / file combination
                 else
@@ -1143,43 +1114,10 @@ package de.axelspringer.videoplayer.controller
             return result;
         }
 
-        protected function set currentClip(videoVO:VideoVO):void {
-            this.duration = videoVO.duration;
-
-            //HDNetwork content
-            if (videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1)
-            {
-                this.hdContent = true;
-                this.videoUrl = videoVO.videoUrl;
-                this.videoFile = videoVO.videoUrl;
-            }
-            else
-            {
-                this.hdContent = false;
-                // streaming
-                if (videoVO.videoUrl.substr(0, 4) == "rtmp")
-                {
-                    this.videoUrl = videoVO.videoUrl;
-                    this.videoIsStream = true;
-                    this.videoServer = "";
-                    this.videoFile = "";
-                }
-                // progressive
-                else
-                {
-                    this.videoIsStream = false;
-                    this.videoServer = null;
-                    this.videoUrl = videoVO.videoUrl;
-                    this.videoFile = this.videoUrl;
-                }
-
-            }
-        }
-
         // checks if we have a stream and no duration -> standard livestream (no akamai)
-        protected function get isLivestream():Boolean {
-            return (this.videoIsStream && ( this.duration == -1 || this.duration == 1 || this.duration == 1000 ));
-        }
+        /* protected function get isLivestream():Boolean {
+         return (this.videoIsStream && ( this.duration == -1 || this.duration == 1 || this.duration == 1000 ));
+         }*/
 
         /********************************************************************************************************
          * EXTERNAL CALLBACKS
@@ -1216,32 +1154,44 @@ package de.axelspringer.videoplayer.controller
         public function currentTime(value:Number = NaN):Number {
             if (!isNaN(value))
             {
-                this.setCurrentTime(value);
+                if (this.isRTMP)
+                {
+                    this.akamaiController.setCurrentTime(value);
+                } else {
+                    this.setCurrentTime(value);
+                }
             }
 
-            return this.playtime
+            return this.isRTMP ? this.akamaiController.getCurrentTime() : this.playtime;
         }
 
         public function getDuration():Number {
-            return this.duration
+            return this.isRTMP ? this.akamaiController.duration : this.duration
         }
 
         public function getBufferTime():Number {
             var bufferTime:Number = 0;
-            if (!hdContent)
-            {
-                if (ns) bufferTime = this.playtime + ns.bufferLength;
+            if (this.isRTMP) {
+                bufferTime = akamaiController.getBufferTime();
+            } else {
+                if (!hdContent)
+                {
+                    if (ns) bufferTime = this.playtime + ns.bufferLength;
+                }
+                else if (nsHD)
+                {
+                    bufferTime = this.playtime + nsHD.bufferLength;
+                }
             }
-            else if (nsHD)
-            {
-                bufferTime = this.playtime + nsHD.bufferLength;
-            }
+
             return bufferTime
         }
 
         public function enableHD(value:String):void {
-            this.videoVO.startHDQuality = value != "false";
-            this.setHDBitrate();
+            if (!this.isRTMP) {
+                this.videoVO.startHDQuality = value != "false";
+                this.setHDBitrate();
+            }
         }
 
         protected function emptyCallback(...args):void {
@@ -1250,7 +1200,7 @@ package de.axelspringer.videoplayer.controller
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Akamai HD Module only
+//  HD Module only
 ////////////////////////////////////////////////////////////////////////////////////////////
         public function setHDBitrate():void {
             if (this.nsHD == null) return;
@@ -1314,24 +1264,18 @@ package de.axelspringer.videoplayer.controller
         }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// movieplayer only
+//              RTMP with AKAMAI only
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-        /**
-         * movieplayer only
-         */
-        public function setMovie(filmVO:FilmVO):void {
-            this.filmVO = filmVO;
-
-            this.videoVO = new VideoVO();
-            this.videoVO.videoUrl = filmVO.streamUrl;
-            this.videoVO.duration = filmVO.duration;
-            this.videoVO.autoplay = true;
+        public function setAkamaiStream():void {
 
             // controller for akamai streams
-            this.akamaiController = new AkamaiController(this.playerView); // , this.controlsView
-            this.akamaiController.setMovie(filmVO);
-            this.akamaiController.setVolume(this.soundTransform.volume);
+            if (!this.akamaiController)
+            {
+                this.akamaiController = new AkamaiController(this.playerView, this.soundTransform);
+            }
+            this.akamaiController.setStreamUrl(videoVO.videoUrl);
+            //this.akamaiController.setVolume(this.soundTransform.volume);
         }
 
     }
