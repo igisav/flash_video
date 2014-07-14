@@ -49,7 +49,7 @@ package de.axelspringer.videoplayer.controller
         private static var lastProgressTime:int = 0;
         private static var lastTimeUpdateTime:int = 0;
 
-        public static function init(playerController:PlayerController, jsCallback:String):Error
+        public static function init(main:MainController, jsCallback:String):Error
         {
             jsEventCallback = jsCallback;
 
@@ -57,7 +57,7 @@ package de.axelspringer.videoplayer.controller
             {
                 try
                 {
-                    bind(playerController);
+                    bind(main);
                 }
                 catch(e:Error)
                 {
@@ -105,17 +105,17 @@ package de.axelspringer.videoplayer.controller
             ExternalInterface.call(jsEventCallback, msg);
         }
 
-        private static function bind(playerController:PlayerController):void {
-            ExternalInterface.addCallback(LOAD, playerController.loadURL);
-            ExternalInterface.addCallback(PLAY, playerController.play);
-            ExternalInterface.addCallback(PAUSE, playerController.pause);
-            ExternalInterface.addCallback(VOLUME, playerController.volume);
-            ExternalInterface.addCallback(MUTED, playerController.mute);
-            ExternalInterface.addCallback(CURRENT_TIME, playerController.currentTime);
-            ExternalInterface.addCallback(DURATION, playerController.getDuration);
-            ExternalInterface.addCallback(BUFFERED, playerController.getBufferTime);
-            ExternalInterface.addCallback(ENABLE_HD, playerController.enableHD);
-            ExternalInterface.addCallback(DESTROY, playerController.destroy);
+        private static function bind(main:MainController):void {
+            ExternalInterface.addCallback(LOAD, main.loadURL);
+            ExternalInterface.addCallback(PLAY, main.play);
+            ExternalInterface.addCallback(PAUSE, main.pause);
+            ExternalInterface.addCallback(VOLUME, main.volume);
+            ExternalInterface.addCallback(MUTED, main.muted);
+            ExternalInterface.addCallback(CURRENT_TIME, main.currentTime);
+            ExternalInterface.addCallback(DURATION, main.getDuration);
+            ExternalInterface.addCallback(BUFFERED, main.getBufferTime);
+            ExternalInterface.addCallback(ENABLE_HD, main.enableHD);
+            ExternalInterface.addCallback(DESTROY, main.destroy);
         }
     }
 }

@@ -16,7 +16,7 @@ package de.axelspringer.videoplayer.controller
     import org.openvideoplayer.events.OvpError;
     import org.openvideoplayer.events.OvpEvent;
 
-    public class AkamaiController
+    public class AkamaiController implements IVideoController
     {
         // gui
         protected var playerView:PlayerView;
@@ -24,7 +24,7 @@ package de.axelspringer.videoplayer.controller
         // stream
         protected var connection:AkamaiConnection;
         protected var netstream:AkamaiDynamicNetStream;
-        protected var soundTransform:SoundTransform;
+        protected var soundTransform:SoundTransform = new SoundTransform();
 
         // data
         protected var streamUrl:String;
@@ -42,17 +42,21 @@ package de.axelspringer.videoplayer.controller
         protected var videoBufferFlushStatus:Boolean;
         protected var videoStarted:Boolean;
         protected var videoStopped:Boolean;
-        public var duration:Number = 0;
+        private   var duration:Number = 0;
         protected var doRewind:Boolean = false;
         protected var errorOccured:Boolean = false;
+        private var lastVolumeValue:Number = 0;
 
-        public function AkamaiController(playerView:PlayerView, sound:SoundTransform) {
+        public function AkamaiController(playerView:PlayerView) {
             this.playerView = playerView;
-            this.soundTransform = sound;
         }
 
-        public function setStreamUrl(streamUrl:String):void {
-            trace(this + "setStreamUrl: " + streamUrl);
+        /********************************************************************************************************
+         * EXTERNAL CALLBACKS
+         *******************************************************************************************************/
+
+        public function loadURL(streamUrl:String):void {
+            trace(this + "loadURL: " + streamUrl);
 
             this.resetStatus();
 
@@ -92,13 +96,30 @@ package de.axelspringer.videoplayer.controller
             }
         }
 
-        public function setVolume(volume:Number):void {
-            this.soundTransform.volume = volume;
-
-            if (this.netstream != null)
+        public function volume(value:Number = NaN):Number {
+            if (!isNaN(value))
             {
-                this.netstream.soundTransform = this.soundTransform;
+                lastVolumeValue = soundTransform.volume;
+                this.soundTransform.volume = value;
+
+                if (this.netstream != null)
+                {
+                    this.netstream.soundTransform = this.soundTransform;
+                }
             }
+
+            return this.soundTransform ? this.soundTransform.volume : 0
+        }
+
+        // TODO: test muted stream
+        public function muted(value:String = ""):Boolean {
+            if (value != "")
+            {
+                var muteValue:Number = value == "false" ? lastVolumeValue : 0;
+                volume(muteValue);
+            }
+
+            return this.soundTransform.volume == 0
         }
 
         public function pause():void {
@@ -111,52 +132,34 @@ package de.axelspringer.videoplayer.controller
             }
         }
 
-        public function resume():void {
-            this.paused = false;
-
-            // set lower buffer here to enable fast video start after pause
-            this.netstream.bufferTime = Const.buffertimeMinimum;
-
-            trace(this + " set buffertime to " + this.netstream.bufferTime);
-
-            this.netstream.resume();
-        }
-
-        public function finishPlay():void {
-            trace(this + " finishPlay");
-
-            // minimize in case of fullscreen
-            if (this.playerView.display.stage.displayState == StageDisplayState.FULL_SCREEN)
-            {
-                this.playerView.display.stage.dispatchEvent(new Event(Event.RESIZE));
-            }
-
-            this.rewindStream(0);
-        }
-
-        public function setCurrentTime(seekPoint:Number):void {
-            trace(this + " onProgressChange - seekPoint: " + seekPoint);
+        public function currentTime(seekPoint:Number  = NaN):Number {
 
             if (this.netstream != null && !isNaN(seekPoint) && duration > 0)
             {
+                Log.info(this + "seek to the point: " + seekPoint);
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
                 var newTime:Number = seekPoint * this.duration;
 
                 // set lower buffer time to enable fast video start after seeking
                 this.netstream.bufferTime = Const.buffertimeMinimum;
 
-                trace(this + " set buffertime to " + this.netstream.bufferTime);
-
                 this.netstream.seek(newTime);
             }
+
+            return this.netstream ? this.netstream.time : 0;
         }
 
-        public function getCurrentTime():Number {
-            return this.netstream ? this.netstream.time : 0;
+
+        public function getDuration():Number {
+            return duration
         }
 
         public function getBufferTime():Number {
             return this.netstream ? this.netstream.time + this.netstream.bufferTime : 0;
+        }
+
+        public function enableHD(value:String = ""):void {
+            // nothing here. implementation of interface
         }
 
         public function destroy():void
@@ -164,7 +167,9 @@ package de.axelspringer.videoplayer.controller
             this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
             this.playerView.display.attachNetStream(null);
 
-            Log.info("Netstream von Akamai wird gelöscht.")
+            videoStarted = false;
+
+            Log.info("Netstream von Akamai wird gestoppt.")
 
             if (netstream)
             {
@@ -176,13 +181,28 @@ package de.axelspringer.videoplayer.controller
                 this.netstream = null;
             }
 
-            if (connection)
+            /*if (connection)
             {
                 this.connection.removeEventListener(NetStatusEvent.NET_STATUS, onConnectionStatus);
                 this.connection.removeEventListener(OvpEvent.ERROR, onError);
                 this.connection.close();
                 this.connection = null;
-            }
+            }*/
+        }
+
+        /********************************************************************************************************
+         * END OF EXTERNAL CALLBACKS
+         *******************************************************************************************************/
+
+        private function resume():void {
+            this.paused = false;
+
+            // set lower buffer here to enable fast video start after pause
+            this.netstream.bufferTime = Const.buffertimeMinimum;
+
+            trace(this + " set buffertime to " + this.netstream.bufferTime);
+
+            this.netstream.resume();
         }
 
         /**
@@ -394,6 +414,13 @@ package de.axelspringer.videoplayer.controller
 
         protected function onStreamFinished(e:Event = null):void {
             trace(this + " onStreamFinished");
+            // minimize in case of fullscreen
+            if (this.playerView.display.stage.displayState == StageDisplayState.FULL_SCREEN)
+            {
+                this.playerView.display.stage.dispatchEvent(new Event(Event.RESIZE));
+            }
+
+            this.rewindStream(0);
 
             this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
 
