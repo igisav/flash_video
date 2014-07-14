@@ -105,6 +105,7 @@ package de.axelspringer.videoplayer.controller
                 if (this.netstream != null)
                 {
                     this.netstream.soundTransform = this.soundTransform;
+                    ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE);
                 }
             }
 
@@ -265,8 +266,9 @@ package de.axelspringer.videoplayer.controller
             this.netstream.play(this.streamName, 0);
         }
 
-        protected function onMetaData(e:OvpEvent):void {
-            trace(this + " onMetaData");
+        protected function onMetaData(e:OvpEvent):void
+        {
+            ExternalController.dispatch(ExternalController.EVENT_LOADED_METADATA, e.data);
 
             // check ratio
             var ratio:Number = 16 / 9;
@@ -410,6 +412,7 @@ package de.axelspringer.videoplayer.controller
             }
 
             this.isPlaying = true;
+            ExternalController.dispatch(ExternalController.EVENT_PLAYING);
         }
 
         protected function onStreamFinished(e:Event = null):void {

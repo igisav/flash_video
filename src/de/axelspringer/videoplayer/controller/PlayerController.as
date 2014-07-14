@@ -123,7 +123,7 @@ package de.axelspringer.videoplayer.controller
             this.videoStopped = true;
         }
 
-        public function setVolume(volume:Number):void {
+        private function setVolume(volume:Number):void {
             if (volume <= 0)
             {
                 this.savedVolume = this.soundTransform.volume;
@@ -144,6 +144,7 @@ package de.axelspringer.videoplayer.controller
                 if (this.ns != null)
                 {
                     this.ns.soundTransform = this.soundTransform;
+                    ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE);
                 }
             }
             else
@@ -151,15 +152,14 @@ package de.axelspringer.videoplayer.controller
                 if (this.nsHD != null)
                 {
                     this.nsHD.soundTransform = this.soundTransform;
+                    ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE);
                 }
             }
-
-            ExternalController.dispatch(ExternalController.EVENT_VOLUME_CHANGE);
         }
 
         public function pause():void {
             this.videoTimer.stop();
-            ExternalController.dispatch(ExternalController.EVENT_PAUSE);
+
             if (this.videoStarted)
             {
                 if (this.hdContent == false)
@@ -219,7 +219,6 @@ package de.axelspringer.videoplayer.controller
             {
                 return;
             }
-            ExternalController.dispatch(ExternalController.EVENT_PLAY);
 
             if (this.videoStarted)
             {

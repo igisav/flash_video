@@ -64,6 +64,7 @@ package de.axelspringer.videoplayer.controller
         public function play():void
         {
             if (controller) {
+                ExternalController.dispatch(ExternalController.EVENT_PLAY);
                 controller.play();
             }
         }
@@ -71,6 +72,7 @@ package de.axelspringer.videoplayer.controller
         public function pause():void
         {
             if (controller) {
+                ExternalController.dispatch(ExternalController.EVENT_PAUSE);
                 controller.pause();
             }
         }
