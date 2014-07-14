@@ -15,7 +15,6 @@ package
     import flash.ui.ContextMenuItem;
 
     // TODO: Bug: Öffnen von lokale html-Seite mit eingebetten Flash (nicht vom Server) wirft Fehler in ExternalController
-    // TODO: Umschalten von Videos soll dynamisch sein (also, nicht durch ersetzen von <object> mit swfObject),
 
     public class VideoplayerMain extends Sprite
     {
@@ -43,12 +42,15 @@ package
 
         protected function addedToStage(e:Event):void {
             this.removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+
             this.init();
         }
 
         protected function init():void {
             this.stage.scaleMode = StageScaleMode.NO_SCALE;
             this.stage.align = StageAlign.TOP_LEFT;
+            this.stage.addEventListener(Event.RESIZE, onStageResize);
+            this.onStageResize();
 
             this.mainController = new MainController(this);
             this.mainController.init(this.loaderInfo.parameters);
@@ -58,6 +60,11 @@ package
             menu.hideBuiltInItems();
             menu.customItems.push(new ContextMenuItem(Const.playerName + " " + Const.versionNumber, true, false));
             this.contextMenu = menu;
+        }
+
+        protected function onStageResize(e:Event = null):void {
+            Const.width = this.stage.stageWidth;
+            Const.height = this.stage.stageHeight;
         }
 
         private static function uncaughtErrorHandler(event:UncaughtErrorEvent):void {

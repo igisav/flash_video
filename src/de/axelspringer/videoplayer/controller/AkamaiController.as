@@ -82,7 +82,7 @@ package de.axelspringer.videoplayer.controller
                 this.connection.addEventListener(NetStatusEvent.NET_STATUS, onConnectionStatus, false, 0, true);
                 this.connection.addEventListener(OvpEvent.ERROR, onError, false, 0, true);
                 this.connection.requestedPort = "any";
-                //this.connection.requestedProtocol = "rtmpe,rtmpte";
+                this.connection.requestedProtocol = "rtmpe,rtmpte";
 
                 if (this.streamParameters != "")
                 {
