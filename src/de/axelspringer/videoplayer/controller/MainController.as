@@ -3,16 +3,13 @@ package de.axelspringer.videoplayer.controller
     import de.axelspringer.videoplayer.view.PlayerView;
 
     import flash.display.Sprite;
-    import flash.text.TextField;
 
     public class MainController
     {
 
         private var controller:IVideoController;
 
-        // controller
-        protected var playerController:PlayerController;
-        protected var view:PlayerView;
+        private var view:PlayerView;
 
         public function MainController(stage:Sprite) {
             this.view = new PlayerView(stage);

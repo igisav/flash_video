@@ -169,7 +169,7 @@ package de.axelspringer.videoplayer.controller
 
             videoStarted = false;
 
-            Log.info("Netstream von Akamai wird gestoppt.")
+            Log.info("Netstream von Akamai wird gestoppt.");
 
             if (netstream)
             {
