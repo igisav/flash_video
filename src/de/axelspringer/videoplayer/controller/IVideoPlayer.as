@@ -1,6 +1,6 @@
 package de.axelspringer.videoplayer.controller
 {
-    public interface IVideoController
+    public interface IVideoPlayer
     {
         function loadURL(url:String):void;
         function play():void;

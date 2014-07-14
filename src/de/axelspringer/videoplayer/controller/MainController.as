@@ -7,7 +7,7 @@ package de.axelspringer.videoplayer.controller
     public class MainController
     {
 
-        private var controller:IVideoController;
+        private var player:IVideoPlayer;
 
         private var view:PlayerView;
 
@@ -34,16 +34,16 @@ package de.axelspringer.videoplayer.controller
         {
             if (akamai)
             {
-                if (!(controller && controller is AkamaiController))
+                if (!(player && player is AkamaiPlayer))
                 {
-                    controller = new AkamaiController(view);
+                    player = new AkamaiPlayer(view);
                 }
             }
             else
             {
-                if (!(controller && controller is PlayerController))
+                if (!(player && player is NormalPlayer))
                 {
-                    controller = new PlayerController(view);
+                    player = new NormalPlayer(view);
                 }
             }
         }
@@ -58,61 +58,61 @@ package de.axelspringer.videoplayer.controller
             var isRTMP:Boolean = url.substr(0, 4) == "rtmp";
             createController(isRTMP);
 
-            controller.loadURL(url);
+            player.loadURL(url);
         }
 
         public function play():void
         {
-            if (controller) {
+            if (player) {
                 ExternalController.dispatch(ExternalController.EVENT_PLAY);
-                controller.play();
+                player.play();
             }
         }
 
         public function pause():void
         {
-            if (controller) {
+            if (player) {
                 ExternalController.dispatch(ExternalController.EVENT_PAUSE);
-                controller.pause();
+                player.pause();
             }
         }
 
         public function volume(value:Number = NaN):Number
         {
-            return controller ? controller.volume(value) : 0;
+            return player ? player.volume(value) : 0;
         }
 
         public function muted(value:String = ""):Boolean
         {
-            return controller ? controller.muted(value) : false;
+            return player ? player.muted(value) : false;
         }
 
         public function currentTime(value:Number = NaN):Number
         {
-            return controller ? controller.currentTime(value) : 0;
+            return player ? player.currentTime(value) : 0;
         }
 
         public function getDuration():Number
         {
-            return controller ? controller.getDuration() : 0;
+            return player ? player.getDuration() : 0;
         }
 
         public function getBufferTime():Number
         {
-            return controller ? controller.getBufferTime() : 0;
+            return player ? player.getBufferTime() : 0;
         }
 
         public function destroy():void
         {
-            if (controller) {
-                controller.destroy();
+            if (player) {
+                player.destroy();
             }
         }
 
         public function enableHD(value:String = ""):void
         {
-            if (controller) {
-                controller.enableHD(value);
+            if (player) {
+                player.enableHD(value);
             }
         }
 
