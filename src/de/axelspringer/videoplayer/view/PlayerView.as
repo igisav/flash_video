@@ -10,7 +10,7 @@ package de.axelspringer.videoplayer.view
 
     public class PlayerView extends EventDispatcher
     {
-        protected var stage:Sprite;
+        public var stage:Sprite;
         public var display:Video;
 
         protected var initWidth:Number;

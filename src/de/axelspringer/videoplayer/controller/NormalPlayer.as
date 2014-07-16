@@ -25,8 +25,14 @@ package de.axelspringer.videoplayer.controller
     import flash.utils.Timer;
     import flash.utils.setTimeout;
 
+
+
     public class NormalPlayer implements IVideoPlayer
     {
+        /* TODO: for implementing of Akamai HDNetStream (Format SMIL) use com.akamai.hd.HDNetStream
+        *  see http://kb.telestream.net/@api/deki/files/2460/AkamaiHD_US_Live.pdf  page 48)
+        */
+
         private static const TIMER_DELAY:Number = 500;
 
         // gui
@@ -1040,7 +1046,7 @@ package de.axelspringer.videoplayer.controller
             this.videoServer = "";
 
             //HDNetwork content
-            this.hdContent = (url.indexOf(".f4m") != -1 || url.indexOf(".smil") != -1);
+            this.hdContent = (url.indexOf(".f4m") != -1 || url.indexOf("smil") != -1);
 
             this.setVolume(0.5);
             this.playerView.display.clear();

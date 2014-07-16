@@ -39,7 +39,6 @@ package
             }
         }
 
-
         protected function addedToStage(e:Event):void {
             this.removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 

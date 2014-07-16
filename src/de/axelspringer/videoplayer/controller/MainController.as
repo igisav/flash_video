@@ -32,6 +32,12 @@ package de.axelspringer.videoplayer.controller
 
         protected function createController(akamai:Boolean):void
         {
+           /* if (!(player && player is OSMFPlayer))
+            {
+                player = new OSMFPlayer(view.stage);
+            }*/
+
+
             if (akamai)
             {
                 if (!(player && player is AkamaiPlayer))
@@ -57,8 +63,12 @@ package de.axelspringer.videoplayer.controller
 
             var isRTMP:Boolean = url.substr(0, 4) == "rtmp";
             createController(isRTMP);
+            try {
+                player.loadURL(url);
+            } catch (e:Error) {
+                trace(e);
+            }
 
-            player.loadURL(url);
         }
 
         public function play():void
