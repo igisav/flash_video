@@ -1,3 +1,8 @@
+/*
+ @author: Igor Savchenko
+ Axel Springer ideAS Engineering GmbH
+ */
+
 package de.axelspringer.videoplayer.controller
 {
     import flash.display.Sprite;
@@ -31,10 +36,12 @@ package de.axelspringer.videoplayer.controller
     import org.osmf.traits.PlayTrait;
     import org.osmf.utils.Version;
 
+    /* This class is for testing of OSMF and Akamai Plugin.
+     Not finished right now
+     */
     public class OSMFPlayer implements IVideoPlayer
     {
         //private var view:MediaPlayerSprite;
-        // stream
         protected var soundTransform:SoundTransform = new SoundTransform();
 
         private var lastVolumeValue:Number = 0;
@@ -44,23 +51,17 @@ package de.axelspringer.videoplayer.controller
         private var mediaPlayer:MediaPlayer = new MediaPlayer();
         private var mediaFactory:MediaFactory = new DefaultMediaFactory();
 
-        public function OSMFPlayer(stage:Sprite)
-        {
+        public function OSMFPlayer(stage:Sprite) {
             trace("OSMF Version", Version.version, Version.buildNumber);
 
             this.stage = stage;
 
             /*var s:Sprite = new Sprite();
-            s.graphics.beginFill(0xf00);
-            s.graphics.drawRect(0,0,100,100);
-            s.graphics.endFill();
-            stage.addChild(s);*/
-
+             s.graphics.beginFill(0xf00);
+             s.graphics.drawRect(0,0,100,100);
+             s.graphics.endFill();
+             stage.addChild(s);*/
         }
-
-        /********************************************************************************************************
-         * EXTERNAL CALLBACKS
-         *******************************************************************************************************/
 
         public function loadURL(streamUrl:String):void {
             trace(this + "loadURL: " + streamUrl);
@@ -91,7 +92,7 @@ package de.axelspringer.videoplayer.controller
             // var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
 
             /*loadPlugin("http://players.edgesuite.net/flash/plugins/osmf/advanced-streaming-plugin/fp10.1/current/AkamaiAdvancedStreamingPlugin.swf");
-            return;*/
+             return;*/
 
             /*var sprite:MediaPlayerSprite = new MediaPlayerSprite();
 
@@ -134,8 +135,7 @@ package de.axelspringer.videoplayer.controller
 
         private static const AKAMAI_BASIC_STREAMING_PLUGIN_INFO:String = "com.akamai.osmf.AkamaiBasicStreamingPluginInfo";
 
-        private function loadAkamai():void
-        {
+        private function loadAkamai():void {
             //var s:com.akamai.osmf.AkamaiBasicStreamingPluginInfo = new AkamaiBasicStreamingPluginInfo();
             mediaFactory.addEventListener(MediaFactoryEvent.PLUGIN_LOAD, onPluginLoaded);
 
@@ -145,8 +145,7 @@ package de.axelspringer.videoplayer.controller
             trace("try to load");
         }
 
-        private function onPluginLoaded(event:MediaFactoryEvent):void
-        {
+        private function onPluginLoaded(event:MediaFactoryEvent):void {
             trace("plugin is loaded");
             var url:String = "http://hds.ak.token.bild.de/31063808,delivery=hds.f4m";
             var urlResource:URLResource = new URLResource(url);
@@ -156,8 +155,7 @@ package de.axelspringer.videoplayer.controller
             loadTrait.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onElementLoadStateChange);
             loadTrait.load();
 
-            function onElementLoadStateChange(event:LoadEvent):void
-            {
+            function onElementLoadStateChange(event:LoadEvent):void {
                 if (event.loadState == LoadState.READY)
                 {
                     var playTrait:PlayTrait = mediaElement.getTrait(MediaTraitType.PLAY) as PlayTrait;
@@ -173,8 +171,7 @@ package de.axelspringer.videoplayer.controller
             }
         }
 
-        public function loadPlugin(source:String):void
-        {
+        public function loadPlugin(source:String):void {
             var pluginResource:MediaResourceBase;
             if (source.substr(0, 4) == "http" ||
                     source.substr(0, 4) == "file")
@@ -192,13 +189,12 @@ package de.axelspringer.videoplayer.controller
             loadPluginFromResource(pluginResource);
         }
 
-        private function loadPluginFromResource(pluginResource:MediaResourceBase):void
-        {
+        private function loadPluginFromResource(pluginResource:MediaResourceBase):void {
             setupListeners();
             mediaFactory.loadPlugin(pluginResource);
-            function setupListeners(add:Boolean=true):void
-            {
-                if (add) {
+            function setupListeners(add:Boolean = true):void {
+                if (add)
+                {
                     mediaFactory.addEventListener(
                             MediaFactoryEvent.PLUGIN_LOAD,
                             onPluginLoad);
@@ -214,14 +210,15 @@ package de.axelspringer.videoplayer.controller
                     mediaFactory.removeEventListener(
                             MediaFactoryEvent.PLUGIN_LOAD_ERROR,
                             onPluginLoadError);
-                } }
-            function onPluginLoad(event:MediaFactoryEvent):void
-            {
+                }
+            }
+
+            function onPluginLoad(event:MediaFactoryEvent):void {
                 trace("plugin loaded successfully.");
                 setupListeners(false);
             }
-            function onPluginLoadError(event:MediaFactoryEvent):void
-            {
+
+            function onPluginLoadError(event:MediaFactoryEvent):void {
                 trace("plugin failed to load.");
                 setupListeners(false);
             }
@@ -231,10 +228,9 @@ package de.axelspringer.videoplayer.controller
             trace("Error:", e.error.detail, e.error.message);
         }
 
-        private function onTimeUpdated(event:TimeEvent):void
-        {
-            trace('time: ' + mediaPlayer.currentTime + ' duration: ' + mediaPlayer.duration + " buffering="+mediaPlayer.buffering
-                    + " buffer="+mediaPlayer.bufferLength);
+        private function onTimeUpdated(event:TimeEvent):void {
+            trace('time: ' + mediaPlayer.currentTime + ' duration: ' + mediaPlayer.duration + " buffering=" + mediaPlayer.buffering
+                    + " buffer=" + mediaPlayer.bufferLength);
         }
 
         /********************************************************************************************************
@@ -266,7 +262,7 @@ package de.axelspringer.videoplayer.controller
         public function pause():void {
         }
 
-        public function currentTime(seekPoint:Number  = NaN):Number {
+        public function currentTime(seekPoint:Number = NaN):Number {
             return 0;
         }
 
@@ -283,14 +279,12 @@ package de.axelspringer.videoplayer.controller
             // nothing here. implementation of interface
         }
 
-        public function destroy():void
-        {
+        public function destroy():void {
         }
 
         /********************************************************************************************************
          * END OF EXTERNAL CALLBACKS
          *******************************************************************************************************/
-
 
 
     }

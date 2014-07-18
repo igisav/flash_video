@@ -1,14 +1,14 @@
 package de.axelspringer.videoplayer.view
 {
-    import de.axelspringer.videoplayer.event.ControlEvent;
-    import de.axelspringer.videoplayer.model.vo.Const;
-    import de.axelspringer.videoplayer.model.vo.FullscreenData;
+    import de.axelspringer.videoplayer.util.Log;
 
     import flash.display.Sprite;
-    import flash.events.EventDispatcher;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
+    import flash.events.Event;
     import flash.media.Video;
 
-    public class PlayerView extends EventDispatcher
+    public class PlayerView
     {
         public var stage:Sprite;
         public var display:Video;
@@ -19,37 +19,28 @@ package de.axelspringer.videoplayer.view
         protected var ratio:Number = 16 / 9;
         protected var currentWidth:Number;
         protected var currentHeight:Number;
-        protected var isFullscreen:Boolean;
-        protected var wasFullscreen:Boolean;
 
         public function PlayerView(stage:Sprite) {
             this.stage = stage;
 
-            this.init();
-        }
-
-        protected function init():void {
             this.display = new Video();
             this.display.smoothing = true;
             this.stage.addChild(this.display);
 
-            resize();
-        }
+            this.stage.stage.scaleMode = StageScaleMode.NO_SCALE;
+            this.stage.stage.align = StageAlign.TOP_LEFT;
+            this.stage.stage.addEventListener(Event.RESIZE, updateDisplaySize);
 
-        public function resize():void {
-            this.setSize();
-            this.setDisplaySizeDefault();
+            initWidth = this.stage.stage.stageWidth;
+            initHeight = this.stage.stage.stageHeight;
+            setDisplaySizeDefault();
         }
 
         public function setDisplaySizeDefault():void {
             this.currentWidth = this.initWidth;
             this.currentHeight = this.initHeight;
 
-            this.isFullscreen = false;
-
             this.updateDisplaySize();
-
-            this.wasFullscreen = false;
         }
 
         public function setVideoRatio(ratio:Number):void {
@@ -58,12 +49,11 @@ package de.axelspringer.videoplayer.view
             this.updateDisplaySize();
         }
 
-        protected function setSize():void {
-            this.initWidth = Const.width;
-            this.initHeight = Const.height;
-        }
 
-        protected function updateDisplaySize():void {
+        protected function updateDisplaySize(e:Event = null):void {
+            currentWidth = this.stage.stage.stageWidth;
+            currentHeight = this.stage.stage.stageHeight;
+
             display.height = this.currentHeight;
             display.width = this.currentHeight * this.ratio;
             if (display.width > this.currentWidth)
@@ -75,8 +65,7 @@ package de.axelspringer.videoplayer.view
             display.x = Math.round(( this.currentWidth - display.width ) / 2);
             display.y = Math.round(( this.currentHeight - display.height ) / 2);
 
-            // notify PlayerController to change size of Ad
-            this.dispatchEvent(new ControlEvent(ControlEvent.RESIZE, new FullscreenData(this.isFullscreen, this.wasFullscreen)));
+            Log.info("Resize: width=" + currentWidth + ", height=" + currentHeight);
         }
 
     }

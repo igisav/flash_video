@@ -1,3 +1,8 @@
+/*
+     @author: Igor Savchenko
+     Axel Springer ideAS Engineering GmbH
+ */
+
 package
 {
     import de.axelspringer.videoplayer.controller.MainController;
@@ -23,7 +28,7 @@ package
         public function VideoplayerMain() {
             Const.versionNumber = "1.0";
 
-            Log.level = Log.TRACE;
+            Log.level = Log.JS_LOGGER;
 
             Security.allowDomain("*");
 
@@ -46,11 +51,6 @@ package
         }
 
         protected function init():void {
-            this.stage.scaleMode = StageScaleMode.NO_SCALE;
-            this.stage.align = StageAlign.TOP_LEFT;
-            this.stage.addEventListener(Event.RESIZE, onStageResize);
-            this.onStageResize();
-
             this.mainController = new MainController(this);
             this.mainController.init(this.loaderInfo.parameters);
 
@@ -59,11 +59,6 @@ package
             menu.hideBuiltInItems();
             menu.customItems.push(new ContextMenuItem(Const.playerName + " " + Const.versionNumber, true, false));
             this.contextMenu = menu;
-        }
-
-        protected function onStageResize(e:Event = null):void {
-            Const.width = this.stage.stageWidth;
-            Const.height = this.stage.stageHeight;
         }
 
         private static function uncaughtErrorHandler(event:UncaughtErrorEvent):void {

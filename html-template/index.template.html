@@ -13,6 +13,12 @@
             #flashContent { display:none; }
             .controls {margin: 20px 0;}
             .number {width: 50px;}
+            #flashWrapper {
+                margin: auto;
+                width: 80%;
+                max-width: 1100px;
+                min-width: 320px;
+            }
         </style>
 
             
@@ -37,7 +43,7 @@
             attributes.align = "middle";
             swfobject.embedSWF(
                     swfSource, "flashContent",
-                    800, 475,
+                    "100%", "100%",
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
@@ -72,36 +78,36 @@
             // currentVideo = "http://multiformatlive-f.akamaihd.net/z/demostream_1@2131/manifest.f4m";
             // currentVideo = "http://zerivodsecure-f.akamaihd.net/z/h264/robinhood/robinhood.smil/manifest.f4m?hdnea=st=1309282760~exp=1409282760~acl=%2f%2a~hmac=b28008e8153033c86ade9c8b65d4885111a5ffab7d1d63ff28ff11080779f03c";
             // geht nicht. Es sollte "Akamai HDN 1 Live-H.264" sein.
-            currentVideo = "http://multiformatlive-f.akamaihd.net/demostream_1_,300~300,800~800,1200~1200,@2131.usmil";
-            currentVideo = "http://mediapm.edgesuite.net/edgeflash/public/debug/assets/smil/respect.smil";
-            currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/smil/elephants_dream.smil";
+            // currentVideo = "http://multiformatlive-f.akamaihd.net/demostream_1_,300~300,800~800,1200~1200,@2131.usmil";
+            // currentVideo = "http://mediapm.edgesuite.net/edgeflash/public/debug/assets/smil/respect.smil";
+            // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/smil/elephants_dream.smil";
             // geht. FLV Progressive
-            currentVideo = "http://mediapm.edgesuite.net/strobe/content/test/AFaerysTale_sylviaApostol_640_500_short.flv";
+            // currentVideo = "http://mediapm.edgesuite.net/strobe/content/test/AFaerysTale_sylviaApostol_640_500_short.flv";
             // geht. FLV Streaming
-            currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mediapm/osmf/content/test/akamai_10_year_f8_512K";
+            // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mediapm/osmf/content/test/akamai_10_year_f8_512K";
             // geht. mp4 progressive
-            currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/spacealonehd_sounas_640_700.mp4";
+            // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/spacealonehd_sounas_640_700.mp4";
             // geht. mp4 stream
-            currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/spacealonehd_sounas_640_700.mp4";
+            // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/spacealonehd_sounas_640_700.mp4";
             // geht. f4m progressive und stream
-            currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/sample1_700kbps.f4v";
-            currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/sample1_700kbps.f4v";
+            // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/sample1_700kbps.f4v";
+            // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/sample1_700kbps.f4v";
             // geht. "mov" streaming und progressive
-            currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/akamai_10_year_500.mov";
+            // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/akamai_10_year_500.mov";
             // geht. Audio streaming
-            currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp3:mediapm/osmf/content/test/train_1500";
+            // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp3:mediapm/osmf/content/test/train_1500";
 
 
             // Bild
             // currentVideo = "http://hds.ak.token.bild.de/31063808,delivery=hds.f4m";
-            // var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
+            var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
 
             window.de.bild.callback = function(msg) {
                 if(msg.type == 'timeupdate' || msg.type == 'progress'){
                     return
                 }
 
-                track("EVENT: " + JSON.stringify(msg));
+                track(msg.type + ": " + JSON.stringify(msg.value));
 
                 if(msg.type == 'initialized'){
                     loadAndPlay(currentVideo);
@@ -198,7 +204,7 @@
                 document.getElementById("videoplayer").destroy();
             }
 
-            function loadVideo(url)
+            /*function loadVideo(url)
             {
                 currentVideo = url;
                 swfobject.embedSWF(
@@ -206,7 +212,7 @@
                         800, 475,
                         swfVersionStr, xiSwfUrlStr,
                         flashvars, params, attributes);
-            }
+            }*/
 
         </script>
     </head>
@@ -217,16 +223,18 @@
              JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
              when JavaScript is disabled.
         -->
-        <div id="flashContent">
-            <p>
-                To view this page ensure that Adobe Flash Player version 
-                ${version_major}.${version_minor}.${version_revision} or greater is installed. 
-            </p>
-            <script type="text/javascript"> 
-                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
-                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
-                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
-            </script> 
+        <div id="flashWrapper">
+            <div id="flashContent">
+                <p>
+                    To view this page ensure that Adobe Flash Player version
+                    ${version_major}.${version_minor}.${version_revision} or greater is installed.
+                </p>
+                <script type="text/javascript">
+                    var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
+                    document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='"
+                            + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" );
+                </script>
+            </div>
         </div>
 
         <div class="controls">

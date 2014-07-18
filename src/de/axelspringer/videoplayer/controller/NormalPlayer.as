@@ -1,8 +1,12 @@
+/*
+ @author: Igor Savchenko
+ Axel Springer ideAS Engineering GmbH
+ */
+
 package de.axelspringer.videoplayer.controller
 {
     import com.akamai.net.f4f.ZStream;
 
-    import de.axelspringer.videoplayer.event.ControlEvent;
     import de.axelspringer.videoplayer.model.vo.Const;
     import de.axelspringer.videoplayer.model.vo.VideoVO;
     import de.axelspringer.videoplayer.util.Log;
@@ -26,12 +30,11 @@ package de.axelspringer.videoplayer.controller
     import flash.utils.setTimeout;
 
 
-
     public class NormalPlayer implements IVideoPlayer
     {
         /* TODO: for implementing of Akamai HDNetStream (Format SMIL) use com.akamai.hd.HDNetStream
-        *  see http://kb.telestream.net/@api/deki/files/2460/AkamaiHD_US_Live.pdf  page 48)
-        */
+         *  see http://kb.telestream.net/@api/deki/files/2460/AkamaiHD_US_Live.pdf  page 48)
+         */
 
         private static const TIMER_DELAY:Number = 500;
 
@@ -113,8 +116,6 @@ package de.axelspringer.videoplayer.controller
 
 
             this.soundTransform = new SoundTransform();
-
-            this.playerView.dispatchEvent(new ControlEvent(ControlEvent.RESIZE));
         }
 
         protected function onReconnectLivestream(event:TimerEvent):void {
@@ -851,9 +852,11 @@ package de.axelspringer.videoplayer.controller
                 else if (this.nsHD)
                 {
 
-                    if (this.nsHD.bytesTotal == 0) {
-                        this.videoLoaded = nsHD.duration > 0 ? (nsHD.time + nsHD.bufferLength)/nsHD.duration : 0;
-                    } else {
+                    if (this.nsHD.bytesTotal == 0)
+                    {
+                        this.videoLoaded = nsHD.duration > 0 ? (nsHD.time + nsHD.bufferLength) / nsHD.duration : 0;
+                    } else
+                    {
                         this.videoLoaded = this.nsHD.bytesLoaded / this.nsHD.bytesTotal;
                     }
                 }
@@ -1106,6 +1109,7 @@ package de.axelspringer.videoplayer.controller
         public function destroy():void {
             Log.info(this + " destroy stream connection");
             this.videoTimer.stop();
+            this.playerView.display.clear();
             this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
             this.playerView.display.attachNetStream(null);
 
@@ -1204,8 +1208,8 @@ package de.axelspringer.videoplayer.controller
          private function setClip(videoVO:VideoVO):void {
          if (!videoVO)
          {
-             Log.error(Const.ERROR_EMPTY_VIDEOCLIP);
-             return;
+         Log.error(Const.ERROR_EMPTY_VIDEOCLIP);
+         return;
          }
          this.videoVO = videoVO;
          this.isPlaying = false;
@@ -1223,19 +1227,19 @@ package de.axelspringer.videoplayer.controller
          this.isRTMP = (videoVO.videoUrl.substr(0, 4) == "rtmp");
          if (this.isRTMP)
          {
-             setAkamaiStream();
+         setAkamaiStream();
          }
 
          if (this.videoVO.mute)
          {
-             this.setVolume(0);
+         this.setVolume(0);
          }
 
          this.playerView.display.clear();
 
          if (this.videoVO.autoplay)
          {
-             this.play();
+         this.play();
          }
          }
          */

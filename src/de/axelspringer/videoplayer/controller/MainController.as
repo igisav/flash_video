@@ -1,3 +1,7 @@
+/*
+     @author: Igor Savchenko
+     Axel Springer ideAS Engineering GmbH
+ */
 package de.axelspringer.videoplayer.controller
 {
     import de.axelspringer.videoplayer.view.PlayerView;
