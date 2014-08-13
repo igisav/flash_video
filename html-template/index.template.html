@@ -73,7 +73,7 @@
 
             // HD Core.   akamai.net.f4f.ZStream
             // folgende funktionieren
-            // currentVideo = "http://multiplatform-f.akamaihd.net/z/multi/april11/cctv/cctv_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,1280x720_1900_m,1280x720_2500_m,1280x720_3500_m,.mp4.csmil/manifest.f4m";
+             currentVideo = "http://multiplatform-f.akamaihd.net/z/multi/april11/cctv/cctv_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,1280x720_1900_m,1280x720_2500_m,1280x720_3500_m,.mp4.csmil/manifest.f4m";
             // currentVideo = "http://multiplatform-f.akamaihd.net/z/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,1280x720_1900_m,1280x720_2500_m,1280x720_3500_m,.mp4.csmil/manifest.f4m";
             // currentVideo = "http://multiformatlive-f.akamaihd.net/z/demostream_1@2131/manifest.f4m";
             // currentVideo = "http://zerivodsecure-f.akamaihd.net/z/h264/robinhood/robinhood.smil/manifest.f4m?hdnea=st=1309282760~exp=1409282760~acl=%2f%2a~hmac=b28008e8153033c86ade9c8b65d4885111a5ffab7d1d63ff28ff11080779f03c";
@@ -86,7 +86,7 @@
             // geht. FLV Streaming
             // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mediapm/osmf/content/test/akamai_10_year_f8_512K";
             // geht. mp4 progressive
-            // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/spacealonehd_sounas_640_700.mp4";
+            currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/spacealonehd_sounas_640_700.mp4";
             // geht. mp4 stream
             // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/spacealonehd_sounas_640_700.mp4";
             // geht. f4m progressive und stream
@@ -97,15 +97,16 @@
             // geht. Audio streaming
             // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp3:mediapm/osmf/content/test/train_1500";
 
-
             // Bild
             // currentVideo = "http://hds.ak.token.bild.de/31063808,delivery=hds.f4m";
-            var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
+            //currentVideo = "http://hds.ak.token.bild.de/36609682,delivery=hds.f4m";
+            //var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
+            var currentVideo = "http://corrupt-system.de/assets/media/caminandes/caminandes.m4v?dfffg";
 
             window.de.bild.callback = function(msg) {
-                if(msg.type == 'timeupdate' || msg.type == 'progress'){
+                /*if(msg.type == 'timeupdate' || msg.type == 'progress'){
                     return
-                }
+                }*/
 
                 track(msg.type + ": " + JSON.stringify(msg.value));
 
@@ -168,7 +169,7 @@
             }
             function setCurrentTime()
             {
-                document.getElementById("videoplayer").currentTime(168);
+                document.getElementById("videoplayer").currentTime(200);
             }
 
             function getDuration()

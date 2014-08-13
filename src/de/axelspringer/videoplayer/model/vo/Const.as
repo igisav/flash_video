@@ -5,6 +5,8 @@ package de.axelspringer.videoplayer.model.vo
 		/*
 		 * constant values
 		 */
+        public static const REDIRECT_DOMAINS:RegExp   = /(cmbildde-preview\/tok.ak|.ak.token.|.bdedev.de)/g;
+
 
         // type of errors
         public static const ERROR_TYPE_NETWORK:String   = "Network Error";

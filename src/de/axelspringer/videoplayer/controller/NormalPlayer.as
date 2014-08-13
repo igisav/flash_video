@@ -415,9 +415,7 @@ package de.axelspringer.videoplayer.controller
         private function redirectConnection():void {
             Log.info("play: redirect davor: " + this.videoFile + "  hd? " + this.hdContent);
 
-            if (this.videoFile.indexOf("http://cmbildde-preview/tok.ak/") == -1 &&
-                    this.videoFile.indexOf(".ak.token.bild.de/") == -1 &&
-                    ( this.videoFile.indexOf(".ak.token.") == -1 && this.videoFile.indexOf(".bdedev.de/") == -1 ))
+            if (this.videoFile.search(Const.REDIRECT_DOMAINS) < 0)
             {
                 if (this.hdContent)
                 {
@@ -475,7 +473,6 @@ package de.axelspringer.videoplayer.controller
 
         protected function rHDLoaded(event:Event):void {
             this.videoFile = event.currentTarget.data;
-            Log.error(Const.ERROR_REDIRECT + event.type, Const.ERROR_TYPE_NETWORK);
 
             if (event.currentTarget.data as XML)
             {
@@ -831,12 +828,12 @@ package de.axelspringer.videoplayer.controller
                     else if (this.nsHD.time == 0 && ( this.videoVO.duration - this.nsHD.duration ) == 0)
                     {
                         //mit oder ohne bitratenwechsel, gesamte länge, spuelen nach vorn
-                        this.playtime = this.nsHD.time + this.savedPosition;
+                        this.playtime = this.savedPosition;
                     }
                     else
                     {
                         //normal, mit oder ohne bitratenwechsel ohne spulen
-                        this.playtime = this.nsHD.time + ( this.videoVO.duration - this.nsHD.duration );
+                        this.playtime = this.nsHD.time;
                     }
                 }
 
@@ -854,7 +851,7 @@ package de.axelspringer.videoplayer.controller
 
                     if (this.nsHD.bytesTotal == 0)
                     {
-                        this.videoLoaded = nsHD.duration > 0 ? (nsHD.time + nsHD.bufferLength) / nsHD.duration : 0;
+                        this.videoLoaded = nsHD.duration > 0 ? Math.min(1, (nsHD.time + nsHD.bufferLength) / nsHD.duration) : 0;
                     } else
                     {
                         this.videoLoaded = this.nsHD.bytesLoaded / this.nsHD.bytesTotal;
