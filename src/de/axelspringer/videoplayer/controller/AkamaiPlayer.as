@@ -139,16 +139,15 @@ package de.axelspringer.videoplayer.controller
 
         public function currentTime(seekPoint:Number  = NaN):Number {
 
-            if (this.netstream != null && !isNaN(seekPoint) && duration > 0)
+            if (this.netstream != null && !isNaN(seekPoint))
             {
                 Log.info(this + "seek to the point: " + seekPoint);
                 ExternalController.dispatch(ExternalController.EVENT_WAITING, true);
-                var newTime:Number = seekPoint * this.duration;
 
                 // set lower buffer time to enable fast video start after seeking
                 this.netstream.bufferTime = Const.buffertimeMinimum;
 
-                this.netstream.seek(newTime);
+                this.netstream.seek(seekPoint);
             }
 
             return this.netstream ? this.netstream.time : 0;
