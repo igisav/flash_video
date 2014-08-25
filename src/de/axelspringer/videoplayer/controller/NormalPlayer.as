@@ -67,7 +67,11 @@ package de.axelspringer.videoplayer.controller
          * Video is stopped by user, error or reached the end */
         protected var videoStopped:Boolean = false;
 
+        /* Progress of buffering video.
+            Value is in range of 0 and 1.
+         */
         protected var videoLoaded:Number = 0;
+
         protected var videoBufferEmptyStatus:Boolean = false;
         protected var videoBufferFlushStatus:Boolean = false;
         protected var videoIsPublished:Boolean = false;
@@ -930,15 +934,18 @@ package de.axelspringer.videoplayer.controller
          Benutzer ändert position des Videos
          */
         protected function setCurrentTime(time:Number):void {
-            Log.info(" onProgressChange - seekPoint: " + time);
+            if (time > this.duration) {
+                Log.info("User wants to seek to point: " + time.toString() + " .. but video is buffed till " + this.videoLoaded * this.duration);
+                return
+            }
+
+            Log.info("seek to point: " + time);
             if (this.hdContent == false)
             {
-                if (this.ns != null && (time <= this.videoLoaded * this.duration))
+                if (this.ns != null)
                 {
                     // set lower buffer time to enable fast video start after seeking
                     this.ns.bufferTime = Const.buffertimeMinimum;
-
-                    Log.info(this + " set buffertime to " + this.ns.bufferTime);
 
                     this.ns.seek(time);
                 }
@@ -947,11 +954,9 @@ package de.axelspringer.videoplayer.controller
             {
                 if (this.nsHD != null)
                 {
-                    var newHDTime:Number = time * this.duration;
-
-                    this.savedPosition = newHDTime;
+                    this.savedPosition = time;
                     this.offsetVideoTime = 0;
-                    this.nsHD.seek(newHDTime + (this.nsHD.duration - this.videoVO.duration));
+                    this.nsHD.seek(time);
                 }
             }
         }
