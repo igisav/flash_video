@@ -71,6 +71,8 @@ package de.axelspringer.videoplayer.controller
             Value is in range of 0 and 1.
          */
         protected var videoLoaded:Number = 0;
+        // flag for progress event, in order dispatch progress = 1 only once
+        protected var isVideoLoadedComplete:Boolean = false;
 
         protected var videoBufferEmptyStatus:Boolean = false;
         protected var videoBufferFlushStatus:Boolean = false;
@@ -251,6 +253,7 @@ package de.axelspringer.videoplayer.controller
 
             this.previousVideoTime = this.savedPosition;
             this.videoLoaded = 0;
+            isVideoLoadedComplete = false;
 
             // start playing!
             this.isPlaying = true;
@@ -844,7 +847,7 @@ package de.axelspringer.videoplayer.controller
                 ExternalController.dispatch(ExternalController.EVENT_TIMEUPDATE, this.playtime);
             }
 
-            if (this.videoLoaded < 1)
+            if (!isVideoLoadedComplete && this.videoLoaded <= 1)
             {
                 if (this.hdContent == false)
                 {
@@ -860,6 +863,9 @@ package de.axelspringer.videoplayer.controller
                     {
                         this.videoLoaded = this.nsHD.bytesLoaded / this.nsHD.bytesTotal;
                     }
+                }
+                if (videoLoaded >= 1) {
+                    isVideoLoadedComplete = true;
                 }
                 ExternalController.dispatch(ExternalController.EVENT_PROGRESS, this.videoLoaded);
             }
