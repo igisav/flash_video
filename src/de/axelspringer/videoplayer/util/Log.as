@@ -10,7 +10,7 @@ package de.axelspringer.videoplayer.util
         public static const JS_LOGGER:String = "js_logger";
 
         public static function error(msg:String, type:String = ""):void {
-            log("[ERROR] " + msg);
+            trace("[ERROR] " + msg);
 
             var error:Object = {
                 'type' : type ? type : Const.ERROR_TYPE_OTHER,
@@ -20,18 +20,15 @@ package de.axelspringer.videoplayer.util
         }
 
         public static function warn(msg:String):void {
-            log("[WARN] " + msg);
+            trace("[WARN] " + msg);
             ExternalController.dispatch(ExternalController.EVENT_WARN, msg);
         }
 
         public static function info(msg:String):void {
-            log("[INFO] " + msg);
-        }
-
-        private static function log(msg:String):void {
+            msg = "[LOG] " + msg;
             if (level == JS_LOGGER)
             {
-                ExternalController.dispatch(ExternalController.EVENT_WARN, msg);
+                ExternalController.dispatch(ExternalController.EVENT_LOG, msg);
             } else if (level == TRACE)
             {
                 trace(msg);

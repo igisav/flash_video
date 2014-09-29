@@ -42,6 +42,7 @@ package de.axelspringer.videoplayer.controller
         public static const EVENT_SEEKED:String         	= "seeked";
         public static const EVENT_ERROR:String              = "error";
         public static const EVENT_WARN:String               = "warn";
+        public static const EVENT_LOG:String                = "log";
 
         public static const DISPATCH_EVENT_DELAY:int        = 200; // time interval for several events, in ms
 
