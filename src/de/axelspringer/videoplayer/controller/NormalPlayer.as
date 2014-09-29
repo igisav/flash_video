@@ -1091,8 +1091,8 @@ package de.axelspringer.videoplayer.controller
             return this.playtime;
         }
 
-        public function getDuration():Number {
-            return this.duration
+        public function getDuration():String {
+            return duration.toString()
         }
 
         public function getBufferTime():Number {

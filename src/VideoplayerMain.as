@@ -28,7 +28,7 @@ package
         public function VideoplayerMain() {
             Const.versionNumber = "1.0";
 
-            Log.level = Log.TRACE;
+            Log.level = Log.JS_LOGGER;
 
             Security.allowDomain("*");
 

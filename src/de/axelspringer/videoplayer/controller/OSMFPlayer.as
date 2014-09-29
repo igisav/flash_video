@@ -267,8 +267,8 @@ package de.axelspringer.videoplayer.controller
         }
 
 
-        public function getDuration():Number {
-            return 0
+        public function getDuration():String {
+            return "0"
         }
 
         public function getBufferTime():Number {

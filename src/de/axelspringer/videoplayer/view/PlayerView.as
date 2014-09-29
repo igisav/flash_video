@@ -65,7 +65,7 @@ package de.axelspringer.videoplayer.view
             display.x = Math.round(( this.currentWidth - display.width ) / 2);
             display.y = Math.round(( this.currentHeight - display.height ) / 2);
 
-            Log.info("Resize: width=" + currentWidth + ", height=" + currentHeight);
+            //Log.info("Resize: width=" + currentWidth + ", height=" + currentHeight);
         }
 
     }

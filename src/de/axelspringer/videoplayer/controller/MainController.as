@@ -106,9 +106,9 @@ package de.axelspringer.videoplayer.controller
             return player ? player.currentTime(value) : 0;
         }
 
-        public function getDuration():Number
+        public function getDuration():String
         {
-            return player ? player.getDuration() : 0;
+            return player ? player.getDuration() : "0";
         }
 
         public function getBufferTime():Number

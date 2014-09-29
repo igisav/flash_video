@@ -8,7 +8,7 @@ package de.axelspringer.videoplayer.controller
         function volume(value:Number = NaN):Number;
         function muted(value:String = ""):Boolean;
         function currentTime(value:Number = NaN):Number;
-        function getDuration():Number;
+        function getDuration():String;
         function getBufferTime():Number;
         function enableHD(value:String = ""):void;
         function destroy():void;
