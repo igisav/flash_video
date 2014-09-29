@@ -102,7 +102,13 @@ package de.axelspringer.videoplayer.controller
                 'type': eventName,
                 'value': value
             };
-            ExternalInterface.call(jsEventCallback, msg);
+            var msg2:String = JSON.stringify(msg);
+            var evt:String = msg2.split("%").join("%25")
+                .split("\\").join("%5c")
+                .split("\"").join("%22")
+                .split("&").join("%26");
+
+            ExternalInterface.call(jsEventCallback, evt);
         }
 
         private static function bind(main:MainController):void {
