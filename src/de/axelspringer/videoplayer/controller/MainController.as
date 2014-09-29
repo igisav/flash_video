@@ -4,6 +4,7 @@
  */
 package de.axelspringer.videoplayer.controller
 {
+    import de.axelspringer.videoplayer.util.Log;
     import de.axelspringer.videoplayer.view.PlayerView;
 
     import flash.display.Sprite;
@@ -70,7 +71,7 @@ package de.axelspringer.videoplayer.controller
             try {
                 player.loadURL(url);
             } catch (e:Error) {
-                trace(e);
+                Log.warn("Flash: Can't load url " + e.toString());
             }
 
         }

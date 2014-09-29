@@ -445,8 +445,6 @@ package de.axelspringer.videoplayer.controller
 
                 if (this.hdContent == false)
                 {
-                    //toDo ... check Problesm with Security and crossdomain.xml if content can't be loaded
-
                     scriptLoader.addEventListener(Event.COMPLETE, rDLoaded, false, 0, true);
                     scriptLoader.addEventListener(IOErrorEvent.IO_ERROR, onRedirectIOError, false, 0, true);
                     scriptLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onRedirectSecurityError, false, 0, true);

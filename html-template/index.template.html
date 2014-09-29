@@ -67,8 +67,8 @@
             // var currentVideo = "rtmp://pssimn24livefs.fplive.net/pssimn24live-live/n24livestream1/n24livestream1";
 
             // Geht nur mit Akamai
-            // var currentVideo = "rtmp://video01.kanal8.de/sachsenfernsehenlive/myStream.sdp";
-              var currentVideo = "rtmp://cp49989.live.edgefcs.net:1935/live/streamRM1@2564";
+            var currentVideo = "rtmp://video01.kanal8.de/sachsenfernsehenlive/myStream.sdp";
+            //  var currentVideo = "rtmp://cp49989.live.edgefcs.net:1935/live/streamRM1@2564";
              // var currentVideo = "rtmp://cp81905.live.edgefcs.net/live/Livecam@17357";
 
             // HD Core.   akamai.net.f4f.ZStream
@@ -107,16 +107,16 @@
 
                 msg = str;
 
-               /* str = str.replace(/%22/g, "\"")
+                str = str.replace(/%22/g, "\"")
                         .replace(/%5c/g, "\\")
                         .replace(/%26/g, "&")
                         .replace(/%25/g, "%");
 
-                var msg = JSON.parse(str);*/
+                var msg = JSON.parse(str);
 
-                /*if(msg.type == 'timeupdate' || msg.type == 'progress'){
+                if(msg.type == 'timeupdate' || msg.type == 'progress'){
                     return
-                }*/
+                }
                 if(msg.type == 'timeupdate'){
                     return
                 }
