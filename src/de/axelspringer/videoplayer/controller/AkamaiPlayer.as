@@ -39,13 +39,11 @@ package de.axelspringer.videoplayer.controller
         protected var streamFingerprint:String;
         protected var streamSList:String;
 
-        // status
-        protected var isPlaying:Boolean;
-        protected var paused:Boolean;
+        // STATUS
+        protected var isConnected:Boolean;
+        protected var paused:Boolean; // user pause video
         protected var videoBufferEmptyStatus:Boolean;
         protected var videoBufferFlushStatus:Boolean;
-        protected var videoStarted:Boolean;
-        protected var videoStopped:Boolean;
         private   var duration:Number = 0;
         protected var doRewind:Boolean = false;
         protected var errorOccured:Boolean = false;
@@ -53,6 +51,12 @@ package de.axelspringer.videoplayer.controller
 
         public function AkamaiPlayer(playerView:PlayerView) {
             this.playerView = playerView;
+
+            this.connection = new AkamaiConnection();
+            this.connection.addEventListener(NetStatusEvent.NET_STATUS, onConnectionStatus, false, 0, true);
+            this.connection.addEventListener(OvpEvent.ERROR, onError, false, 0, true);
+            this.connection.requestedPort = "any";
+            this.connection.requestedProtocol = "rtmpe,rtmpte";
         }
 
         /********************************************************************************************************
@@ -70,33 +74,24 @@ package de.axelspringer.videoplayer.controller
 
         public function play():void {
 
-            if (this.videoStarted)
+            if (this.paused)
             {
-                if (this.isPlaying)
-                {
-                    resume();
-                }
+                resume();
             }
-            else
+            else if (!this.isConnected)
             {
                 trace(this + " play");
                 trace(this + " ---> server: " + this.streamServer);
                 trace(this + " ---> parameters: " + this.streamParameters);
 
-                this.isPlaying = true;
                 this.paused = false;
-
-                this.connection = new AkamaiConnection();
-                this.connection.addEventListener(NetStatusEvent.NET_STATUS, onConnectionStatus, false, 0, true);
-                this.connection.addEventListener(OvpEvent.ERROR, onError, false, 0, true);
-                this.connection.requestedPort = "any";
-                this.connection.requestedProtocol = "rtmpe,rtmpte";
 
                 if (this.streamParameters != "")
                 {
                     this.connection.connectionAuth = this.streamParameters;
                 }
                 this.connection.connect(this.streamServer);
+                isConnected = true;
             }
         }
 
@@ -130,10 +125,9 @@ package de.axelspringer.videoplayer.controller
         public function pause():void {
             this.paused = true;
 
-            if (this.videoStarted)
+            if (this.isConnected)
             {
                 this.netstream.pause();
-                this.isPlaying = false;
             }
         }
 
@@ -153,9 +147,8 @@ package de.axelspringer.videoplayer.controller
             return this.netstream ? this.netstream.time : 0;
         }
 
-
-        public function getDuration():Number {
-            return duration
+        public function getDuration():String {
+            return duration == 0 ? "Infinity" : duration.toString();
         }
 
         public function getBufferTime():Number {
@@ -171,7 +164,7 @@ package de.axelspringer.videoplayer.controller
             this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
             this.playerView.display.attachNetStream(null);
 
-            videoStarted = false;
+            isConnected = false;
 
             Log.info("Netstream von Akamai wird gestoppt.");
 
@@ -351,8 +344,6 @@ package de.axelspringer.videoplayer.controller
                 }
                 case "NetStream.Play.Stop":
                 {
-                    this.videoStopped = true;
-
                     break;
                 }
                 case "NetStream.Failed":
@@ -364,12 +355,9 @@ package de.axelspringer.videoplayer.controller
                 }
             }
 
-            // check for clip end
-//			trace(this + " this.videoStopped == " + this.videoStopped + " || this.videoBufferEmptyStatus == " + this.videoBufferEmptyStatus  + " || this.videoBufferFlushStatus == " + this.videoBufferFlushStatus);
-
             // if stopped, check buffer stati for OnDemandStreams
             // for LiveStreams, this is the end
-            if (this.videoStopped == true && this.videoBufferEmptyStatus == true && this.videoBufferFlushStatus == true && !this.paused)
+            if (this.videoBufferEmptyStatus == true && this.videoBufferFlushStatus == true && !this.paused)
             {
                 this.onStreamFinished();
             }
@@ -407,14 +395,13 @@ package de.axelspringer.videoplayer.controller
             }
 
             this.resetStatus();
-            this.videoStarted = true;
+            this.isConnected = true;
 
             if (!this.playerView.display.hasEventListener(Event.ENTER_FRAME))
             {
                 this.playerView.display.addEventListener(Event.ENTER_FRAME, onVideoEnterFrame, false, 0, true);
             }
 
-            this.isPlaying = true;
             ExternalController.dispatch(ExternalController.EVENT_PLAYING);
         }
 
@@ -439,10 +426,9 @@ package de.axelspringer.videoplayer.controller
         }
 
         protected function resetStatus():void {
-            this.videoStarted = false;
+            this.isConnected = false;
             this.videoBufferEmptyStatus = false;
             this.videoBufferFlushStatus = false;
-            this.videoStopped = false;
             this.paused = false;
             this.errorOccured = false;
         }
@@ -456,12 +442,10 @@ package de.axelspringer.videoplayer.controller
             Log.error(this + "Error: " + code + ", description: " + description);
 
             this.errorOccured = true;
-            //destroy();
+            destroy();
         }
 
         protected function parseStreamUrl(url:String):void {
-            // on demand:
-            // rtmpte://cp100638.edgefcs.net/ondemand/mp4:secure/flash/16195/16195_38427.mp4?auth=daEdtd.d2b_b7d8aHcTajb.ambTdcd5dvau-bnnfOo-4q-4qounWmBCF1noFFn7Bzotvs&aifp=v001&slist=secure/flash/16195/16195_38427
 
             var index:Number = url.indexOf("://");
             url = url.substring(index + 3);
