@@ -101,7 +101,7 @@
             // currentVideo = "http://hds.ak.token.bild.de/31063808,delivery=hds.f4m";
             // currentVideo = "http://hds.ak.token.bild.de/36609682,delivery=hds.f4m";
             //var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
-            //var currentVideo = "http://corrupt-system.de/assets/media/caminandes/caminandes.m4v";
+            var currentVideo = "http://corrupt-system.de/assets/media/caminandes/caminandes.m4v";
 
             window.de.bild.callback = function(str) {
 
@@ -121,7 +121,11 @@
                     return
                 }
 
-                track(msg.type + ": " + JSON.stringify(msg.value));
+                if (msg.value) {
+                    track(msg.type + ": " + JSON.stringify(msg.value));
+                } else {
+                    track(msg.type);
+                }
 
                 if(msg.type == 'initialized'){
                     loadAndPlay(currentVideo);

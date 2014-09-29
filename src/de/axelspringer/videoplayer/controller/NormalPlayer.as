@@ -81,7 +81,7 @@ package de.axelspringer.videoplayer.controller
         protected var metadata:Object;
         protected var duration:Number;
         protected var playtime:Number = 0; // currentTime
-        protected var savedVolume:Number = 0;
+        protected var savedVolume:Number = 0.5;
         protected var savedPosition:Number = 0;
         protected var isMuted:Boolean = false;
 
@@ -1057,7 +1057,6 @@ package de.axelspringer.videoplayer.controller
             //HDNetwork content
             this.hdContent = (url.indexOf(".f4m") != -1 || url.indexOf("smil") != -1);
 
-            this.setVolume(0.5);
             this.playerView.display.clear();
         }
 
