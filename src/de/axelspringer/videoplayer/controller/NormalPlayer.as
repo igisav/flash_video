@@ -1112,7 +1112,7 @@ package de.axelspringer.videoplayer.controller
         }
 
         public function destroy():void {
-            Log.info(this + " destroy stream connection");
+            Log.info(this + " Cleanup of current player");
             this.videoTimer.stop();
             this.playerView.display.clear();
             this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
