@@ -8,7 +8,7 @@
 
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
-            body { margin:0; padding:0; overflow:auto; text-align:center;}
+            body { margin:0; padding:0; overflow:auto; text-align:center; background-color: aqua;}
             object:focus { outline:none; }
             #flashContent { display:none; }
             .controls {margin: 20px 0;}
@@ -36,7 +36,7 @@
             params.bgcolor = "${bgcolor}";
             params.allowscriptaccess = "always";
             params.allowfullscreen = "true";
-            params.wmode = "transparent";
+           // params.wmode = "transparent";
             var attributes = {};
             attributes.id = "videoplayer"; // ${application}
             attributes.name = "${application}";
@@ -59,17 +59,17 @@
                 window.de.bild = {};
             }
 
-             // var currentVideo = "rtmpe://cp134706.live.edgefcs.net/live/demostream_1_1200@2131";
-              var currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/&mp4:mediapm/ovp/content/test/video/spacealonehd_sounas_640_300.mp4";
-
-            // N24. Geht nicht
-            // var currentVideo = "rtmp://pssimn24livefs.fplive.net/pssimn24live-live/stream1";
-            // var currentVideo = "rtmp://pssimn24livefs.fplive.net/pssimn24live-live/n24livestream1/n24livestream1";
+            // N24.
+            // 2
+             var currentVideo = "rtmp://pssimn24livefs.fplive.net/pssimn24live-live/stream1";
 
             // Geht nur mit Akamai
-            var currentVideo = "rtmp://video01.kanal8.de/sachsenfernsehenlive/myStream.sdp";
-            //  var currentVideo = "rtmp://cp49989.live.edgefcs.net:1935/live/streamRM1@2564";
-             // var currentVideo = "rtmp://cp81905.live.edgefcs.net/live/Livecam@17357";
+            // 2
+             var currentVideo = "rtmp://video01.kanal8.de/sachsenfernsehenlive/myStream.sdp";
+            // 1,2
+              var currentVideo = "rtmp://cp49989.live.edgefcs.net:1935/live/streamRM1@2564";
+            // geht nicht
+            //  var currentVideo = "rtmp://cp81905.live.edgefcs.net/live/Livecam@17357";
 
             // HD Core.   akamai.net.f4f.ZStream
             // folgende funktionieren
@@ -84,13 +84,14 @@
             // geht. FLV Progressive
             // currentVideo = "http://mediapm.edgesuite.net/strobe/content/test/AFaerysTale_sylviaApostol_640_500_short.flv";
             // geht. FLV Streaming
+            // 2
             // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mediapm/osmf/content/test/akamai_10_year_f8_512K";
             // geht. mp4 progressive
             // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/spacealonehd_sounas_640_700.mp4";
             // geht. mp4 stream
             // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/spacealonehd_sounas_640_700.mp4";
             // geht. f4m progressive und stream
-            // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/sample1_700kbps.f4v";
+             currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/sample1_700kbps.f4v";
             // currentVideo = "rtmp://cp67126.edgefcs.net/ondemand/mp4:mediapm/osmf/content/test/sample1_700kbps.f4v";
             // geht. "mov" streaming und progressive
             // currentVideo = "http://mediapm.edgesuite.net/osmf/content/test/akamai_10_year_500.mov";
@@ -101,7 +102,27 @@
             // currentVideo = "http://hds.ak.token.bild.de/31063808,delivery=hds.f4m";
             // currentVideo = "http://hds.ak.token.bild.de/36609682,delivery=hds.f4m";
             //var currentVideo = "http://videos-world.ak.token.bild.de/BILD/34/75/04/76/34750476,property=Video.mp4";
-            var currentVideo = "http://corrupt-system.de/assets/media/caminandes/caminandes.m4v";
+           // currentVideo = "http://corrupt-system.de/assets/media/caminandes/caminandes.m4v";
+           // currentVideo = "rtmp://cp92998.live.edgefcs.net/live/fussball-de@21240";
+
+
+
+            // 1, 2B
+            // currentVideo = "rtmp://cp81905.live.edgefcs.net/live/Bildlive@118111";
+
+            // geht nicht
+           // currentVideo = "http://bildlivehds-lh.akamaihd.net/z/laola1_1@107628/manifest.f4m";
+            // currentVideo = "http://cdn.flashtalking.com/33708/64539_NMEN_Skin_Energy_818x460.mp4";
+
+            currentVideo = "rtmp://p7s1redcarpetlivefs.fplive.net/p7s1redcarpetlive-live/stream-red1";
+
+            // 2A, 2B
+           //currentVideo = "rtmp://cp112845.edgefcs.net/ondemand/mp4:redcarpet/Der_Nanny_HD720_03_24_15.mp4";
+            // 1, aber nicht 2
+           // currentVideo = 'rtmp://cp79715.edgefcs.net/ondemand/lubitz-im-flieger.mp4';
+
+
+            // 1 - Akamai, 2 - OSMF.  2A - URLResource, 2B - StreamingURLResource
 
             window.de.bild.callback = function(str) {
 

@@ -17,3 +17,5 @@ Außer standard [Flex Apache SDK](http://flex.apache.org/installer.html) ist [HD
   +  Preferences > Compiler > ActionScript Compiler:   Compile with mxmlc/compc
   +  In Run/Debug Configuration:   Launch with Chrome (!!! Chrome soll debugger Player haben und vorinstallierten "Pepper"-Player ausschalten)
   +  In Run/Debug Configuration:  Use debugger from SDK: Flex Apache
+  +  Falls Debugger sich nicht zum Player connecten kann, dann überprüfen ob in anderen Browser geht: in Run/Debug Configuration > "Launch With ..."
+        Oft ist Ursache für fehlende Verbindung zum Debugger ist einfach, dass in "bin-debug" Ordner der swf nicht vorhanden ist. Lösung dafür: "Build > Make Projekt".

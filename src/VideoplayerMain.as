@@ -18,7 +18,7 @@ package
     import flash.ui.ContextMenuItem;
 
     // TODO: Bug: Öffnen von lokale html-Seite mit eingebetten Flash (nicht vom Server) wirft Fehler in ExternalController
-
+    [SWF(backgroundColor="0xec9900")]
     public class VideoplayerMain extends Sprite
     {
         protected var mainController:MainController;

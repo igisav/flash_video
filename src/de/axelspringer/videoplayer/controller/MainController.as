@@ -33,21 +33,20 @@ package de.axelspringer.videoplayer.controller
             }
 
             ExternalController.dispatch(ExternalController.EVENT_INITIALIZED);
+
         }
 
         protected function createController(akamai:Boolean):void
         {
-           /* if (!(player && player is OSMFPlayer))
-            {
-                player = new OSMFPlayer(view.stage);
-            }*/
-
-
             if (akamai)
             {
-                if (!(player && player is AkamaiPlayer))
+               /* if (!(player && player is AkamaiPlayer))
                 {
                     player = new AkamaiPlayer(view);
+                }*/
+                if (!(player && player is OSMFPlayer))
+                {
+                    player = new OSMFPlayer(view.stage);
                 }
             }
             else
