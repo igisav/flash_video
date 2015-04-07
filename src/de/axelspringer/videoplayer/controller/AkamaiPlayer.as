@@ -270,8 +270,6 @@ package de.axelspringer.videoplayer.controller
 
         protected function onMetaData(e:OvpEvent):void
         {
-            ExternalController.dispatch(ExternalController.EVENT_LOADED_METADATA, e.data);
-
             // check ratio
             var ratio:Number = 16 / 9;
 
@@ -287,6 +285,7 @@ package de.axelspringer.videoplayer.controller
             {
                 this.duration = Number(e.data.duration);
             }
+            ExternalController.dispatch(ExternalController.EVENT_LOADED_METADATA, e.data);
         }
 
         protected function onNetStreamStatus(e:NetStatusEvent):void {
