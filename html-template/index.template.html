@@ -8,7 +8,7 @@
 
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
-            body { margin:0; padding:0; overflow:auto; text-align:center; background-color: aqua;}
+            body { margin:0; padding:0; overflow:auto; text-align:center; }
             object:focus { outline:none; }
             #flashContent { display:none; }
             .controls {margin: 20px 0;}
@@ -112,14 +112,23 @@
 
             // geht nicht
            // currentVideo = "http://bildlivehds-lh.akamaihd.net/z/laola1_1@107628/manifest.f4m";
-            // currentVideo = "http://cdn.flashtalking.com/33708/64539_NMEN_Skin_Energy_818x460.mp4";
+             currentVideo = "http://cdn.flashtalking.com/33708/64539_NMEN_Skin_Energy_818x460.mp4";
 
-            currentVideo = "rtmp://p7s1redcarpetlivefs.fplive.net/p7s1redcarpetlive-live/stream-red1";
+            // 2, aber nicht 1
+            // currentVideo = "rtmp://p7s1redcarpetlivefs.fplive.net/p7s1redcarpetlive-live/stream-red1";
 
-            // 2A, 2B
-           //currentVideo = "rtmp://cp112845.edgefcs.net/ondemand/mp4:redcarpet/Der_Nanny_HD720_03_24_15.mp4";
+            // 1, 2
+            // currentVideo = "rtmp://cp112845.edgefcs.net/ondemand/mp4:redcarpet/Der_Nanny_HD720_03_24_15.mp4";
             // 1, aber nicht 2
-           // currentVideo = 'rtmp://cp79715.edgefcs.net/ondemand/lubitz-im-flieger.mp4';
+             currentVideo = 'rtmp://cp79715.edgefcs.net/ondemand/lubitz-im-flieger.mp4';
+
+            // weder 1 noch 2
+            // currentVideo = 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/honda_accord';
+            // weder 1 noch 2
+            // currentVideo = 'rtmp://flash.oit.duke.edu/vod/_definst_/test/Wildlife2.flv';
+
+            // 2, aber nicht 1
+            // currentVideo = 'rtmp://184.72.239.149/vod/BigBuckBunny_115k.mov';
 
 
             // 1 - Akamai, 2 - OSMF.  2A - URLResource, 2B - StreamingURLResource
@@ -135,12 +144,12 @@
 
                 var msg = JSON.parse(str);
 
-                if(msg.type == 'timeupdate' || msg.type == 'progress'){
+               /* if(msg.type == 'timeupdate' || msg.type == 'progress'){
                     return
                 }
                 if(msg.type == 'timeupdate'){
                     return
-                }
+                }*/
 
                 if (msg.value) {
                     track(msg.type + ": " + JSON.stringify(msg.value));

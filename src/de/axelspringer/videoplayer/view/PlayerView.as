@@ -47,6 +47,18 @@ package de.axelspringer.videoplayer.view
             this.updateDisplaySize();
         }
 
+        public function clearView():void {
+            if (display) {
+                stage.removeChild(display);
+                display.clear();
+                display.attachNetStream(null);
+                display = null;
+            }
+
+            this.currentWidth = this.initWidth;
+            this.currentHeight = this.initHeight;
+        }
+
 
         protected function updateDisplaySize(e:Event = null):void {
             currentWidth = this.stage.stage.stageWidth;

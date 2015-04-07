@@ -13,6 +13,7 @@ package de.axelspringer.videoplayer.controller
 
     import flash.display.StageDisplayState;
     import flash.events.Event;
+    import flash.events.EventDispatcher;
     import flash.events.NetStatusEvent;
     import flash.media.SoundTransform;
     import flash.utils.setTimeout;
@@ -20,7 +21,7 @@ package de.axelspringer.videoplayer.controller
     import org.openvideoplayer.events.OvpError;
     import org.openvideoplayer.events.OvpEvent;
 
-    public class AkamaiPlayer implements IVideoPlayer
+    public class AkamaiPlayer extends EventDispatcher implements IVideoPlayer
     {
         // gui
         protected var playerView:PlayerView;
@@ -48,6 +49,9 @@ package de.axelspringer.videoplayer.controller
         protected var doRewind:Boolean = false;
         protected var errorOccured:Boolean = false;
         private var lastVolumeValue:Number = 0;
+
+
+        public static const AKAMAI_PLAYER_ERROR:String = "AKAMAI_PLAYER_ERROR";
 
         public function AkamaiPlayer(playerView:PlayerView) {
             this.playerView = playerView;
@@ -161,8 +165,10 @@ package de.axelspringer.videoplayer.controller
 
         public function destroy():void
         {
-            this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
-            this.playerView.display.attachNetStream(null);
+            if (this.playerView.display) {
+                this.playerView.display.removeEventListener(Event.ENTER_FRAME, onVideoEnterFrame);
+            }
+            this.playerView.clearView();
 
             isConnected = false;
 
@@ -439,7 +445,9 @@ package de.axelspringer.videoplayer.controller
         }
 
         protected function treatError(code:String, description:String = ""):void {
-            Log.error(this + "Error: " + code + ", description: " + description);
+            Log.warn(this + "Error: " + code + ", description: " + description);
+
+            dispatchEvent(new Event(AKAMAI_PLAYER_ERROR));
 
             this.errorOccured = true;
             destroy();
