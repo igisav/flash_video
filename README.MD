@@ -19,3 +19,6 @@ Außer standard [Flex Apache SDK](http://flex.apache.org/installer.html) ist [HD
   +  In Run/Debug Configuration:  Use debugger from SDK: Flex Apache
   +  Falls Debugger sich nicht zum Player connecten kann, dann überprüfen ob in anderen Browser geht: in Run/Debug Configuration > "Launch With ..."
         Oft ist Ursache für fehlende Verbindung zum Debugger ist einfach, dass in "bin-debug" Ordner der swf nicht vorhanden ist. Lösung dafür: "Build > Make Projekt".
+  +  Error: #2060 security sandbox violation
+        Open global security settings of Flash: http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html
+        Add the output folder (i.e. bin-debug) as trusted.
