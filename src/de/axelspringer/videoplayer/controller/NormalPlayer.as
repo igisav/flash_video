@@ -29,7 +29,6 @@ package de.axelspringer.videoplayer.controller
     import flash.utils.Timer;
     import flash.utils.setTimeout;
 
-
     public class NormalPlayer implements IVideoPlayer
     {
         /* TODO: for implementing of Akamai HDNetStream (Format SMIL) use com.akamai.hd.HDNetStream
@@ -68,7 +67,7 @@ package de.axelspringer.videoplayer.controller
         protected var videoStopped:Boolean = false;
 
         /* Progress of buffering video.
-            Value is in range of 0 and 1.
+         Value is in range of 0 and 1.
          */
         protected var videoLoaded:Number = 0;
         // flag for progress event, in order dispatch progress = 1 only once
@@ -862,7 +861,8 @@ package de.axelspringer.videoplayer.controller
                         this.videoLoaded = this.nsHD.bytesLoaded / this.nsHD.bytesTotal;
                     }
                 }
-                if (videoLoaded >= 1) {
+                if (videoLoaded >= 1)
+                {
                     isVideoLoadedComplete = true;
                 }
                 ExternalController.dispatch(ExternalController.EVENT_PROGRESS, this.videoLoaded);
@@ -938,7 +938,8 @@ package de.axelspringer.videoplayer.controller
          Benutzer ändert position des Videos
          */
         protected function setCurrentTime(time:Number):void {
-            if (time > this.duration) {
+            if (time > this.duration)
+            {
                 Log.info("User wants to seek to point: " + time.toString() + " .. but video is buffed till " + this.videoLoaded * this.duration);
                 return
             }
@@ -1183,7 +1184,6 @@ package de.axelspringer.videoplayer.controller
             {
                 Log.info(" doSwitchBitrate : " + step);
                 var time:Number = this.savedPosition;
-//				if (this.nsHD.isLiveStream)time = this.nsHD.duration;
                 if (this.nsHD.isLiveStream)time = this.nsHD.timeAsUTC;
 
                 var index:int;
@@ -1207,47 +1207,5 @@ package de.axelspringer.videoplayer.controller
                 }
             }
         }
-
-        /*
-         old method for setting video
-         private function setClip(videoVO:VideoVO):void {
-         if (!videoVO)
-         {
-         Log.error(Const.ERROR_EMPTY_VIDEOCLIP);
-         return;
-         }
-         this.videoVO = videoVO;
-         this.isPlaying = false;
-         this.videoStarted = false;
-
-         this.duration = videoVO.duration;
-         this.videoUrl = videoVO.videoUrl;
-         this.videoFile = videoVO.videoUrl;
-         this.videoServer = "";
-
-         //HDNetwork content
-         this.hdContent = (videoVO.videoUrl.indexOf(".f4m") != -1 || videoVO.videoUrl.indexOf(".smil") != -1);
-
-         // streaming
-         this.isRTMP = (videoVO.videoUrl.substr(0, 4) == "rtmp");
-         if (this.isRTMP)
-         {
-         setAkamaiStream();
-         }
-
-         if (this.videoVO.mute)
-         {
-         this.setVolume(0);
-         }
-
-         this.playerView.display.clear();
-
-         if (this.videoVO.autoplay)
-         {
-         this.play();
-         }
-         }
-         */
-
     }
 }
